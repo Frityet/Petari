@@ -5,6 +5,7 @@ target("smg-pc-game")
     add_cxxflags("-include " .. path.join(os.projectdir(), "aurora/include/MSL_C/stdio.h"), { force = true })
     add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_files("**.cpp")
+    add_files("Screen/THPDraw.c", {sourcekind = "cxx"})
     -- Retail XanimeCore uses unfused scalar arithmetic; its paired SDK calls
     -- preserve their explicit fused instructions in the compatibility layer.
     add_files("Animation/XanimeCore.cpp", {cxxflags = "-ffp-contract=off"})

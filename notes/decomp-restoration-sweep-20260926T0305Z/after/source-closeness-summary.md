@@ -1,6 +1,6 @@
 # Source-Closeness Audit
 
-Generated: 2026-09-26T03:22:34Z
+Generated: 2026-09-26T03:25:05Z
 Repo root: `/Users/frityet/Projects/petari`
 PC root: `/Users/frityet/Projects/petari`
 
@@ -26,9 +26,9 @@ This is intentionally conservative. Anything not proven exact, compile-only, or 
 | `compile-only` | 375 | 59 |
 | `debug-only` | 0 | 0 |
 | `compat-temporary` | 1122 | 419 |
-| `decomp-needed` | 2 | 1 |
+| `decomp-needed` | 1 | 1 |
 
-Audited original game-code files: 3212
+Audited original game-code files: 3211
 Target surface files: 883
 Compatibility-layer files inventoried separately: 508
 Decomp-needed files with root declaration counterparts: 0
@@ -75,7 +75,7 @@ Files with guarded debug probes or release-facing observer candidates: 36
 
 ## Required Migration
 
-Files requiring migration or decomp work: 1124
+Files requiring migration or decomp work: 1123
 
 - `Camera/CamHeliEffector.cpp`: `compat-temporary`
 - `Camera/CamHeliEffector.hpp`: `compat-temporary`
