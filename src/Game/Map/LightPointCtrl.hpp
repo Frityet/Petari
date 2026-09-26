@@ -1,28 +1,18 @@
 #pragma once
 
-#include <cstdint>
-
+#include "Game/Util/Color.hpp"
+#include <revolution/gx/GXEnum.h>
+#include <JSystem/JGeometry.hpp>
 #include <revolution.h>
 
-#include "Game/LiveActor/LiveActor.hpp"
+class LiveActor;
 
-class Color8;
-
-class PointLightInfo {
-public:
-    void operator=(const PointLightInfo& other) {
-        mPosition = other.mPosition;
-        mColor = other.mColor;
-        mRadius = other.mRadius;
-        mBrightness = other.mBrightness;
-        mDistAttnFn = other.mDistAttnFn;
-    }
-
-    TVec3f mPosition;  // 0x0
-    _GXColor mColor;   // 0xC
-    f32 mRadius = 0.0F;
-    f32 mBrightness = 0.0F;
-    u32 mDistAttnFn = 0U;
+struct PointLightInfo {
+    /* 0x00 */ Vec mPos;
+    /* 0x0C */ GXColor mColor;
+    /* 0x10 */ f32 mRefDistance;
+    /* 0x14 */ f32 mRefBrightness;
+    /* 0x18 */ GXDistAttnFn mDistAttnFn;
 };
 
 class LightPointCtrl {
@@ -32,27 +22,30 @@ public:
 
     void loadPointLight();
     void update();
-    void clearPointLight(PointLightInfo*);
-    void requestPointLight(const LiveActor*, TVec3f, Color8, f32, s32);
+    void requestPointLight(const LiveActor* pActor, TVec3f pos, Color8 color, f32 intensity, s32 duration);
+    void clearPointLight(PointLightInfo* pInfo);
+    void blendPointLight(PointLightInfo* pDst, const PointLightInfo& rStart, const PointLightInfo& rEnd, f32 t);
 
     bool tryBlendStart();
+    bool isUpdateCandidateActor(const LiveActor* pActor) const;
+
     void updatePointLight();
-    void blendPointLight(PointLightInfo*, const PointLightInfo&, const PointLightInfo&, f32);
-    bool isUpdateCandidateActor(const LiveActor*) const;
 
-    s32 _0 = -1;
-    s32 _4 = 30;
-    const LiveActor* _8 = nullptr;
-    const LiveActor* _C = nullptr;
-    const LiveActor* _10 = nullptr;
-    PointLightInfo* _14 = nullptr;
-    PointLightInfo* _18 = nullptr;
-    PointLightInfo* _1C = nullptr;
+    s32 getStep() const {
+        return mStep;
+    }
 
-    // Native pointers are generation-qualified on the host. This preserves
-    // the retail identity comparisons while rejecting a destroyed actor and
-    // pointer-address reuse before any candidate is dereferenced.
-    std::uint64_t _8Generation = 0U;
-    std::uint64_t _CGeneration = 0U;
-    std::uint64_t _10Generation = 0U;
+    /* 0x00 */ s32 mStep;
+    /* 0x04 */ s32 mBlendTime;
+    /* 0x08 */ const LiveActor* mCurrentActor;
+    /* 0x0C */ const LiveActor* mPreviousActor;
+    /* 0x10 */ const LiveActor* mCandidateActor;
+    /* 0x14 */ PointLightInfo* mCurrentInfo;
+    /* 0x18 */ PointLightInfo* mTargetInfo;
+    /* 0x1C */ PointLightInfo* mPreviousInfo;
+
+    // Qualify borrowed actor identities across native destruction/address reuse.
+    u64 mCurrentGeneration = 0;
+    u64 mPreviousGeneration = 0;
+    u64 mCandidateGeneration = 0;
 };

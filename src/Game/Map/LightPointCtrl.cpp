@@ -1,213 +1,151 @@
 #include "Game/Map/LightPointCtrl.hpp"
-
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
-#include "Game/Util/Color.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "Game/NameObj/NameObj.hpp"
-
-#include <cmath>
-#include <limits>
-#include <memory>
 
 namespace {
-    constexpr auto cNoBlendStep = s32{-1};
-    constexpr auto cDefaultBlendDuration = s32{30};
-    constexpr auto cPointLightRadius = 15.0F;
-    constexpr auto cMinimumBrightness = 0.95F;
-    constexpr auto cMaximumBrightness = 0.999999F;
-    constexpr auto cAbsentBrightness = 0.001F;
+    static const s32 sDefaultBlendTime = 30;
+    static const f32 sDefaultDistRef = 15.0f;
+};
 
-    [[nodiscard]] f32 clampBrightness(f32 brightness) {
-        // PPC's unordered compare clears both LT and GT. The retail bge/ble
-        // sequence therefore reaches the raw-value store for NaN instead of
-        // selecting either endpoint.
-        if (std::isnan(brightness)) {
-            return brightness;
-        }
-        if (brightness < cMinimumBrightness) {
-            return cMinimumBrightness;
-        }
-        if (brightness <= cMaximumBrightness) {
-            return brightness;
-        }
-        return cMaximumBrightness;
-    }
+LightPointCtrl::LightPointCtrl()
+    : mStep(-1), mBlendTime(::sDefaultBlendTime), mCurrentActor(), mPreviousActor(), mCandidateActor(), mCurrentInfo(),
+      mTargetInfo(), mPreviousInfo() {
+    mCurrentInfo = new PointLightInfo();
+    mTargetInfo = new PointLightInfo();
+    mPreviousInfo = new PointLightInfo();
 
-    [[nodiscard]] f32 interpolate(f32 rate, f32 from, f32 to) {
-        return from + ((to - from) * rate);
-    }
-
-    [[nodiscard]] u8 truncateColorChannel(f32 value) {
-        // PowerPC fctiwz produces the integer-indefinite value for NaN and
-        // overflow; its low byte is zero when blendColor stores the channel.
-        if (!std::isfinite(value) || value < static_cast< f32 >(std::numeric_limits< s32 >::min()) ||
-            value > static_cast< f32 >(std::numeric_limits< s32 >::max())) {
-            return 0U;
-        }
-        return static_cast< u8 >(static_cast< s32 >(value));
-    }
-
-    void blendColor(_GXColor* pOut, const _GXColor& rFrom, const _GXColor& rTo, f32 rate) {
-        pOut->r = truncateColorChannel(interpolate(rate, static_cast< f32 >(rFrom.r), static_cast< f32 >(rTo.r)));
-        pOut->g = truncateColorChannel(interpolate(rate, static_cast< f32 >(rFrom.g), static_cast< f32 >(rTo.g)));
-        pOut->b = truncateColorChannel(interpolate(rate, static_cast< f32 >(rFrom.b), static_cast< f32 >(rTo.b)));
-        pOut->a = truncateColorChannel(interpolate(rate, static_cast< f32 >(rFrom.a), static_cast< f32 >(rTo.a)));
-    }
-
-    void blendVec(TVec3f* pOut, const TVec3f& rFrom, const TVec3f& rTo, f32 rate) {
-        pOut->set(interpolate(rate, rFrom.x, rTo.x), interpolate(rate, rFrom.y, rTo.y), interpolate(rate, rFrom.z, rTo.z));
-    }
-
-    [[nodiscard]] bool isLiveGeneration(const LiveActor* actor, std::uint64_t generation) noexcept {
-        return actor != nullptr && generation != 0U && NameObj::nativeGeneration(actor) == generation;
-    }
-
-}  // namespace
-
-LightPointCtrl::LightPointCtrl() {
-    auto current = std::make_unique< PointLightInfo >();
-    auto requested = std::make_unique< PointLightInfo >();
-    auto transitionStart = std::make_unique< PointLightInfo >();
-
-    clearPointLight(current.get());
-    clearPointLight(requested.get());
-    clearPointLight(transitionStart.get());
-
-    _14 = current.release();
-    _18 = requested.release();
-    _1C = transitionStart.release();
-}
-
-LightPointCtrl::~LightPointCtrl() {
-    delete _1C;
-    delete _18;
-    delete _14;
-    _1C = nullptr;
-    _18 = nullptr;
-    _14 = nullptr;
+    clearPointLight(mCurrentInfo);
+    clearPointLight(mTargetInfo);
+    clearPointLight(mPreviousInfo);
 }
 
 void LightPointCtrl::loadPointLight() {
-    LightFunction::loadPointLightInfo(_14);
+    LightFunction::loadPointLightInfo(mCurrentInfo);
 }
 
 void LightPointCtrl::update() {
-    if (_0 == cNoBlendStep) {
-        if (_10 != nullptr && !isLiveGeneration(_10, _10Generation)) {
-            _10 = nullptr;
-            _10Generation = 0U;
-            clearPointLight(_18);
+    if (mStep == -1) {
+        // Native actors can retire before their containing scene heap does.
+        if (mCandidateActor != nullptr && NameObj::nativeGeneration(mCandidateActor) != mCandidateGeneration) {
+            mCandidateActor = nullptr;
+            mCandidateGeneration = 0;
+            clearPointLight(mTargetInfo);
         }
-        _8 = _10;
-        _8Generation = _10Generation;
+        mCurrentGeneration = mCandidateGeneration;
+        mCurrentActor = mCandidateActor;
         tryBlendStart();
     }
 
     updatePointLight();
 
-    if (_0 == cNoBlendStep) {
-        _C = _8;
-        _CGeneration = _8Generation;
-        *_1C = *_18;
-        _10 = nullptr;
-        _10Generation = 0U;
+    if (mStep == -1) {
+        mPreviousGeneration = mCurrentGeneration;
+        mPreviousActor = mCurrentActor;
+        *mPreviousInfo = *mTargetInfo;
+        mCandidateActor = nullptr;
+        mCandidateGeneration = 0;
     }
 }
 
-void LightPointCtrl::requestPointLight(const LiveActor* pActor, TVec3f position, Color8 color, f32 brightness, s32 duration) {
-    if (_0 != cNoBlendStep || pActor == nullptr || !isUpdateCandidateActor(pActor)) {
-        return;
+void LightPointCtrl::requestPointLight(const LiveActor* pActor, TVec3f pos, Color8 color, f32 intensity, s32 duration) {
+    if (mStep == -1 && isUpdateCandidateActor(pActor)) {
+        mCandidateGeneration = NameObj::nativeGeneration(pActor);
+        mCandidateActor = pActor;
+        mTargetInfo->mPos = pos;
+        mTargetInfo->mColor = color.mGXColor;
+        mTargetInfo->mRefBrightness = MR::clamp(intensity, 0.95f, 0.999999f);
+        mTargetInfo->mRefDistance = ::sDefaultDistRef;
+        mTargetInfo->mDistAttnFn = GX_DA_STEEP;
+        mBlendTime = duration >= 0 ? duration : ::sDefaultBlendTime;
     }
-
-    const auto generation = NameObj::nativeGeneration(pActor);
-    if (generation == 0U) {
-        return;
-    }
-
-    _10 = pActor;
-    _10Generation = generation;
-    _18->mPosition = position;
-    _18->mColor = static_cast< GXColor >(color);
-    _18->mBrightness = clampBrightness(brightness);
-    _18->mRadius = cPointLightRadius;
-    _18->mDistAttnFn = GX_DA_STEEP;
-    _4 = duration >= 0 ? duration : cDefaultBlendDuration;
 }
 
 void LightPointCtrl::updatePointLight() {
-    if (_8 == nullptr && _C != nullptr) {
-        clearPointLight(_18);
+    if (mCurrentActor == nullptr && mPreviousActor != nullptr) {
+        clearPointLight(mTargetInfo);
     }
 
-    if (_8 == nullptr && _0 == cNoBlendStep) {
-        clearPointLight(_14);
+    if (mCurrentActor == nullptr && mStep == -1) {
+        clearPointLight(mCurrentInfo);
         return;
     }
 
-    if (_0 == cNoBlendStep) {
-        *_14 = *_18;
+    if (getStep() == -1) {
+        *mCurrentInfo = *mTargetInfo;
         return;
     }
 
-    // PPC's duration-zero path feeds the cosine helper its integer-conversion
-    // zero phase. Keep the one inclusive transition step, but do not turn a
-    // retail duration of zero into a one-frame duration or an immediate snap.
-    const auto rate = _4 == 0 ? 0.0F : MR::getEaseInOutValue(static_cast< f32 >(_0) / static_cast< f32 >(_4), 0.0F, 1.0F, 1.0F);
-    blendPointLight(_14, *_1C, *_18, rate);
+    f32 t = MR::getEaseInOutValue(static_cast< f32 >(mStep) / mBlendTime, 0.0f, 1.0f, 1.0f);
+    blendPointLight(mCurrentInfo, *mPreviousInfo, *mTargetInfo, t);
 
-    if (_0 < _4) {
-        ++_0;
+    if (mStep < mBlendTime) {
+        mStep++;
     } else {
-        _0 = cNoBlendStep;
+        mStep = -1;
     }
 }
 
 void LightPointCtrl::clearPointLight(PointLightInfo* pInfo) {
-    if (pInfo == nullptr) {
-        return;
-    }
+    Vec pos;
+    pos.x = 0.0f;
+    pos.y = 0.0f;
+    pos.z = 0.0f;
+    pInfo->mPos = pos;
 
-    pInfo->mPosition.zero();
-    pInfo->mColor = _GXColor{0U, 0U, 0U, 0xFFU};
-    pInfo->mBrightness = cAbsentBrightness;
-    pInfo->mRadius = cPointLightRadius;
+    GXColor color;
+    color.r = 0;
+    color.g = 0;
+    color.b = 0;
+    color.a = 255;
+    pInfo->mColor = color;
+
+    pInfo->mRefBrightness = 0.001f;
+    pInfo->mRefDistance = ::sDefaultDistRef;
     pInfo->mDistAttnFn = GX_DA_STEEP;
-    _4 = cDefaultBlendDuration;
+    mBlendTime = ::sDefaultBlendTime;
 }
 
-void LightPointCtrl::blendPointLight(PointLightInfo* pOut, const PointLightInfo& rFrom, const PointLightInfo& rTo, f32 rate) {
-    if (_8 == nullptr) {
-        pOut->mPosition = rFrom.mPosition;
-    } else if (_C == nullptr) {
-        pOut->mPosition = rTo.mPosition;
+void LightPointCtrl::blendPointLight(PointLightInfo* pDst, const PointLightInfo& rStart, const PointLightInfo& rEnd, f32 t) {
+    if (mCurrentActor == nullptr) {
+        pDst->mPos = rStart.mPos;
+    } else if (mPreviousActor == nullptr) {
+        pDst->mPos = rEnd.mPos;
     } else {
-        blendVec(&pOut->mPosition, rFrom.mPosition, rTo.mPosition, rate);
+        MR::blendVec(&pDst->mPos, rStart.mPos, rEnd.mPos, t);
     }
 
-    const auto fromBrightness = _C == nullptr ? cMinimumBrightness : rFrom.mBrightness;
-    const auto toBrightness = _8 == nullptr ? cMinimumBrightness : rTo.mBrightness;
-    pOut->mBrightness = interpolate(rate, fromBrightness, toBrightness);
-    blendColor(&pOut->mColor, rFrom.mColor, rTo.mColor, rate);
-    pOut->mRadius = interpolate(rate, rFrom.mRadius, rTo.mRadius);
+    f32 start = mPreviousActor == nullptr ? 0.95f : rStart.mRefBrightness;
+    f32 end = mCurrentActor == nullptr ? 0.95f : rEnd.mRefBrightness;
+    pDst->mRefBrightness = MR::getLinerValue(t, start, end, 1.0f);
+    MR::blendColor(&pDst->mColor, rStart.mColor, rEnd.mColor, t);
+    pDst->mRefDistance = MR::getLinerValue(t, rStart.mRefDistance, rEnd.mRefDistance, 1.0f);
 }
 
 bool LightPointCtrl::tryBlendStart() {
-    if (_C == _8 && _CGeneration == _8Generation) {
+    if (mPreviousActor == mCurrentActor && mPreviousGeneration == mCurrentGeneration) {
         return false;
     }
 
-    _0 = 0;
+    mStep = 0;
     return true;
 }
 
 bool LightPointCtrl::isUpdateCandidateActor(const LiveActor* pActor) const {
-    if (pActor == nullptr || NameObj::nativeGeneration(pActor) == 0U) {
+    if (pActor == nullptr || NameObj::nativeGeneration(pActor) == 0) {
         return false;
     }
-    if (!isLiveGeneration(_10, _10Generation)) {
+    if (mCandidateActor == nullptr || NameObj::nativeGeneration(mCandidateActor) != mCandidateGeneration) {
         return true;
     }
 
-    return MR::calcDistanceToPlayer(pActor) < MR::calcDistanceToPlayer(_10);
+    f32 dist = MR::calcDistanceToPlayer(mCandidateActor);
+    return MR::calcDistanceToPlayer(pActor) < dist;
+}
+
+LightPointCtrl::~LightPointCtrl() {
+    delete mCurrentInfo;
+    delete mTargetInfo;
+    delete mPreviousInfo;
 }

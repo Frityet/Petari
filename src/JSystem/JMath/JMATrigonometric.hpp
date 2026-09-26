@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math_types.hpp>
+#include <aurora/ppc_math.hpp>
 #include <revolution.h>
 
 #include <algorithm>
@@ -54,7 +55,7 @@ namespace JMath {
 
         [[nodiscard]] T sinRadian(T value) const {
             const auto scaled = value * (static_cast<T>(LEN) / TAngleConstant_<T>::RADIAN_DEG360());
-            const auto index = static_cast<u16>(scaled < static_cast<T>(0) ? -scaled : scaled) & (LEN - 1U);
+            const auto index = aurora::ppc::truncate_u16(scaled < static_cast<T>(0) ? -scaled : scaled) & (LEN - 1U);
             const auto sine = table[index].a1;
             return scaled < static_cast<T>(0) ? -sine : sine;
         }
@@ -62,33 +63,33 @@ namespace JMath {
         [[nodiscard]] T cosRadian(T value) const {
             const auto scaled = std::abs(value) *
                                 (static_cast<T>(LEN) / TAngleConstant_<T>::RADIAN_DEG360());
-            return table[static_cast<u16>(scaled) & (LEN - 1U)].b1;
+            return table[aurora::ppc::truncate_u16(scaled) & (LEN - 1U)].b1;
         }
 
         [[nodiscard]] T sinDegree(T value) const {
             const auto scaled = value * (value < static_cast<T>(0) ? static_cast<T>(-45.511112F) : static_cast<T>(45.511112F));
-            const auto sine = table[static_cast<u16>(scaled) & (LEN - 1U)].a1;
+            const auto sine = table[aurora::ppc::truncate_u16(scaled) & (LEN - 1U)].a1;
             return value < static_cast<T>(0) ? -sine : sine;
         }
 
         [[nodiscard]] T cosDegree(T value) const {
             const auto scaled = std::abs(value) * static_cast<T>(45.511112F);
-            return table[static_cast<u16>(scaled) & (LEN - 1U)].b1;
+            return table[aurora::ppc::truncate_u16(scaled) & (LEN - 1U)].b1;
         }
 
         [[nodiscard]] T sinLap(T value) const {
             const auto scaled = value * (value < static_cast<T>(0) ? -static_cast<T>(LEN) : static_cast<T>(LEN));
-            const auto sine = table[static_cast<u16>(scaled) & (LEN - 1U)].a1;
+            const auto sine = table[aurora::ppc::truncate_u16(scaled) & (LEN - 1U)].a1;
             return value < static_cast<T>(0) ? -sine : sine;
         }
 
         [[nodiscard]] T cosLap(T value) const {
             const auto scaled = std::abs(value) * static_cast<T>(LEN);
-            return table[static_cast<u16>(scaled) & (LEN - 1U)].b1;
+            return table[aurora::ppc::truncate_u16(scaled) & (LEN - 1U)].b1;
         }
 
         [[nodiscard]] T get(T value) const {
-            return table[static_cast<u16>(value) & (LEN - 1U)].b1;
+            return table[aurora::ppc::truncate_u16(value) & (LEN - 1U)].b1;
         }
 
         TSinCosPair<T, T> table[LEN]{};

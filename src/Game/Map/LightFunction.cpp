@@ -234,11 +234,11 @@ void LightFunction::loadLightInfoCoin(const LightInfoCoin* pInfo) {
 }
 
 void LightFunction::loadPointLightInfo(const PointLightInfo* pInfo) {
-    TVec3f v7(pInfo->mPosition);
+    TVec3f v7(pInfo->mPos);
     MR::getCameraViewMtx().mult(v7, v7);
     GXLightObj obj;
     GXInitLightPos(&obj, v7.x, v7.y, v7.z);
-    GXInitLightDistAttn(&obj, pInfo->mRadius, pInfo->mBrightness, static_cast<GXDistAttnFn>(pInfo->mDistAttnFn));
+    GXInitLightDistAttn(&obj, pInfo->mRefDistance, pInfo->mRefBrightness, static_cast<GXDistAttnFn>(pInfo->mDistAttnFn));
     GXInitLightSpot(&obj, 0.0, GX_SP_OFF);
     GXInitLightColor(&obj, pInfo->mColor);
     GXLoadLightObjImm(&obj, GX_LIGHT4);

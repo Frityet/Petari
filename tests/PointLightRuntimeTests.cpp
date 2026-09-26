@@ -14,6 +14,8 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/Color.hpp"
 #include "Game/Util/LightUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include <JSystem/JMath/JMATrigonometric.hpp>
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "resource/TextEncoding.hpp"
@@ -61,10 +63,10 @@ namespace {
 
     void requireAbsent(const PointLightInfo &info,
                        std::string_view message) {
-        requirePosition(info.mPosition, TVec3f{}, message);
+        requirePosition(info.mPos, TVec3f{}, message);
         requireColor(info.mColor, _GXColor{0U, 0U, 0U, 255U}, message);
-        requireNear(info.mRadius, 15.0F, message);
-        requireNear(info.mBrightness, 0.001F, message);
+        requireNear(info.mRefDistance, 15.0F, message);
+        requireNear(info.mRefBrightness, 0.001F, message);
         require(info.mDistAttnFn == GX_DA_STEEP, message);
     }
 
@@ -116,48 +118,48 @@ namespace {
         nearActor.mPosition.set(25.0F, 0.0F, 0.0F);
 
         auto controller = LightPointCtrl{};
-        require(controller._0 == -1 && controller._4 == 30 &&
-                    controller._8 == nullptr && controller._C == nullptr &&
-                    controller._10 == nullptr && controller._14 != nullptr &&
-                    controller._18 != nullptr && controller._1C != nullptr,
+        require(controller.mStep == -1 && controller.mBlendTime == 30 &&
+                    controller.mCurrentActor == nullptr && controller.mPreviousActor == nullptr &&
+                    controller.mCandidateActor == nullptr && controller.mCurrentInfo != nullptr &&
+                    controller.mTargetInfo != nullptr && controller.mPreviousInfo != nullptr,
                 "LightPointCtrl must begin in the retail idle/empty state");
-        requireAbsent(*controller._14,
+        requireAbsent(*controller.mCurrentInfo,
                       "the loaded point-light record must begin absent");
-        requireAbsent(*controller._18,
+        requireAbsent(*controller.mTargetInfo,
                       "the request point-light record must begin absent");
-        requireAbsent(*controller._1C,
+        requireAbsent(*controller.mPreviousInfo,
                       "the transition point-light record must begin absent");
 
         const auto nan = std::numeric_limits<f32>::quiet_NaN();
         controller.requestPointLight(
             &farActor, TVec3f{1.0F, 2.0F, 3.0F},
             Color8(20U, 40U, 60U, 255U), nan, -1);
-        require(controller._10 == &farActor &&
-                    std::isnan(controller._18->mBrightness) &&
-                    controller._4 == 30,
+        require(controller.mCandidateActor == &farActor &&
+                    std::isnan(controller.mTargetInfo->mRefBrightness) &&
+                    controller.mBlendTime == 30,
                 "the first request must win and PPC unordered brightness must preserve NaN");
 
         controller.requestPointLight(
             &tieActor, TVec3f{4.0F, 5.0F, 6.0F},
             Color8(1U, 2U, 3U, 255U), 0.98F, 4);
-        require(controller._10 == &farActor &&
-                    std::isnan(controller._18->mBrightness),
+        require(controller.mCandidateActor == &farActor &&
+                    std::isnan(controller.mTargetInfo->mRefBrightness),
                 "an equal-distance request must not replace the first candidate");
 
         controller.requestPointLight(
             &nearActor, TVec3f{7.0F, 8.0F, 9.0F},
             Color8(200U, 100U, 50U, 255U), 2.0F, 2);
-        require(controller._10 == &nearActor && controller._4 == 2 &&
-                    controller._18->mBrightness == 0.999999F &&
-                    controller._18->mRadius == 15.0F &&
-                    controller._18->mDistAttnFn == GX_DA_STEEP,
+        require(controller.mCandidateActor == &nearActor && controller.mBlendTime == 2 &&
+                    controller.mTargetInfo->mRefBrightness == 0.999999F &&
+                    controller.mTargetInfo->mRefDistance == 15.0F &&
+                    controller.mTargetInfo->mDistAttnFn == GX_DA_STEEP,
                 "a strictly nearer request must replace the candidate and clamp high");
 
         auto lowController = LightPointCtrl{};
         lowController.requestPointLight(
             &nearActor, TVec3f{}, Color8(255U, 255U, 255U, 255U),
             -std::numeric_limits<f32>::infinity(), 1);
-        require(lowController._18->mBrightness == 0.95F,
+        require(lowController.mTargetInfo->mRefBrightness == 0.95F,
                 "finite and infinite brightness below the retail range must clamp low");
     }
 
@@ -170,7 +172,7 @@ namespace {
         controller.requestPointLight(
             first, TVec3f{10.0F, 20.0F, 30.0F},
             Color8(255U, 0U, 0U, 255U), 0.98F, 5);
-        const auto firstGeneration = controller._10Generation;
+        const auto firstGeneration = controller.mCandidateGeneration;
         first->~LiveActor();
 
         auto *second = new (storage.data()) LiveActor("point-light second generation");
@@ -178,39 +180,39 @@ namespace {
                     firstGeneration,
                 "the ABA fixture must reuse the pointer with a new generation");
         controller.update();
-        require(controller._8 == nullptr && controller._C == nullptr &&
-                    controller._10 == nullptr && controller._0 == -1 &&
-                    controller._4 == 30,
+        require(controller.mCurrentActor == nullptr && controller.mPreviousActor == nullptr &&
+                    controller.mCandidateActor == nullptr && controller.mStep == -1 &&
+                    controller.mBlendTime == 30,
                 "a stale or ABA-reused request must become absent before dereference");
-        requireAbsent(*controller._14,
+        requireAbsent(*controller.mCurrentInfo,
                       "a stale request must leave the published light absent");
-        requireAbsent(*controller._18,
+        requireAbsent(*controller.mTargetInfo,
                       "stale invalidation must clear the request record before the idle footer copies it");
 
         controller.requestPointLight(
             second, TVec3f{40.0F, 50.0F, 60.0F},
             Color8(20U, 80U, 40U, 255U), 0.98F, 1);
         controller.update();
-        require(controller._0 == 1 && controller._8 == second,
+        require(controller.mStep == 1 && controller.mCurrentActor == second,
                 "the valid generation after a stale request must begin a normal fade-in");
-        requirePosition(controller._14->mPosition,
+        requirePosition(controller.mCurrentInfo->mPos,
                         TVec3f{40.0F, 50.0F, 60.0F},
                         "a valid post-stale fade-in must use its own target position");
-        requireColor(controller._14->mColor,
+        requireColor(controller.mCurrentInfo->mColor,
                      _GXColor{0U, 0U, 0U, 255U},
                      "a valid post-stale fade-in must begin at black without stale color bleed");
-        requireNear(controller._14->mBrightness, 0.95F,
+        requireNear(controller.mCurrentInfo->mRefBrightness, 0.95F,
                     "a valid post-stale fade-in must begin at the present endpoint brightness");
         controller.update();
-        require(controller._0 == -1 && controller._C == second &&
-                    controller._CGeneration ==
+        require(controller.mStep == -1 && controller.mPreviousActor == second &&
+                    controller.mPreviousGeneration ==
                         NameObj::nativeGeneration(second),
                 "the post-stale fade-in endpoint must track the valid generation");
-        requireColor(controller._14->mColor,
+        requireColor(controller.mCurrentInfo->mColor,
                      _GXColor{20U, 80U, 40U, 255U},
                      "the post-stale fade-in endpoint must reach its own color");
 
-        const auto secondGeneration = controller._CGeneration;
+        const auto secondGeneration = controller.mPreviousGeneration;
         second->~LiveActor();
         auto *third =
             new (storage.data()) LiveActor("point-light third generation");
@@ -221,13 +223,13 @@ namespace {
             third, TVec3f{-10.0F, -20.0F, -30.0F},
             Color8(180U, 30U, 90U, 255U), 0.97F, 2);
         controller.update();
-        require(controller._0 == 1 && controller._8 == third &&
-                    controller._8Generation != secondGeneration,
+        require(controller.mStep == 1 && controller.mCurrentActor == third &&
+                    controller.mCurrentGeneration != secondGeneration,
                 "pointer reuse for a tracked actor must start an actor-switch blend");
-        requirePosition(controller._14->mPosition,
+        requirePosition(controller.mCurrentInfo->mPos,
                         TVec3f{40.0F, 50.0F, 60.0F},
                         "tracked-actor ABA step zero must retain the old generation position");
-        requireColor(controller._14->mColor,
+        requireColor(controller.mCurrentInfo->mColor,
                      _GXColor{20U, 80U, 40U, 255U},
                      "tracked-actor ABA must not take the same-actor immediate path");
         third->~LiveActor();
@@ -239,18 +241,18 @@ namespace {
             &actor, TVec3f{3.0F, 4.0F, 5.0F},
             Color8(200U, 100U, 50U, 255U), 0.98F, 0);
         controller.update();
-        require(controller._4 == 0 && controller._0 == -1 &&
-                    controller._C == &actor,
+        require(controller.mBlendTime == 0 && controller.mStep == -1 &&
+                    controller.mPreviousActor == &actor,
                 "a zero-duration transition must execute one deterministic retail step without normalization");
-        requirePosition(controller._14->mPosition,
+        requirePosition(controller.mCurrentInfo->mPos,
                         TVec3f{3.0F, 4.0F, 5.0F},
                         "fade-in position must use the target even for duration zero");
-        requireNear(controller._14->mBrightness, 0.95F,
+        requireNear(controller.mCurrentInfo->mRefBrightness, 0.95F,
                     "duration zero must use the retail cosine rate-zero brightness endpoint");
-        requireColor(controller._14->mColor,
+        requireColor(controller.mCurrentInfo->mColor,
                      _GXColor{0U, 0U, 0U, 255U},
                      "duration zero must use the retail cosine rate-zero black color endpoint");
-        requireNear(controller._14->mRadius, 15.0F,
+        requireNear(controller.mCurrentInfo->mRefDistance, 15.0F,
                     "duration zero must retain the retail point-light radius");
     }
 
@@ -401,29 +403,43 @@ namespace {
         requirePosition(world, TVec3f(130, 240, 350), "follow-camera light converts through actual inverse view");
     }
 
+    void testPpcLightMath() {
+        const auto nan = std::numeric_limits<f32>::quiet_NaN();
+        require(JMACosRadian(nan) == 1.0f && JMASinRadian(nan) == 0.0f,
+                "PPC integer conversion gives nonfinite easing input the original zero table phase");
+        GXColor result;
+        MR::blendColor(&result, GXColor{250, 100, 10, 255}, GXColor{255, 0, 250, 255}, 2.0f);
+        requireColor(result, GXColor{4, 156, 234, 255},
+                     "original color extrapolation stores the low byte of the signed integer conversion");
+        MR::blendColor(&result, GXColor{0, 0, 0, 0}, GXColor{1, 2, 3, 4}, nan);
+        requireColor(result, GXColor{0, 0, 0, 0}, "NaN conversions preserve Gekko's integer-indefinite low byte");
+        MR::blendColor(&result, GXColor{0, 0, 0, 0}, GXColor{1, 2, 3, 4}, std::numeric_limits<f32>::infinity());
+        requireColor(result, GXColor{255, 255, 255, 255}, "positive overflow preserves Gekko's saturated integer low byte");
+    }
+
     void testPointTransition() {
         LiveActor actor("original point transition");
         LightPointCtrl controller;
         controller.requestPointLight(&actor, TVec3f(25, 5, -2), Color8(200, 100, 50, 255), 0.99f, 2);
         controller.update();
-        require(controller._0 == 1 && controller._8 == &actor, "fade-in includes step zero");
-        requireColor(controller._14->mColor, GXColor{0, 0, 0, 255}, "fade-in begins at black");
-        requireNear(controller._14->mBrightness, 0.95f, "fade-in begins at minimum present brightness");
+        require(controller.mStep == 1 && controller.mCurrentActor == &actor, "fade-in includes step zero");
+        requireColor(controller.mCurrentInfo->mColor, GXColor{0, 0, 0, 255}, "fade-in begins at black");
+        requireNear(controller.mCurrentInfo->mRefBrightness, 0.95f, "fade-in begins at minimum present brightness");
         controller.update();
-        requireColor(controller._14->mColor, GXColor{100, 50, 25, 255}, "cosine midpoint blends half color");
-        requireNear(controller._14->mBrightness, 0.97f, "cosine midpoint blends brightness");
+        requireColor(controller.mCurrentInfo->mColor, GXColor{100, 50, 25, 255}, "cosine midpoint blends half color");
+        requireNear(controller.mCurrentInfo->mRefBrightness, 0.97f, "cosine midpoint blends brightness");
         controller.update();
-        require(controller._0 == -1 && controller._C == &actor, "fade-in includes its endpoint");
-        requireColor(controller._14->mColor, GXColor{200, 100, 50, 255}, "fade-in reaches authored color");
+        require(controller.mStep == -1 && controller.mPreviousActor == &actor, "fade-in includes its endpoint");
+        requireColor(controller.mCurrentInfo->mColor, GXColor{200, 100, 50, 255}, "fade-in reaches authored color");
         controller.update();
-        require(controller._0 == 1 && controller._8 == nullptr && controller._4 == 30, "missed request starts the original thirty-step fade-out");
+        require(controller.mStep == 1 && controller.mCurrentActor == nullptr && controller.mBlendTime == 30, "missed request starts the original thirty-step fade-out");
         for (int i = 0; i < 15; ++i) controller.update();
-        requireColor(controller._14->mColor, GXColor{100, 50, 25, 255}, "fade-out retains the cosine midpoint");
-        requirePosition(controller._14->mPosition, TVec3f(25, 5, -2), "fade-out freezes the prior actor position");
+        requireColor(controller.mCurrentInfo->mColor, GXColor{100, 50, 25, 255}, "fade-out retains the cosine midpoint");
+        requirePosition(controller.mCurrentInfo->mPos, TVec3f(25, 5, -2), "fade-out freezes the prior actor position");
         for (int i = 0; i < 15; ++i) controller.update();
-        require(controller._0 == -1 && controller._C == nullptr, "fade-out includes step thirty");
+        require(controller.mStep == -1 && controller.mPreviousActor == nullptr, "fade-out includes step thirty");
         controller.update();
-        requireAbsent(*controller._14, "idle frame after fade-out clears the real point record");
+        requireAbsent(*controller.mCurrentInfo, "idle frame after fade-out clears the real point record");
     }
 }
 
@@ -442,6 +458,7 @@ int main(int argc, char** argv) {
         return smgpc::test::run_stage_resource_process("original-light-owners", [] {
             testOriginalCatalog();
             testCoordinateBlend();
+            testPpcLightMath();
             auto& player = *MR::getMarioHolder()->getMarioActor();
             const auto position = player.mPosition;
             struct RestorePosition { LiveActor& actor; TVec3f position; ~RestorePosition() { actor.mPosition = position; } } restore{player, position};
