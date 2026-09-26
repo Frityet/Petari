@@ -1,6 +1,9 @@
 #include <aurora/exception.hpp>
 #include "J3dJointData.hpp"
 #include "J3dNameData.hpp"
+#include "J3dNativeBlock.hpp"
+#include "JSystem/J3DGraphLoader/J3DJointFactory.hpp"
+#include "JSystem/J3DGraphLoader/J3DModelLoader.hpp"
 
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
@@ -117,7 +120,7 @@ namespace smgpc::resource {
         std::uint16_t draw_count = 0;
         std::uint16_t full_weight_count = 0;
         std::vector<J3DModelHierarchy> hierarchy;
-        std::vector<J3DJoint> joints;
+        std::vector<std::unique_ptr<J3DJoint>> joints;
         std::vector<J3DJoint*> joint_pointers;
         std::unique_ptr<J3DMtxCalc> basic;
         J3dNameData names;
@@ -144,27 +147,42 @@ namespace smgpc::resource {
             const auto count = u16_at(block, 8);
             const auto init = table_offset(block, 0xc, count == 0 ? 0 : 0x40);
             const auto indices = table_offset(block, 0x10, count * 2U);
-            joints.resize(count);
+            std::vector<u16> remap(count);
+            std::size_t init_count = 0;
+            for (std::size_t i = 0; i < count; ++i) {
+                remap[i] = u16_at(block, indices + i * 2);
+                init_count = std::max(init_count, std::size_t{remap[i]} + 1);
+            }
+            require_range(block, init, init_count * 0x40);
+            std::vector<J3DJointInitData> initializers(init_count);
+            for (std::size_t i = 0; i < init_count; ++i) {
+                const auto source = init + i * 0x40;
+                auto& entry = initializers[i];
+                entry.mKind = u16_at(block, source);
+                entry.mScaleCompensate = block[source + 2];
+                entry.mTransformInfo.mScale = vec_at(block, source + 4);
+                entry.mTransformInfo.mRotation.x = std::bit_cast<s16>(u16_at(block, source + 0x10));
+                entry.mTransformInfo.mRotation.y = std::bit_cast<s16>(u16_at(block, source + 0x12));
+                entry.mTransformInfo.mRotation.z = std::bit_cast<s16>(u16_at(block, source + 0x14));
+                entry.mTransformInfo.mTranslate = vec_at(block, source + 0x18);
+                entry.mRadius = f32_at(block, source + 0x24);
+                entry.mMin = vec_at(block, source + 0x28);
+                entry.mMax = vec_at(block, source + 0x34);
+            }
+            using NativeJointBlock = J3dNativeBlock<J3DJointBlock>;
+            NativeJointBlock::Builder builder;
+            builder.header.mBlockType = u32_at(block, 0);
+            builder.header.mBlockSize = u32_at(block, 4);
+            builder.header.mJointNum = count;
+            builder.header.mpJointInitData = NativeJointBlock::Builder::pointer_offset(builder.append<J3DJointInitData>(initializers));
+            builder.header.mpIndexTable = NativeJointBlock::Builder::pointer_offset(builder.append<u16>(remap));
+            auto native = std::move(builder).finish();
+            J3DJointFactory factory(native->header());
+            joints.reserve(count);
             joint_pointers.reserve(count);
             for (std::size_t i = 0; i < count; ++i) {
-                const auto source = init + u16_at(block, indices + i * 2) * 0x40U;
-                require_range(block, source, 0x40);
-                auto& joint = joints[i];
-                // J3DJointFactory::create: logical numbering, remapped authored
-                // metadata, low-byte kind, and the original 0xff sentinel.
-                joint.mJntNo = static_cast<u16>(i);
-                joint.mKind = static_cast<u8>(u16_at(block, source));
-                joint.mScaleCompensate = block[source + 2] == 0xff ? 0 : block[source + 2];
-                joint.mTransformInfo.mScale = vec_at(block, source + 4);
-                joint.mTransformInfo.mRotation.x = std::bit_cast<s16>(u16_at(block, source + 0x10));
-                joint.mTransformInfo.mRotation.y = std::bit_cast<s16>(u16_at(block, source + 0x12));
-                joint.mTransformInfo.mRotation.z = std::bit_cast<s16>(u16_at(block, source + 0x14));
-                joint.mTransformInfo.mTranslate = vec_at(block, source + 0x18);
-                joint.mBoundingSphereRadius = f32_at(block, source + 0x24);
-                joint.mMin = vec_at(block, source + 0x28);
-                joint.mMax = vec_at(block, source + 0x34);
-                joint.mMtxCalc = nullptr;
-                joint_pointers.push_back(&joint);
+                joints.emplace_back(factory.create(static_cast<int>(i)));
+                joint_pointers.push_back(joints.back().get());
             }
             const auto name_offset = u32_at(block, 0x14);
             if (name_offset != 0) {
