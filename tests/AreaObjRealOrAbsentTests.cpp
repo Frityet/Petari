@@ -1,3 +1,4 @@
+#include "resource/JMapResource.hpp"
 #include "NativeHeapFixture.hpp"
 #include "OriginalLightFixture.hpp"
 #include "SourceMirrorEncoding.hpp"
@@ -376,8 +377,7 @@ namespace {
         const auto text = std::string_view(name);
         bytes.insert(bytes.end(), text.begin(), text.end());
         bytes.push_back(0);
-        auto info = JMapInfo::from_bcsv(bytes);
-        info.setPlacedZoneId(0);
+        auto info = smgpc::resource::make_jmap_info(bytes);
         return info;
     }
 

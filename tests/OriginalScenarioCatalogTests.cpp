@@ -35,7 +35,7 @@ std::vector<std::string> scenario_paths() {
     return result;
 }
 
-void verify_catalog(std::weak_ptr<JMapInfo::DataCompat>& last_map) {
+void verify_catalog(std::weak_ptr<const void>& last_map) {
     auto* loader = SingletonHolder<FileLoader>::get();
     auto* system = SingletonHolder<GameSystem>::get();
     auto* parser = system->mSceneController->mScenarioParser;
@@ -81,7 +81,7 @@ void verify_catalog(std::weak_ptr<JMapInfo::DataCompat>& last_map) {
         for (s32 zone = 0; zone < data->getZoneNum(); ++zone)
             require(data->getZoneName(zone), "every authored zone retains its readable original name");
         zones += data->getZoneNum();
-        last_map = data->mZoneList->mData;
+        last_map = data->mZoneList->mResourceOwner;
     }
     const auto* gateway = parser->getScenarioData("heavensdoorgalaxy");
     require(gateway && gateway == parser->getScenarioData("HeavensDoorGalaxy"),
@@ -145,7 +145,7 @@ void verify_native_name_and_failed_constructor_lifetimes() {
 }
 
 int main() {
-    std::weak_ptr<JMapInfo::DataCompat> last_map;
+    std::weak_ptr<const void> last_map;
     const int result = smgpc::test::run_stage_resource_process("original-scenario-catalog", [&] {
         verify_catalog(last_map);
         verify_native_name_and_failed_constructor_lifetimes();

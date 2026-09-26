@@ -1,5 +1,6 @@
 #include <aurora/exception.hpp>
 #include "resource/JMapResource.hpp"
+#include "resource/BcsvTable.hpp"
 #include <aurora/allocation.hpp>
 #include <algorithm>
 #include <map>
@@ -7,16 +8,31 @@
 #include <stdexcept>
 #include <vector>
 namespace {
+    void validate_table(std::span<const std::uint8_t> bytes) {
+        // Validate bounded host input once; original Game readers borrow the
+        // unchanged resource, including its strings, without a decoded facade.
+        const auto table = smgpc::resource::BcsvTable::from_bytes(bytes);
+        for (const auto& field : table.fields()) {
+            if (field.type != smgpc::resource::BcsvFieldType::InlineString &&
+                field.type != smgpc::resource::BcsvFieldType::StringOffset) continue;
+            for (std::size_t row = 0; row < table.entry_count(); ++row)
+                (void)table.get_string(row, field.hash);
+        }
+    }
     struct DeferredJMap {
         std::shared_ptr<const void> source_owner;
         std::function<std::shared_ptr<const void>()> retain_attachment;
         std::span<const std::uint8_t> bytes;
-        std::once_flag decode_once;
+        std::once_flag validate_once;
         std::shared_ptr<const JMapInfo> table;
 
         std::shared_ptr<const JMapInfo> load() {
-            std::call_once(decode_once, [&] {
-                table = std::make_shared<JMapInfo>(JMapInfo::from_bcsv(bytes));
+            std::call_once(validate_once, [&] {
+                validate_table(bytes);
+                auto info = std::make_shared<JMapInfo>();
+                info->mData = reinterpret_cast<const JMapData*>(bytes.data());
+                info->mResourceOwner = source_owner;
+                table = std::move(info);
             });
             return table;
         }
@@ -40,17 +56,22 @@ namespace {
 }  // namespace
 namespace smgpc::resource {
     struct JMapResource::Storage {
-        std::vector<std::uint8_t> bytes;
+        std::shared_ptr<const std::vector<std::uint8_t>> bytes;
         std::shared_ptr<const JMapInfo> table;
         std::uint64_t generation = 0;
         explicit Storage(std::span<const std::uint8_t> source)
-            : bytes(source.begin(), source.end()), table(std::make_shared<JMapInfo>(JMapInfo::from_bcsv(bytes))) {
+            : bytes(std::make_shared<const std::vector<std::uint8_t>>(source.begin(), source.end())) {
+            validate_table(*bytes);
+            auto info = std::make_shared<JMapInfo>();
+            info->mData = reinterpret_cast<const JMapData*>(bytes->data());
+            info->mResourceOwner = bytes;
+            table = std::move(info);
         }
         ~Storage() {
             aurora::allocation::HostAllocationScope host;
             auto &owners = registry();
             const std::lock_guard lock(owners.mutex);
-            const auto entry = owners.tables.find(bytes.data());
+            const auto entry = owners.tables.find(bytes->data());
             if (entry != owners.tables.end() && entry->second.generation == generation)
                 owners.tables.erase(entry);
         }
@@ -123,11 +144,11 @@ namespace smgpc::resource {
         _storage->generation = owners.next_generation++;
         if (_storage->generation == 0)
             aurora::throw_host_exception<std::overflow_error>("JMap registration identity exhausted");
-        owners.tables.emplace(_storage->bytes.data(), Registry::Entry{_storage, _storage->table, _storage->generation, 1});
+        owners.tables.emplace(_storage->bytes->data(), Registry::Entry{_storage, _storage->table, _storage->generation, 1});
     }
     JMapSourceRegistration JMapResource::register_source(std::span<const std::uint8_t> alias) {
         aurora::allocation::HostAllocationScope host;
-        if (alias.size() != _storage->bytes.size() || !std::equal(alias.begin(), alias.end(), _storage->bytes.begin()))
+        if (alias.size() != _storage->bytes->size() || !std::equal(alias.begin(), alias.end(), _storage->bytes->begin()))
             aurora::throw_host_exception<std::invalid_argument>("JMap alias does not match the complete retained source");
         auto &owners = registry();
         const std::lock_guard lock(owners.mutex);
@@ -154,10 +175,16 @@ namespace smgpc::resource {
         }
     }
     const void *JMapResource::data() const {
-        return _storage->bytes.data();
+        return _storage->bytes->data();
     }
     std::span<const std::uint8_t> JMapResource::bytes() const {
-        return _storage->bytes;
+        return *_storage->bytes;
+    }
+    JMapInfo make_jmap_info(std::span<const std::uint8_t> bytes) {
+        const JMapResource resource(bytes);
+        JMapInfo info;
+        info.attach(resource.data());
+        return info;
     }
     std::shared_ptr<const JMapInfo> find_jmap_resource(const void *data) {
         aurora::allocation::HostAllocationScope host;
@@ -179,7 +206,7 @@ namespace smgpc::resource {
         if (!deferred) return nullptr;
         // Fixed archives own raw bytes through their original FileEntry and
         // heap. Each attachment takes a distinct retirement lease before any
-        // decode; registration alone must not make its archive self-borrowed.
+        // validation; registration alone must not make its archive self-borrowed.
         struct Attachment {
             std::shared_ptr<DeferredJMap> source;
             std::shared_ptr<const void> lifetime;

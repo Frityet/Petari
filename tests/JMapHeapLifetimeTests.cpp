@@ -1,3 +1,4 @@
+#include "resource/JMapResource.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "NativeHeapFixture.hpp"
@@ -100,17 +101,17 @@ namespace {
     void test_range_tail_and_explicit_delete() {
         Heap heap;
         const auto bytes = fixture();
-        std::weak_ptr<JMapInfo::DataCompat> head_data, tail_data, deleted_data;
+        std::weak_ptr<const void> head_data, tail_data, deleted_data;
         JMapInfo* head;
         {
             const JKRHeap::CurrentHeapScope original(*(heap.domain));
             const aurora::allocation::ClientAllocationScope originalRouting({true, true});
-            head = new JMapInfo(JMapInfo::from_bcsv(bytes));
-            auto* removed = new JMapInfo(JMapInfo::from_bcsv(bytes));
+            head = new JMapInfo(smgpc::resource::make_jmap_info(bytes));
+            auto* removed = new JMapInfo(smgpc::resource::make_jmap_info(bytes));
             void* tail_storage = heap.get().alloc(sizeof(JMapInfo), -32);
             require(tail_storage, "actual original tail allocation succeeds");
-            auto* tail = new (tail_storage) JMapInfo(JMapInfo::from_bcsv(bytes));
-            head_data = head->mData; tail_data = tail->mData; deleted_data = removed->mData;
+            auto* tail = new (tail_storage) JMapInfo(smgpc::resource::make_jmap_info(bytes));
+            head_data = head->mResourceOwner; tail_data = tail->mResourceOwner; deleted_data = removed->mResourceOwner;
             require(heap.count() == 3, "three heap parsers have three independent disposer links");
             delete removed;
             require(deleted_data.expired() && heap.count() == 2, "explicit parser delete releases ownership and unlinks");
@@ -127,9 +128,9 @@ namespace {
     void test_copy_move_registration_and_metadata() {
         Heap heap;
         const auto bytes = fixture();
-        JMapInfo host = JMapInfo::from_bcsv(bytes);
-        host.setName(name); host.setPlacedZoneId(23); host.setValue(0, "value", 9.5F);
-        const auto data = host.mData;
+        JMapInfo host = smgpc::resource::make_jmap_info(bytes);
+        host.setName(name);
+        const auto data = host.mResourceOwner;
         JMapInfo survivor;
         {
             const JKRHeap::CurrentHeapScope original(*(heap.domain));
@@ -138,13 +139,13 @@ namespace {
             auto* moved = new JMapInfo(std::move(*copied));
             require(heap.count() == 2 && registered(heap.get(), copied) && registered(heap.get(), moved),
                     "JMap copy/move register the new storage instead of transferring the source link");
-            require(moved->mData == data && moved->getPlacedZoneId() == 23 && *moved == host,
-                    "JMap copy/move retain table identity and placement metadata");
+            require(moved->mResourceOwner == data && moved->getName() == name && *moved == host,
+                    "JMap copy/move retain table identity and original borrowed name");
             *copied = *moved;
             survivor = std::move(*moved);
             require(heap.count() == 2 && !registered(heap.get(), &survivor),
                     "JMap assignment preserves heap destinations and never registers a host destination");
-            require(survivor.mData == data && std::string_view(survivor.getName()) == name,
+            require(survivor.mResourceOwner == data && std::string_view(survivor.getName()) == name,
                     "JMap assignment preserves shared data and copied name");
             *copied = *copied;
             *moved = std::move(*moved);
@@ -155,75 +156,53 @@ namespace {
         require(heap.count() == 0 && data.use_count() == 3,
                 "bulk retirement releases exactly the heap parser's remaining shared reference");
         float value = 0;
-        require(survivor.getValue(0, "value", &value) && value == 9.5F,
-                "moved float-override map survives source heap retirement");
+        require(survivor.getValue(0, "value", &value) && value == 1.25F,
+                "the original float resource survives source heap retirement");
     }
 
-    void test_host_metadata_and_nested_owners() {
+    void test_host_resource_and_borrowed_strings() {
         Heap heap;
         const auto bytes = fixture();
-        const auto table = smgpc::resource::BcsvTable::from_bytes(bytes);
         JMapInfo survivor;
-        std::weak_ptr<JMapInfo::DataCompat> parent_data, child_data, path_data, point_data;
+        std::weak_ptr<const void> resource;
+        const char* borrowed = nullptr;
         {
-            const JKRHeap::CurrentHeapScope original(*(heap.domain));
-            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
-            const auto before_table_copy = heap.get().getFreeSize();
-            JMapInfo table_copy(table);
-            require(heap.get().getFreeSize() == before_table_copy,
-                    "BCSV parameter and retained table copies allocate on host, before any Game heap consumption");
-            auto* parent = new JMapInfo(JMapInfo::from_bcsv(bytes));
-            const auto before_metadata = heap.get().getFreeSize();
-            JMapInfo child = JMapInfo::from_bcsv(bytes);
-            JMapInfo path = JMapInfo::from_bcsv(bytes);
-            JMapInfo point = JMapInfo::from_bcsv(bytes);
-            parent->setName(name);
-            parent->setPlacedZoneId(42);
-            parent->setValue(0, "value", 7.25F);
-            parent->setChildObjInfo(child);
-            parent->setRailInfo(0, path, point, 0);
-            const char* cached = nullptr;
-            require(parent->getValue(0, "name", &cached), "actual string cache is populated");
-            JMapInfo copied(*parent);
-            survivor = copied;
-            require(heap.get().getFreeSize() == before_metadata,
-                    "names, caches, map copies and nested shared owners never consume the original heap");
-            require(heap.count() == 1 && registered(heap.get(), parent),
-                    "nested shared JMap objects must not be independently disposed by the original heap");
-            require(JKRHeap::findFromRoot(const_cast<char*>(parent->getName())) == nullptr &&
-                    JKRHeap::findFromRoot(const_cast<char*>(cached)) == nullptr &&
-                    JKRHeap::findFromRoot(const_cast<JMapInfo*>(parent->getChildObjInfo())) == nullptr,
-                    "actual name, cache and shared child storage have host provenance");
-            parent_data = parent->mData; child_data = child.mData; path_data = path.mData; point_data = point.mData;
+            const JKRHeap::CurrentHeapScope original(*heap.domain);
+            const aurora::allocation::ClientAllocationScope routing({true, true});
+            auto* parser = new JMapInfo(smgpc::resource::make_jmap_info(bytes));
+            const auto before_reads = heap.get().getFreeSize();
+            parser->setName(name);
+            require(parser->getName() == name, "the original name setter borrows its caller's string");
+            require(parser->getValue(0, "name", &borrowed) &&
+                        borrowed == reinterpret_cast<const char*>(parser->getData()) + 48,
+                    "original string lookup returns the actual string-table address");
+            survivor = *parser;
+            resource = parser->mResourceOwner;
+            require(heap.get().getFreeSize() == before_reads && heap.count() == 1,
+                    "original getters and parser copies require no additional Game heap storage");
+            require(JKRHeap::findFromRoot(const_cast<char*>(borrowed)) == nullptr,
+                    "the bounded synthetic resource has host allocation provenance");
         }
         heap.get().freeAll();
-        require(heap.count() == 0 && parent_data.use_count() == 1,
-                "freeAll destroys the original parser while preserving the host copy");
         heap.domain.reset();
         heap.runtime.reset();
-        const JMapInfo *path = nullptr, *point = nullptr;
-        s32 path_index = -1;
-        require(survivor.getChildObjInfo() && survivor.getRailInfo(0, &path, &point, &path_index) && path_index == 0,
-                "host child and rail ownership survive the actual source heap's destruction");
-        const char* cached = nullptr;
-        float value = 0;
-        require(path->getValue(0, "name", &cached) && std::string_view(cached) == name && point->getNumEntries() == 1 &&
-                    survivor.getValue(0, "value", &value) && value == 7.25F && survivor.getPlacedZoneId() == 42,
-                "nested rows, names and overrides retain their values after heap retirement");
+        const char* again = nullptr;
+        require(resource.use_count() == 1 && survivor.getValue(0, "name", &again) &&
+                    again == borrowed && std::string_view(again) == name,
+                "a copied original reader retains bytes and string addresses after heap retirement");
         survivor = JMapInfo();
-        require(parent_data.expired() && child_data.expired() && path_data.expired() && point_data.expired(),
-                "releasing the last host parser retires every nested shared owner exactly once");
+        require(resource.expired(), "the last original reader releases its host resource borrow");
     }
 
     void test_domain_retirement_releases_parser() {
         Heap heap;
         const auto bytes = fixture();
-        std::weak_ptr<JMapInfo::DataCompat> data;
+        std::weak_ptr<const void> data;
         {
             const JKRHeap::CurrentHeapScope original(*(heap.domain));
             const aurora::allocation::ClientAllocationScope originalRouting({true, true});
-            auto* info = new JMapInfo(JMapInfo::from_bcsv(bytes));
-            data = info->mData;
+            auto* info = new JMapInfo(smgpc::resource::make_jmap_info(bytes));
+            data = info->mResourceOwner;
             require(heap.count() == 1 && data.use_count() == 1, "only the actual heap parser owns its native metadata");
         }
         heap.domain.reset();
@@ -235,13 +214,13 @@ namespace {
         const auto bytes = fixture();
         JMapInfo survivor;
         JMapInfo* info;
-        std::weak_ptr<JMapInfo::DataCompat> data;
+        std::weak_ptr<const void> data;
         {
             const JKRHeap::CurrentHeapScope original(*heap.domain);
             const aurora::allocation::ClientAllocationScope routing({true, true});
-            info = new JMapInfo(JMapInfo::from_bcsv(bytes));
+            info = new JMapInfo(smgpc::resource::make_jmap_info(bytes));
             survivor = *info;
-            data = info->mData;
+            data = info->mResourceOwner;
         }
         const auto used = heap.get().getFreeSize();
         heap.runtime->retireNativeResourceReferences();
@@ -264,7 +243,7 @@ int main() {
         std::pair{"reusable disposer copy/move identity", test_reusable_identity_base},
         std::pair{"JMap range, tail and explicit deletion", test_range_tail_and_explicit_delete},
         std::pair{"JMap copy/move registration", test_copy_move_registration_and_metadata},
-        std::pair{"host metadata and nested ownership", test_host_metadata_and_nested_owners},
+        std::pair{"host resource and original borrowed strings", test_host_resource_and_borrowed_strings},
         std::pair{"actual domain retirement", test_domain_retirement_releases_parser},
         std::pair{"native references before arena retirement", test_resource_retirement_before_arena_release},
     };

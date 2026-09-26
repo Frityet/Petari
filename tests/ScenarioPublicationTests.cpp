@@ -17,7 +17,7 @@ void require(bool pass, const char* message) { if (!pass) throw std::runtime_err
 int main(int argc, char** argv) {
     return smgpc::test::run_stage_resource_generations(argc, argv, "scenario-publication", 2, [](unsigned cycle) {
         const auto baseline = NameObj::snapshotNativeObjects().size();
-        std::weak_ptr<JMapInfo::DataCompat> map;
+        std::weak_ptr<const void> map;
         std::weak_ptr<const void> archive_lifetime;
         const auto label = std::string("scenario-publication-") + std::to_string(cycle);
         const auto result = smgpc::test::run_stage_resource_process(label.c_str(), [&] {
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
             }
             require(loader->mArchiveHolder->mEntries.size() == archive_count,
                     "repeat scenario requests do not create a second mount registry or duplicate entries");
-            map = gateway->mZoneList->mData;
+            map = gateway->mZoneList->mResourceOwner;
             std::cout << "PASS actual process publication cycle=" << cycle
                       << " galaxies=" << parser->mScenarioData.size() << " gateway zones=" << gateway->getZoneNum() << '\n';
         });

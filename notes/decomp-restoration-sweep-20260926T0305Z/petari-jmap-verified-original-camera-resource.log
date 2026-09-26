@@ -1,0 +1,8 @@
+[pass] borrowed parameter strings
+[pass] original ID formatting/temporary storage
+[pass] ID order/copy/scene ownership
+[pass] original binary fields/vector/iteration
+[pass] original reader resource/heap lifetime
+[retail] HeavensDoorGalaxy: 42 rows, 798 scalar/string fields, 210 vectors, version 196630
+[retail] EggStarGalaxy: 111 rows, 2109 scalar/string fields, 555 vectors, version 196630
+[pass] actual disc camera catalogs

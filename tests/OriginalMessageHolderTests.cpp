@@ -283,12 +283,12 @@ int main() {
         rejects([] { (void)MR::getLayoutMessageDirect("Missing"); }, "layout utility requires the original holder");
         rejects([] { (void)MR::isExistGameMessage("Missing"); }, "existence queries require the original holder");
         rejects([] { (void)MessageSystem::getSceneMessageData(); }, "direct original access requires an actual holder");
-        std::weak_ptr<JMapInfo::DataCompat> metadata;
+        std::weak_ptr<const void> metadata;
         const int result = smgpc::test::run_stage_resource_process("original-message-holder", [&] {
         auto& process = *smgpc::resource::GameResourceRuntime::active();
         auto& loader = *SingletonHolder<FileLoader>::get();
         smgpc::runtime::DvdFileSystemService dvd("/");
-        metadata = smgpc::runtime::current_message_holder()->mGameMessageData->mIDTable->mData;
+        metadata = smgpc::runtime::current_message_holder()->mGameMessageData->mIDTable->mResourceOwner;
         const auto font_path = dvd.find_layout_archive("Font");
         require(font_path.has_value(), "the DVD catalog contains the current fixture's font archive");
         auto font_archive = smgpc::resource::RarcArchive::from_bytes(dvd.read_file(font_path->generic_string()));

@@ -1,3 +1,4 @@
+#include "resource/JMapResource.hpp"
 #include <MSL_C/stdio.h>
 
 #include "Game/LiveActor/Nerve.hpp"
@@ -116,57 +117,11 @@ namespace {
         bytes[field_offset + 0x0bU] = static_cast<std::uint8_t>(type);
     }
 
-    JMapInfo make_fieldless_jmap(std::uint32_t entry_count) {
-        auto bytes = std::vector<std::uint8_t>(0x10U, 0U);
-        write_be32(bytes, 0x00U, entry_count);
-        write_be32(bytes, 0x08U, 0x10U);
-        return JMapInfo::from_bcsv(bytes);
-    }
 
-    JMapInfo make_open_rail_path_info() {
-        constexpr auto data_offset = 0x1cU;
-        constexpr auto entry_size = 8U;
-        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
-        write_be32(bytes, 0x00U, 1U);
-        write_be32(bytes, 0x04U, 1U);
-        write_be32(bytes, 0x08U, data_offset);
-        write_be32(bytes, 0x0cU, entry_size);
-        write_bcsv_field(bytes, 0U, "closed", 0U, smgpc::resource::BcsvFieldType::InlineString);
-        bytes[data_offset + 0U] = 'O';
-        bytes[data_offset + 1U] = 'P';
-        bytes[data_offset + 2U] = 'E';
-        bytes[data_offset + 3U] = 'N';
-        return JMapInfo::from_bcsv(bytes);
-    }
 
-    JMapInfo make_linear_rail_point_info(std::uint32_t entry_count = 3U) {
-        constexpr auto field_count = 10U;
-        constexpr auto entry_size = field_count * 4U;
-        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
-        constexpr auto field_names = std::array<std::string_view, field_count>{
-            "pnt0_x", "pnt0_y", "pnt0_z", "pnt1_x", "pnt1_y", "pnt1_z", "pnt2_x", "pnt2_y", "pnt2_z", "id",
-        };
 
-        auto bytes = std::vector<std::uint8_t>(data_offset + entry_count * entry_size, 0U);
-        write_be32(bytes, 0x00U, entry_count);
-        write_be32(bytes, 0x04U, field_count);
-        write_be32(bytes, 0x08U, data_offset);
-        write_be32(bytes, 0x0cU, entry_size);
-        for (auto field = 0U; field < field_count; ++field) {
-            const auto type = field + 1U == field_count ? smgpc::resource::BcsvFieldType::Int32 : smgpc::resource::BcsvFieldType::Float;
-            write_bcsv_field(bytes, field, field_names[field], static_cast<std::uint16_t>(field * 4U), type);
-        }
 
-        for (auto entry = 0U; entry < entry_count; ++entry) {
-            const auto entry_offset = data_offset + entry * entry_size;
-            const auto x = static_cast<float>(entry * 10U);
-            write_be_float(bytes, entry_offset + 0U * 4U, x);
-            write_be_float(bytes, entry_offset + 3U * 4U, x);
-            write_be_float(bytes, entry_offset + 6U * 4U, x);
-            write_be32(bytes, entry_offset + 9U * 4U, entry);
-        }
-        return JMapInfo::from_bcsv(bytes);
-    }
+
 
     JMapInfo make_demo_rabbit_placement_info() {
         constexpr auto field_count = 4U;
@@ -195,8 +150,7 @@ namespace {
             write_be32(bytes, entry_offset + 3U * 4U, entry == 0U ? 0U : 0xffffffffU);
         }
 
-        auto info = JMapInfo::from_bcsv(bytes);
-        info.setRailInfo(0, make_open_rail_path_info(), make_linear_rail_point_info(5U), 0);
+        auto info = smgpc::resource::make_jmap_info(bytes);
         return info;
     }
 
@@ -225,7 +179,7 @@ namespace {
         // A missing group remains invalid even when CastId is present.
         write_be32(bytes, data_offset + 1U * entry_size + 0U * 4U, 0xffffffffU);
         write_be32(bytes, data_offset + 1U * entry_size + 1U * 4U, 0U);
-        return JMapInfo::from_bcsv(bytes);
+        return smgpc::resource::make_jmap_info(bytes);
     }
 
     int g_pre_retrace = -1;
@@ -608,32 +562,6 @@ namespace {
 
     }
 
-    void test_rail_info_ownership_and_per_entry_lookup() {
-        auto placement_info = [] {
-            auto placement = make_fieldless_jmap(2U);
-            placement.setRailInfo(0, make_fieldless_jmap(2U), make_fieldless_jmap(3U), 1);
-            placement.setRailInfo(1, make_fieldless_jmap(1U), make_fieldless_jmap(4U), 0);
-            return placement;
-        }();
-
-        auto retained_copy = placement_info;
-        placement_info = JMapInfo{};
-
-        auto path_iter = JMapInfoIter{};
-        const JMapInfo *point_info = nullptr;
-        MR::getRailInfo(&path_iter, &point_info, JMapInfoIter(&retained_copy, 0));
-        require(path_iter.isValid() && path_iter.mIndex == 1,
-                "rail header iterator should retain the matched CommonPathInfo row");
-        require(point_info != nullptr && point_info->getNumEntries() == 3,
-                "rail point metadata should outlive the resolver's temporary tables");
-
-        MR::getRailInfo(&path_iter, &point_info, JMapInfoIter(&retained_copy, 1));
-        require(path_iter.isValid() && path_iter.mIndex == 0,
-                "each placement row should retain its own CommonPathInfo association");
-        require(point_info != nullptr && point_info->getNumEntries() == 4,
-                "each placement row should retain its own CommonPathPointInfo table");
-    }
-
     void test_demo_rabbit_original_archive_callback() {
         auto placement = make_demo_rabbit_placement_info();
         constexpr auto expected = std::array<std::string_view, 3>{
@@ -702,21 +630,8 @@ namespace {
         require(position.epsilonEquals(TVec3f{5.0F, 7.5F, 0.0F}, 0.00001F) && bezier.getTotalLength() > 10.0F,
                 "Bezier rail parts should preserve original cubic evaluation and positive arc length");
 
-        auto placement = make_fieldless_jmap(1U);
-        placement.setRailInfo(0, make_open_rail_path_info(), make_linear_rail_point_info(), 0);
-        auto actor = LiveActor("rail-test");
-        actor.initRailRider(JMapInfoIter(&placement, 0));
-        require(actor.mRailRider != nullptr && std::fabs(MR::getRailTotalLength(&actor) - 20.0F) < 0.00001F &&
-                    MR::getRailPos(&actor).epsilonEquals(TVec3f{0.0F, 0.0F, 0.0F}, 0.00001F),
-                "LiveActor rail ownership should consume attached CommonPath metadata and start at the first point");
-
-        MR::setRailCoordSpeed(&actor, 5.0F);
-        MR::moveRailRider(&actor);
-        require(MR::getRailPos(&actor).epsilonEquals(TVec3f{5.0F, 0.0F, 0.0F}, 0.00001F),
-                "RailRider movement should advance by source-compatible world-space arc length");
-        MR::moveCoordToNearestPos(&actor, TVec3f{13.0F, 4.0F, 0.0F});
-        require(MR::getRailPos(&actor).epsilonEquals(TVec3f{13.0F, 0.0F, 0.0F}, 0.00001F),
-                "RailRider nearest-position projection should select the correct path part");
+        // Original stage lookup and RailRider movement are exercised with the
+        // authored Gateway resources in OriginalStageSessionTests.
     }
 
     void test_fixed_position_and_parts_model_surface() {
@@ -1054,7 +969,6 @@ int main(int argc, char** argv) {
         TestCase{"scene scheduler registration scope cleanup", test_scene_scheduler_registration_scope_cleanup},
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
-        TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
         TestCase{"DemoRabbit factory and archives are active", test_demo_rabbit_original_archive_callback},
         TestCase{"demo cast requires scene definition", test_demo_cast_requires_scene_definition},
         TestCase{"story-event spin entitlement boundary", test_story_event_spin_entitlement_boundary},

@@ -126,7 +126,6 @@ struct GroupBatch {
     ~GroupBatch() { clear(); }
     void clear() {
         for (auto* group : holder.mGroups) {
-            for (auto* info : group->mInfos) delete info;
             delete group;
         }
         holder.mGroups.clear();
@@ -139,7 +138,7 @@ struct Backing {
     std::weak_ptr<JKRHeap> root;
     std::weak_ptr<JKRHeap> scene;
     std::weak_ptr<JKRHeap> metadata;
-    std::weak_ptr<JMapInfo::DataCompat> effects;
+    std::weak_ptr<const void> effects;
     std::weak_ptr<const void> source;
 };
 
@@ -175,8 +174,8 @@ void verify_authored(Backing& backing) {
                     JKRHeap::findFromRoot(particles->mResourceMgr) == process_heap &&
                     JKRHeap::findFromRoot(map) == process_heap,
                 "the actual particle holder, resource manager and metadata table belong to their original process heap");
-        backing.effects = map->mData;
-        backing.source = smgpc::resource::find_jmap_resource(source);
+        backing.effects = map->mResourceOwner;
+        backing.source = archive->retainSource();
         require(!backing.effects.expired() && !backing.source.expired(),
                 "weak observers witness the real process metadata and retained archive source");
         require(raw.entry_count() > 0, "the real auto-effect table is populated");

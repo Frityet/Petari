@@ -1,0 +1,16 @@
+PASS original field rules and binary search
+PASS raw source identity and original row ranges
+PASS raw source original heap retirement
+PASS original memory-archive index fetch
+PASS fixed archive attachment retirement leases
+PASS attachment lease expiry and duplicate policy
+PASS borrowed name outlives local reader
+PASS attached reader retains released resource
+PASS rebind preserves other owner
+PASS concurrent shared readers
+PASS archive alias retention
+PASS archive alias validation
+PASS Game heap cache isolation
+PASS deferred archive lifetime
+PASS deferred archive validation
+PASS concurrent deferred archive readers

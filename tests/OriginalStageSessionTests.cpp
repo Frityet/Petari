@@ -9,9 +9,12 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/Scene/StageDataHolder.hpp"
+#include "Game/LiveActor/RailRider.hpp"
 
 #include <algorithm>
 #include <cctype>
+#include <cmath>
 #include <cstdio>
 #include <memory>
 #include <stdexcept>
@@ -27,7 +30,7 @@ bool same_id(const JMapIdInfo& left, const JMapIdInfo& right) {
     return left._0 == right._0 && left.mZoneID == right.mZoneID;
 }
 
-void verify_original_session(std::weak_ptr<JMapInfo::DataCompat>& zone_lifetime) {
+void verify_original_session(std::weak_ptr<const void>& zone_lifetime) {
     auto* system = SingletonHolder<GameSystem>::get();
     auto* controller = system->mSceneController;
     auto* parser = ScenarioDataFunction::getScenarioDataParser();
@@ -43,7 +46,7 @@ void verify_original_session(std::weak_ptr<JMapInfo::DataCompat>& zone_lifetime)
     require(gateway && gateway->getZoneNum() == 7, "the authored Gateway catalog retains its seven ZoneList rows");
     const auto accessor = MR::makeCurrentGalaxyStatusAccessor();
     require(accessor.mScenarioData == gateway, "current galaxy queries use the actual scene controller's parser");
-    zone_lifetime = gateway->mZoneList->mData;
+    zone_lifetime = gateway->mZoneList->mResourceOwner;
     for (s32 zone = 0; zone < gateway->getZoneNum(); ++zone) {
         const char* name = gateway->getZoneName(zone);
         require(name && accessor.getZoneId(name) == zone &&
@@ -101,12 +104,43 @@ void verify_original_session(std::weak_ptr<JMapInfo::DataCompat>& zone_lifetime)
     }
     require(found_purple && MR::getCurrentScenarioNo() == 1 && !MR::isGalaxyAnyCometAppearInCurrentStage(),
             "querying actual Purple metadata never replaces the selected Gateway scenario or comet state");
+
+    unsigned rails = 0;
+    auto* stage = MR::getStageDataHolder();
+    for (int zone = 0; zone < gateway->getZoneNum(); ++zone) {
+        const auto* placed = stage->getStageDataHolderFromZoneId(zone);
+        if (!placed) continue;
+        for (const auto& table : placed->mPlacementObjs) {
+            for (int row = 0; row < table.getNumEntries(); ++row) {
+                s32 rail_id = -1;
+                if (!table.getValue(row, "CommonPath_ID", &rail_id) || rail_id < 0) continue;
+                const JMapInfoIter placement(&table, row);
+                const JMapInfo* points = nullptr;
+                JMapInfoIter path;
+                MR::getRailInfo(&path, &points, placement);
+                require(path.isValid() && points && points->getNumEntries() >= 2,
+                        "the original stage holder resolves authored placement rails and their point tables");
+                RailRider rider(placement);
+                require(rider.mBezierRail->mInfo == points && std::isfinite(rider.getTotalLength()) && rider.getTotalLength() > 0,
+                        "the original RailRider consumes the actual stage resource table");
+                const float speed = std::min(1.0F, rider.getTotalLength() / 4.0F);
+                rider.setSpeed(speed);
+                rider.move();
+                require(std::abs(rider.mCoord - speed) < 0.001F && std::isfinite(rider.mCurPos.x) &&
+                            std::isfinite(rider.mCurPos.y) && std::isfinite(rider.mCurPos.z),
+                        "original rail movement advances by world-space distance using the resource's float coordinates");
+                ++rails;
+            }
+        }
+    }
+    require(rails > 0, "the real Gateway fixture must exercise at least one authored placement rail");
+    std::fprintf(stderr, "[jmap-probe] Original stage lookup and RailRider movement passed for %u placements\n", rails);
 }
 }
 
 int main() try {
     const auto registered_before = NameObj::snapshotNativeObjects().size();
-    std::weak_ptr<JMapInfo::DataCompat> zone_lifetime;
+    std::weak_ptr<const void> zone_lifetime;
     const int result = smgpc::test::run_stage_resource_process("original-stage-session", [&] {
         verify_original_session(zone_lifetime);
     });

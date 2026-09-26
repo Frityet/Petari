@@ -1,0 +1,57 @@
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[original-process] GameSystem::init completed
+setupAramHeap 4000, 4000, e00000
+[original-process] Requesting authored stage HeavensDoorGalaxy scenario 1 through GameSequence
+[original-audio] DSP submitted_frames=76160 nonzero_samples=0
+[src/app/OriginalGameApplication.cpp:544][APP - INFO] Booting the original GameSystem
+[src/app/OriginalGameApplication.cpp:546][APP - INFO] Running the original GameSystem frame loop
+[ok] original tag skip/default writer dispatch, native parameter widths and actual font readers
+[ok] original MessageData native scalar/text/CP932 identity/flow boundary
+[ok] original talk nodes: messages=957 branches=542 events=92 terminals=291 history=1
+[ok] actual MessageHolder: system=6 game=1994
+[src/app/OriginalGameApplication.cpp:583][APP - INFO] Original GameSystem stopped after 120 completed frames
+[aurora:warning:aurora::gpu] Device lost: Device was destroyed.
+PASS original-message-holder: original process resources and normal teardown

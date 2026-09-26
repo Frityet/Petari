@@ -1,3 +1,4 @@
+#include "resource/JMapResource.hpp"
 #include "NativeHeapFixture.hpp"
 #include "app/Application.hpp"
 #include "app/OriginalGameApplication.hpp"
@@ -150,7 +151,7 @@ namespace {
         std::ranges::copy(gravity_type, bytes.begin() + data_offset + 16U);
         std::ranges::copy(power, bytes.begin() + data_offset + 48U);
         write_be32(bytes, data_offset + 76U, 1U);
-        return JMapInfo::from_bcsv(bytes);
+        return smgpc::resource::make_jmap_info(bytes);
     }
 
     class ConstantGravity final : public PlanetGravity {

@@ -20,7 +20,7 @@ namespace {
 constexpr const char* archive_path = "/ParticleData/Effect.arc";
 struct Backing {
     std::weak_ptr<const smgpc::resource::JpcResource> jpc;
-    std::weak_ptr<JMapInfo::DataCompat> names, effects;
+    std::weak_ptr<const void> names, effects;
 };
 void verify_authored(Backing& backing) {
     auto* system = SingletonHolder<GameSystem>::get();
@@ -64,8 +64,8 @@ void verify_authored(Backing& backing) {
     auto* archive = MR::receiveArchive(archive_path);
     assert(archive && MR::mountArchive(archive_path, nullptr) == archive);
     backing.jpc = smgpc::resource::resolve_jpc_source(archive->getResource("Particles.jpc"));
-    backing.names = holder.mParticleNames->mData;
-    backing.effects = holder.mAutoEffectList->mData;
+    backing.names = holder.mParticleNames->mResourceOwner;
+    backing.effects = holder.mAutoEffectList->mResourceOwner;
     assert(!backing.jpc.expired() && !backing.names.expired() && !backing.effects.expired());
     std::fprintf(stderr, "PASS resources=3327 textures=225 names=3327 auto_effects=2591 groups=612 original_facades=pass\n");
 }

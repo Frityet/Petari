@@ -47,8 +47,8 @@ struct Field {
 constexpr std::array fields{
     Field{"version", 0, BcsvFieldType::UInt32},
     Field{"num1", 4, BcsvFieldType::Int32},
-    Field{"short", 8, BcsvFieldType::Int16},
-    Field{"byte", 10, BcsvFieldType::Int8},
+    Field{"short", 8, BcsvFieldType::Int16, 0xffff},
+    Field{"byte", 10, BcsvFieldType::Int8, 0xff},
     Field{"packed", 12, BcsvFieldType::UInt32, 0xf00, 8},
     Field{"dist", 16, BcsvFieldType::Float},
     Field{"axis.X", 20, BcsvFieldType::Float},
@@ -183,7 +183,11 @@ void test_binary_fields_and_atomic_vector() {
     require(reader.getValueInt("num1", &value) && value == -3, "signed 32-bit camera parameter decodes exactly");
     require(reader.getValueInt("short", &value) && value == -32000, "signed short camera field sign extends");
     require(reader.getValueInt("byte", &value) && value == -7, "signed byte camera field sign extends");
-    require(reader.getValueInt("packed", &value) && value == 10, "packed integer applies authored mask and shift");
+    require(!reader.getValueInt("packed", &value) && value == -7,
+            "the original signed getter rejects a packed unsigned field without changing the output");
+    u32 packed = 0;
+    require(reader.mMapInfo.getValue(0, "packed", &packed) && packed == 10,
+            "the original unsigned getter applies the authored mask and shift");
     f32 distance = 0;
     require(reader.getValueFloat("dist", &distance) && distance == 25.5F, "camera float decodes big-endian bytes");
     TVec3f axis(0.F, 0.F, 0.F);
@@ -208,9 +212,11 @@ void test_binary_fields_and_atomic_vector() {
     reader.nextToChunk();
     require(!reader.hasMoreChunk() && reader.mMapIter.mIndex == 2, "reader reaches the original end sentinel");
     reader.nextToChunk();
-    require(reader.mMapIter.mIndex == 2 && !reader.getValueInt("num1", &value),
-            "advancing an invalid end iterator neither runs away nor exposes another row");
-    JMapResource empty(fixture(0));
+    require(reader.mMapIter.mIndex == 2 && !reader.hasMoreChunk(),
+            "advancing the original end iterator leaves it at the end sentinel");
+    std::array<u8, 16> empty_bytes{};
+    empty_bytes[11] = 16;
+    JMapResource empty(empty_bytes);
     DotCamReaderInBin empty_reader(empty.data());
     require(empty_reader.getVersion() == 0 && !empty_reader.hasMoreChunk(), "empty authored table has no version row or chunks");
 }
@@ -224,7 +230,7 @@ void test_reader_resource_and_heap_lifetime() {
     registration.emplace(register_jmap_source(*bytes, bytes));
     DotCamReaderInBin* reader;
     CameraParamString borrowed;
-    std::weak_ptr<JMapInfo::DataCompat> data;
+    std::weak_ptr<const void> data;
     {
         const JKRHeap::CurrentHeapScope game(*(domain));
         const aurora::allocation::ClientAllocationScope gameRouting({true, true});
@@ -233,7 +239,7 @@ void test_reader_resource_and_heap_lifetime() {
         const char* name = nullptr;
         require(reader->getValueString("id", &name), "original heap reader reads its retained camera name");
         borrowed.setCharPtr(name);
-        data = reader->mMapInfo.mData;
+        data = reader->mMapInfo.mResourceOwner;
         require(JKRHeap::findFromRoot(const_cast<char*>(name)) == nullptr,
                 "native decoded string cache escapes Game allocation routing");
     }

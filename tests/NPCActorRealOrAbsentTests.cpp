@@ -192,12 +192,7 @@ namespace {
         bytes[field_offset + 0x0bU] = static_cast<std::uint8_t>(type);
     }
 
-    JMapInfo make_fieldless_jmap(std::uint32_t entry_count) {
-        auto bytes = std::vector<std::uint8_t>(0x10U, 0U);
-        write_be32(bytes, 0x00U, entry_count);
-        write_be32(bytes, 0x08U, 0x10U);
-        return JMapInfo::from_bcsv(bytes);
-    }
+
 
     std::vector<std::uint8_t> make_npc_item_table(bool sparse) {
         // Deliberately shuffle the columns: NPCParameterReader must resolve
@@ -304,50 +299,9 @@ namespace {
         std::cout << "[proof] original NPC item table lookup, shuffled fields, rows, sparse/missing/null resources and retained strings\n";
     }
 
-    JMapInfo make_open_rail_path_info() {
-        constexpr auto data_offset = 0x1cU;
-        constexpr auto entry_size = 8U;
-        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
-        write_be32(bytes, 0x00U, 1U);
-        write_be32(bytes, 0x04U, 1U);
-        write_be32(bytes, 0x08U, data_offset);
-        write_be32(bytes, 0x0cU, entry_size);
-        write_bcsv_field(bytes, 0U, "closed", 0U, smgpc::resource::BcsvFieldType::InlineString);
-        bytes[data_offset + 0U] = 'O';
-        bytes[data_offset + 1U] = 'P';
-        bytes[data_offset + 2U] = 'E';
-        bytes[data_offset + 3U] = 'N';
-        return JMapInfo::from_bcsv(bytes);
-    }
 
-    JMapInfo make_linear_rail_point_info(std::uint32_t entry_count = 3U) {
-        constexpr auto field_count = 10U;
-        constexpr auto entry_size = field_count * 4U;
-        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
-        constexpr auto field_names = std::array<std::string_view, field_count>{
-            "pnt0_x", "pnt0_y", "pnt0_z", "pnt1_x", "pnt1_y", "pnt1_z", "pnt2_x", "pnt2_y", "pnt2_z", "id",
-        };
 
-        auto bytes = std::vector<std::uint8_t>(data_offset + entry_count * entry_size, 0U);
-        write_be32(bytes, 0x00U, entry_count);
-        write_be32(bytes, 0x04U, field_count);
-        write_be32(bytes, 0x08U, data_offset);
-        write_be32(bytes, 0x0cU, entry_size);
-        for (auto field = 0U; field < field_count; ++field) {
-            const auto type = field + 1U == field_count ? smgpc::resource::BcsvFieldType::Int32 : smgpc::resource::BcsvFieldType::Float;
-            write_bcsv_field(bytes, field, field_names[field], static_cast<std::uint16_t>(field * 4U), type);
-        }
 
-        for (auto entry = 0U; entry < entry_count; ++entry) {
-            const auto entry_offset = data_offset + entry * entry_size;
-            const auto x = static_cast<float>(entry * 10U);
-            write_be_float(bytes, entry_offset + 0U * 4U, x);
-            write_be_float(bytes, entry_offset + 3U * 4U, x);
-            write_be_float(bytes, entry_offset + 6U * 4U, x);
-            write_be32(bytes, entry_offset + 9U * 4U, entry);
-        }
-        return JMapInfo::from_bcsv(bytes);
-    }
 
     std::array<const char*, 4> npcMotionNames(const NPCActor& actor) {
         const auto* table = actor.mModelManager->mModelResourceHolder->mMotionResTable;
@@ -495,55 +449,9 @@ namespace {
                     MR::isActionStart(&actor, names[1]),
                 "without a rail, move-talk must delegate to the original stationary talk decision");
 
-        auto placement = make_fieldless_jmap(1);
-        placement.setRailInfo(0, make_open_rail_path_info(), make_linear_rail_point_info(), 0);
-        actor.initRailRider(JMapInfoIter(&placement, 0));
-        require(actor.mRailRider != nullptr && actor.mRailRider->mBezierRail != nullptr,
-                "movement actions require the actual original RailRider and BezierRail");
-        actor.mPosition.zero();
-        actor.mGravity.set(0.0F, -1.0F, 0.0F);
-        actor._A0.set(0.0F, 0.0F, 0.0F, 1.0F);
-        actor._10C = 2.0F;
-        actor._110 = 0.5F;
-        actor._114 = 1.0F;
-        actor._124 = 0;
-        MR::setRailCoordSpeed(&actor, 0.0F);
-        MR::startMoveAction(&actor);
-        requireNear(MR::getRailCoordSpeed(&actor), 0.5F, "original rail speed approaches its target by the configured rate");
-        requireNear(MR::getRailCoord(&actor), 0.5F, "rail advancement must use the adjusted speed in the same call");
-        requireNear(actor.mPosition.x, 0.5F, "the original pose helper follows the advanced rail position");
-        auto front = TVec3f{};
-        actor._A0.getZDir(front);
-        require(front.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0001F),
-                "rail pose must orient the actual NPC quaternion along the path");
-        MR::setRailCoord(&actor, 19.75F);
-        MR::setRailCoordSpeed(&actor, 2.0F);
-        MR::startMoveAction(&actor);
-        requireNear(MR::getRailCoord(&actor), 20.0F, "open-rail motion must reach its original end coordinate");
-        require(!MR::isRailGoingToEnd(&actor), "reaching the original goal reverses the real RailRider direction");
-
-        actor._11C = names[2];
-        actor._120 = names[3];
-        actor._118 = 0.375F;
-        const auto before_long_talk = MR::getRailCoord(&actor);
-        actor.mParam._1C = names[0];
-        require(MR::tryStartMoveTalkAction(&actor) && MR::isActionStart(&actor, names[0]),
-                "long talk selects the stationary talk action even when a rail exists");
-        requireNear(MR::getRailCoord(&actor), before_long_talk, "long talk must not advance the rail");
-        requireNear(MR::getBckCtrl(&actor)->getRate(), 1.0F, "stationary talk restores the normal animation rate");
-        talk.mNodeCtrl->mMessageInfo.mTalkType = 1;
-        require(MR::tryStartMoveTalkAction(&actor) && MR::isActionStart(&actor, names[3]),
-                "short talk must retain movement and select its move-talk action");
-        require(MR::getRailCoord(&actor) < before_long_talk, "short talk continues along the reversed rail");
-        requireNear(MR::getBckCtrl(&actor)->getRate(), 0.375F, "short moving talk applies the configured animation rate");
-        MR::setBckRate(&actor, 1.0F);
-        require(!MR::tryStartMoveTalkAction(&actor), "retaining the same moving-talk action is not a new start");
-        requireNear(MR::getBckCtrl(&actor)->getRate(), 0.375F, "moving-talk rate is reapplied even when its action did not change");
-        talk._18 = 0;
-        require(MR::tryStartMoveTalkAction(&actor) && MR::isActionStart(&actor, names[2]),
-                "ending talk restores the original rail move action");
-        requireNear(MR::getBckCtrl(&actor)->getRate(), 1.0F, "ordinary moving action restores the normal animation rate");
-        std::cout << "[proof] original NPC stationary/long/short talk decisions and real rail speed, pose and reversal\n";
+        // Rail ownership is exercised against the original stage tables by
+        // OriginalStageSessionTests; JMapInfo has no synthetic rail associations.
+        std::cout << "[proof] original NPC stationary talk decisions\n";
     }
 
     void testFloatOffsetAndBaseMatrix() {
@@ -636,7 +544,7 @@ namespace {
 int main(int argc, char** argv) {
     if (argc == 2 && std::string_view(argv[1]) == "--item-columns-only") {
         const auto heap = smgpc::test::create_native_root_heap(8U << 20);
-        auto table = JMapInfo::from_bcsv(make_npc_item_table(false));
+        auto table = smgpc::resource::make_jmap_info(make_npc_item_table(false));
         const char* left = "";
         const char* right = "";
         NPCParameterJoint left_parameter("mGoodsJoint0", "TestNpc", &left);

@@ -9,6 +9,7 @@
 
 #include <array>
 #include <atomic>
+#include <bit>
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
@@ -226,19 +227,82 @@ namespace {
         auto reg1 = owner.register_source(first), reg2 = owner.register_source(second);
         JMapInfo a, b;
         require(a.attach(first.data()) && b.attach(second.data()), "both raw aliases attach");
-        require(a.mData == b.mData && !(a == b), "shared decoded cache does not conflate distinct raw tables");
+        require(a.mData != b.mData && !(a == b), "original table identity follows each distinct raw resource");
         require(a.getData() == first.data() && b.getData() == second.data(), "source addresses remain exact");
         require(a.getEntryData(0) == reinterpret_cast<const char*>(first.data() + 40), "entry starts at original data offset");
         require(a.getEntryData(1) == reinterpret_cast<const char*>(first.data() + 76) && a.getDataSize() == 76,
                 "original row stride and row-range extent exclude the string table");
         const char *av, *bv;
-        require(a.getValue(0, "name", &av) && b.getValue(0, "name", &bv) && av == bv, "raw aliases keep shared cached strings");
+        require(a.getValue(0, "name", &av) && b.getValue(0, "name", &bv) &&
+                    av == reinterpret_cast<const char*>(first.data() + 76) &&
+                    bv == reinterpret_cast<const char*>(second.data() + 76),
+                "original string readers borrow each resource's actual string table");
         JMapInfo copy(a), moved(std::move(copy));
         require(moved == a && moved.getData() == first.data() && copy.getData() == nullptr,
                 "copy and move preserve raw identity without retaining a moved-from alias");
-        JMapInfo owned = JMapInfo::from_bcsv(fixture());
+        JMapInfo owned = smgpc::resource::make_jmap_info(fixture());
         require(owned.getData() != first.data() && std::memcmp(owned.getData(), first.data(), first.size()) == 0,
                 "direct parser owns the complete original byte image");
+    }
+    void test_original_field_rules_and_binary_search() {
+        static_assert(sizeof(JMapItem) == 12 && sizeof(JMapData) == 16 && alignof(JMapData) == 1);
+        struct Field { const char* name; u8 type; u32 mask; u8 shift; u32 word; };
+        const std::array fields{
+            Field{"signed", 0, 0xffffffff, 0, 0xffff8001},
+            Field{"short", 4, 0xffff, 0, 0x80010000},
+            Field{"byte", 5, 0xff, 0, 0xfe000000},
+            Field{"unsigned", 3, 0x0000ff00, 8, 0x12345600},
+            Field{"float", 2, 0xffffffff, 0, std::bit_cast<u32>(-1.5F)},
+            Field{"packed", 0, 0xf0, 4, 0xab},
+            Field{"flag", 0, 0x80000000, 31, 0x80000000},
+        };
+        const u32 data_offset = 16 + fields.size() * 12;
+        std::vector<u8> bytes(data_offset + fields.size() * 4);
+        put32(bytes, 0, 1); put32(bytes, 4, fields.size());
+        put32(bytes, 8, data_offset); put32(bytes, 12, fields.size() * 4);
+        for (std::size_t i = 0; i < fields.size(); ++i) {
+            const auto header = 16 + i * 12;
+            put32(bytes, header, smgpc::resource::jmap_hash(fields[i].name));
+            put32(bytes, header + 4, fields[i].mask);
+            bytes[header + 9] = i * 4;
+            bytes[header + 10] = fields[i].shift;
+            bytes[header + 11] = fields[i].type;
+            put32(bytes, data_offset + i * 4, fields[i].word);
+        }
+        const auto info = smgpc::resource::make_jmap_info(bytes);
+        s32 signed_value = 0;
+        require(info.getValue(0, "signed", &signed_value) && signed_value == -32767,
+                "original signed words preserve their full two's-complement value");
+        require(info.getValue(0, "short", &signed_value) && signed_value == -32767 &&
+                    info.getValue(0, "byte", &signed_value) && signed_value == -2,
+                "original short and byte fields sign-extend only at full width");
+        signed_value = 123;
+        require(!info.getValue(0, "unsigned", &signed_value) && !info.getValue(0, "packed", &signed_value) && signed_value == 123,
+                "original signed getters reject unsigned or packed fields without changing the output");
+        u32 value = 0;
+        require(info.getValue(0, "unsigned", &value) && value == 0x56 &&
+                    info.getValue(0, "packed", &value) && value == 10,
+                "original unsigned getters apply the authored mask and shift");
+        float floating = 0;
+        bool flag = false;
+        require(info.getValue(0, "float", &floating) && floating == -1.5F && info.getValue(0, "flag", &flag) && flag,
+                "original float and bool getters read big-endian payloads directly");
+
+        const std::array<const char*, 5> names{"Alpha", "Duplicate", "Duplicate", "Duplicate", "Omega"};
+        bytes.assign(28 + names.size() * 4, 0);
+        put32(bytes, 0, names.size()); put32(bytes, 4, 1); put32(bytes, 8, 28); put32(bytes, 12, 4);
+        put32(bytes, 16, smgpc::resource::jmap_hash("name")); put32(bytes, 20, 0xffffffff); bytes[27] = 6;
+        for (std::size_t row = 0; row < names.size(); ++row) {
+            put32(bytes, 28 + row * 4, bytes.size() - 48);
+            bytes.insert(bytes.end(), names[row], names[row] + std::strlen(names[row]) + 1);
+        }
+        const auto sorted = smgpc::resource::make_jmap_info(bytes);
+        require(sorted.findElementBinary("name", "Duplicate").mIndex == 2 &&
+                    sorted.findElement("name", "Duplicate", 0).mIndex == 1,
+                "the restored binary search selects the original midpoint among duplicate keys");
+        require(sorted.findElementBinary("name", "Missing") == sorted.end() &&
+                    MR::findJMapInfoElementNoCase(&sorted, "name", "oMEGA", 0).mIndex == 4,
+                "original absent and case-insensitive searches retain their iterator contracts");
     }
     void test_raw_source_heap_retirement() {
 
@@ -374,6 +438,7 @@ namespace {
 }
 int main() {
     const std::array tests{
+        std::pair{"original field rules and binary search", test_original_field_rules_and_binary_search},
         std::pair{"raw source identity and original row ranges", test_raw_source_identity},
         std::pair{"raw source original heap retirement", test_raw_source_heap_retirement},
         std::pair{"original memory-archive index fetch", test_original_archive_index},
