@@ -258,7 +258,7 @@ namespace {
         Model<3> model;
         model.joints[0].appendChild(&model.joints[1]);
         model.joints[0].appendChild(&model.joints[2]);
-        model.joints[0].setTransformInfo({{2, 3, 4}, {0, 0, 0x4000}, {5, 6, 7}});
+        model.joints[0].setTransformInfo({{2, 3, 4}, {0, 0, 0x4000}, 0, {5, 6, 7}});
         Core owner(2, 3, 2);
         auto& core = owner.object;
         require(core.mTrackCount == 2 && core.mJointCount == 3 && core._4 == 2 && core.mTransformList == nullptr,
@@ -279,9 +279,9 @@ namespace {
                     core.mTransformList[0]._68 == nullptr && core.mTransformList[0]._6C == nullptr,
                 "transform records retain real joints and empty optional matrices");
         core.mTransformList[0].mScale.set(9, 8, 7);
-        model.joints[0].setTransformInfo({{4, 5, 6}, {0, 0, 0}, {8, 9, 10}});
+        model.joints[0].setTransformInfo({{4, 5, 6}, {0, 0, 0}, 0, {8, 9, 10}});
         core.reconfigJointTransform(&model.data);
-        vector_near(core.mTransformList[0].mTransformInfo.mScale, {4, 5, 6}, "reconfig replaces authored transform");
+        vector_near(core.mTransformList[0]._44.mScale, {4, 5, 6}, "reconfig replaces authored transform");
         vector_near(core.mTransformList[0].mScale, {9, 8, 7}, "reconfig preserves local transform adjustment");
         Core shared(3, core);
         require(shared.object.mJointList == core.mJointList && shared.object.mTransformList == core.mTransformList &&
@@ -536,9 +536,7 @@ namespace {
             transform._14.set(3, 1, 1);
             transform._2C.set(4, 5, 6);
             transform._38.set(10, 20, 30);
-            transform._20 = 100;
-            transform._24 = 200;
-            transform._28 = 300;
+            transform._20.set(100, 200, 300);
             core.init({1, 1, 1}, base);
             model.select(0);
             core.calc();

@@ -6,6 +6,7 @@
 struct J3DTransformInfo {
     Vec mScale;        // 0x00
     S16Vec mRotation;  // 0x0C
+    u16 _12;           // 0x12
     Vec mTranslate;    // 0x14
 
 #ifdef __MWERKS__

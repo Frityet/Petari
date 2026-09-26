@@ -1,6 +1,6 @@
 # Source-Closeness Audit
 
-Generated: 2026-09-26T03:01:57Z
+Generated: 2026-09-26T03:22:34Z
 Repo root: `/Users/frityet/Projects/petari`
 PC root: `/Users/frityet/Projects/petari`
 
@@ -22,13 +22,13 @@ This is intentionally conservative. Anything not proven exact, compile-only, or 
 
 | Classification | All audited Game files | Target surface files |
 | --- | ---: | ---: |
-| `exact-source` | 1708 | 403 |
+| `exact-source` | 1713 | 404 |
 | `compile-only` | 375 | 59 |
 | `debug-only` | 0 | 0 |
-| `compat-temporary` | 1127 | 420 |
-| `decomp-needed` | 3 | 1 |
+| `compat-temporary` | 1122 | 419 |
+| `decomp-needed` | 2 | 1 |
 
-Audited original game-code files: 3213
+Audited original game-code files: 3212
 Target surface files: 883
 Compatibility-layer files inventoried separately: 508
 Decomp-needed files with root declaration counterparts: 0
@@ -75,7 +75,7 @@ Files with guarded debug probes or release-facing observer candidates: 36
 
 ## Required Migration
 
-Files requiring migration or decomp work: 1130
+Files requiring migration or decomp work: 1124
 
 - `Camera/CamHeliEffector.cpp`: `compat-temporary`
 - `Camera/CamHeliEffector.hpp`: `compat-temporary`
@@ -281,7 +281,6 @@ Files requiring migration or decomp work: 1130
 - `Screen/PrologueLetter.cpp`: `compat-temporary`
 - `Screen/ProloguePictureBook.cpp`: `compat-temporary`
 - `Screen/ReplaceTagProcessor.cpp`: `compat-temporary`
-- `Screen/ReplaceTagProcessor.hpp`: `compat-temporary`
 - `Screen/SaveIcon.cpp`: `compat-temporary`
 - `Screen/SaveIcon.hpp`: `compat-temporary`
 - `Screen/ScreenAlphaCapture.cpp`: `compat-temporary`

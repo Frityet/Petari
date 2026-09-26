@@ -355,7 +355,7 @@ namespace {
         require(player.mModel == replacement.object.get() && player.mModelData == &replacement.data &&
                     player.mCore->mTransformList[1]._0 == &replacement.joints[1],
                 "setModel must rebind the existing actual per-joint transform storage");
-        near(player.mCore->mTransformList[1].mTransformInfo.mTranslate.y, 12,
+        near(player.mCore->mTransformList[1]._44.mTranslate.y, 12,
              "Rebinding must copy the replacement joint's actual bind-pose metadata");
         player.overWriteMtxCalc(1);
         require(replacement.joints[1].mMtxCalc == player.mCore && fixture.model.joints[1].mMtxCalc == nullptr,
