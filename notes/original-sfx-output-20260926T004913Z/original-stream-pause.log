@@ -37,7 +37,7 @@ Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/deb
   minUniformBufferOffsetAlignment: 256
   minStorageBufferOffsetAlignment: 256
   maxImmediateSize: 64
-[aurora:info:aurora::gpu] Enabling features: 
+[aurora:info:aurora::gpu] Enabling features:
   CoreFeaturesAndLimits
   DepthClipControl
   TextureCompressionBC

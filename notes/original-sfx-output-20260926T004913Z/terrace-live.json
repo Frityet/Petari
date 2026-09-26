@@ -1,0 +1,15 @@
+{
+  "executable": "/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/Terrace Probe.app/Contents/MacOS/smg-pc",
+  "sha256": "bd45c52e8a4a25add9206e5fd763c113bc5a90f3dc37084a8e9e6472020d54f9",
+  "source_commit": "7b064cafd",
+  "aurora_commit": "eeb21c51b8b3c0dcf13b5cf52be178bbd4d90345",
+  "stage": "AstroDome",
+  "scenario": 1,
+  "slot": 1,
+  "loaded_stars": 2,
+  "pid": 56372,
+  "audio_muted": false,
+  "input_injected": false,
+  "observation": "Live screenshot shows Mario and the Luma in the Terrace dialogue.",
+  "runtime_log": "/tmp/petari-terrace-original-audio-live.log"
+}

@@ -37,3 +37,7 @@ The ringing fix is documented in [ringing.md](ringing.md): JKRArchive buffer rea
 - `final-build.log`: main executable and focused audio tests built with LLVM 23 on macOS ARM64. Source diffs passed whitespace checks.
 
 These checks establish execution, sample output and the measured ringing fix. They do not establish listening quality for every effect, every cutscene, or every audio device. Save-backed diagnostics copied the user's two-star save; no test injected live controls or altered their progress.
+
+## Playable handoff
+
+Root code commit `7b064cafd` and Aurora commit `eeb21c5` are pushed. The rebuilt, ad-hoc signed Terrace app is running with the existing two-star slot 1 save and audio enabled, without a frame limit. `terrace-audio-live.png` confirms Mario and the Luma in the Terrace dialogue; `terrace-live.json` records the executable hash and launch. No controls were sent. The user retains control.
