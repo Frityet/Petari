@@ -768,6 +768,15 @@ void JKRHeap::recordAllocation(void *memory, JKRHeap *heap, int alignment) {
     *slot = fresh;
 }
 
+JKRHeap* JKRHeap::allocationHeap(const void* memory) noexcept {
+    using namespace AllocationRecords;
+    if (!memory) return nullptr;
+    Lock lock;
+    for (auto* record = buckets[bucket(const_cast<void*>(memory))]; record; record = record->next)
+        if (record->memory == memory) return record->heap;
+    return nullptr;
+}
+
 JKRHeap *JKRHeap::releaseAllocation(void *memory) noexcept {
     using namespace AllocationRecords;
     if (memory == nullptr)

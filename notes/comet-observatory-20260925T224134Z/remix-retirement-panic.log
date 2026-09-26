@@ -1,0 +1,122 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-original-process-remix-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-remix-tests' (arm64).
+(lldb) breakpoint set --name OSPanic
+Breakpoint 1: where = smg-pc-original-process-remix-tests`::OSPanic(const char *, int, const char *, ...) + 20 at OSReport.cpp:92:16, address = 0x0000000100ac5a78
+(lldb) run
+[remix-probe] PASS original packed-resource consumer, timer and truncation checks
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-26 01:33:15.314569+0100 smg-pc-original-process-remix-tests[29833:7146553] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:33:15.314880+0100 smg-pc-original-process-remix-tests[29833:7146553] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:33:15.315239+0100 smg-pc-original-process-remix-tests[29833:7146552] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:33:15.315271+0100 smg-pc-original-process-remix-tests[29833:7146552] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:33:15.315654+0100 smg-pc-original-process-remix-tests[29833:7146651] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:33:15.315664+0100 smg-pc-original-process-remix-tests[29833:7146651] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:33:15.315945+0100 smg-pc-original-process-remix-tests[29833:7146651] [Connection] Will NOT re-try to establish the connection
+2026-09-26 01:33:15.316003+0100 smg-pc-original-process-remix-tests[29833:7146553] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:33:15.316062+0100 smg-pc-original-process-remix-tests[29833:7146553] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:33:16.531250+0100 smg-pc-original-process-remix-tests[29833:7146338] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[src/app/OriginalGameApplication.cpp:544][APP - INFO] Booting the original GameSystem
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[original-process] GameSystem::init completed
+[src/app/OriginalGameApplication.cpp:546][APP - INFO] Running the original GameSystem frame loop
+[aurora:info:aurora::gpu::cache] Pruned 4 stale Dawn cache entries
+2026-09-26 01:33:16.858552+0100 smg-pc-original-process-remix-tests[29833:7146696] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x7855443920> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+[original-process] Loaded original save slot 1 (mario1): 1 stars
+[original-process] Requesting authored stage EggStarGalaxy scenario 1 through GameSequence
+[remix-probe] PASS ready at frame 144: 6 groups, 1 fairies, 43 notes
+[aurora:warning:aurora::gpu] WebGPU message: Calling [RenderPassEncoder "EFB 1"].Draw with a vertex count of 0 is unusual.
+[src/app/OriginalGameApplication.cpp:583][APP - INFO] Original GameSystem stopped after 600 completed frames
+warning: smg-pc-original-process-remix-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 29833 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-remix-tests' (arm64)
+Process 29833 stopped
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+       frame #0: 0x0000000100ac5a78 smg-pc-original-process-remix-tests`OSPanic(file="src/JSystem/JKernel/JKRHeap.cpp", line=661, msg="Delete has no original allocation provenance: %p") at OSReport.cpp:92:16 [opt]
+   89  	}
+   90  	
+   91  	void OSPanic(const char* file, int line, const char* msg, ...) {
+-> 92  	  std::fprintf(stderr, "PANIC %s:%d: ", file, line);
+    	               ^
+   93  	  va_list args;
+   94  	  va_start(args, msg);
+   95  	  OSVReport(msg, args);
+Target 0: (smg-pc-original-process-remix-tests) stopped.
+(lldb) bt 18
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+   * frame #0: 0x0000000100ac5a78 smg-pc-original-process-remix-tests`OSPanic(file="src/JSystem/JKernel/JKRHeap.cpp", line=661, msg="Delete has no original allocation provenance: %p") at OSReport.cpp:92:16 [opt]
+     frame #1: 0x000000010049a360 smg-pc-original-process-remix-tests`(anonymous namespace)::release(memory=0x000000752c47a780) at JKRHeap.cpp:0:9 [opt]
+     frame #2: 0x0000000100274b9c smg-pc-original-process-remix-tests`GameScene::~GameScene(this=0x000000752be1c5b0) at GameScene.cpp:93:13 [opt]
+     frame #3: 0x0000000100274c2c smg-pc-original-process-remix-tests`GameScene::~GameScene(this=<unavailable>) at GameScene.cpp:82:25 [opt] [inlined]
+     frame #4: 0x0000000100274c28 smg-pc-original-process-remix-tests`GameScene::~GameScene(this=<unavailable>) at GameScene.cpp:82:25 [opt]
+     frame #5: 0x00000001000055cc smg-pc-original-process-remix-tests`smgpc::app::(anonymous namespace)::OriginalProcess::retire(this=0x000000016fdfe158) at OriginalGameApplication.cpp:450:13 [opt]
+     frame #6: 0x00000001000054d8 smg-pc-original-process-remix-tests`smgpc::app::(anonymous namespace)::OriginalProcess::~OriginalProcess(this=0x000000016fdfe158) at OriginalGameApplication.cpp:275:26 [opt] [inlined]
+     frame #7: 0x00000001000054d8 smg-pc-original-process-remix-tests`smgpc::app::(anonymous namespace)::OriginalProcess::~OriginalProcess(this=0x000000016fdfe158) at OriginalGameApplication.cpp:275:24 [opt]
+     frame #8: 0x0000000100004a64 smg-pc-original-process-remix-tests`smgpc::app::run_original_game(configuration=0x000000016fdfe540, logger=0x000000785702c020, observer=<unavailable>) at OriginalGameApplication.cpp:585:1 [opt]
+     frame #9: 0x0000000100002160 smg-pc-original-process-remix-tests`main at OriginalProcessRemixTests.cpp:139:28 [opt]
+     frame #10: 0x000000018a03be80 dyld`start + 6688
+(lldb) frame select 1
+frame #1: 0x000000010049a360 smg-pc-original-process-remix-tests`(anonymous namespace)::release(memory=0x000000752c47a780) at JKRHeap.cpp:0:9 [opt]
+   647 	        return allocate(size, magnitude, alignment < 0, heap);
+   648 	    }
+   649 	
+-> 650 	    void release(void* memory) noexcept {
+    	        ^
+   651 	        if (memory == nullptr) return;
+   652 	        if (JKRHeap* heap = JKRHeap::releaseAllocation(memory)) {
+   653 	            // Provenance is consumed before the heap's own mutex is taken;
+note: This address is not associated with a specific line of code. This may be due to compiler optimizations.
+(lldb) frame variable
+(NameObj *) memory = 0x000000752c47a780
+(const uintptr_t) address = 503254067072
+(const uintptr_t) begin = <variable not available>
+
+(lldb) expression -- ((NameObj*)memory)->mName
+(const char *) $0 = 0x0000000100f30653 "ゴロゴロ岩"
+(lldb) memory read --size 8 --format x --count 12 memory
+0x752c47a780: 0x000000010106c330 0x0000000100f30653
+0x752c47a790: 0x00000000ffff0000 0x0000000000000000
+0x752c47a7a0: 0x0000000000000000 0x0000000000000000
+0x752c47a7b0: 0x0000000000000000 0x0000000000000000
+0x752c47a7c0: 0xc65ec47ec615e4bd 0x43340000c518f394
+0x752c47a7d0: 0x0000000043ab5220 0x3f8000003f800000

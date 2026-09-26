@@ -1,6 +1,7 @@
 #include "Game/System/AudSystemWrapper.hpp"
 #include "Game/AudioLib/AudBgmMgr.hpp"
 #include "Game/AudioLib/AudParams.hpp"
+#include "Game/AudioLib/AudRemixMgr.hpp"
 #include "Game/AudioLib/AudSceneMgr.hpp"
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
 #include "Game/AudioLib/AudSoundObject.hpp"
@@ -10,7 +11,10 @@
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
+#include "resource/RemixSequenceResource.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <JSystem/JKernel/JKRMemArchive.hpp>
+#include <JSystem/JKernel/JKRSolidHeap.hpp>
 #include <JSystem/JAudio2/JAIStreamMgr.hpp>
 #include <aurora/j_audio_stream.hpp>
 #include <dolphin/dvd.h>
@@ -83,6 +87,10 @@ AudSoundObjHolder* AudSystemWrapper::getSoundObjHolder() const noexcept {
     return mInitializePhase == InitializePhase::Initialized ? mSoundObjHolder.get() : nullptr;
 }
 
+AudRemixMgr* AudSystemWrapper::getRemixMgr() const noexcept {
+    return mInitializePhase == InitializePhase::Initialized ? mRemixMgr.get() : nullptr;
+}
+
 void AudSystemWrapper::setTriggerSePermitted(bool permitted) noexcept {
     mTriggerSePermitted = permitted;
 }
@@ -102,6 +110,7 @@ void AudSystemWrapper::requestResourceForInitialize() {
     // Stream metadata and name conversion share the original sound archive.
     // The absent DSP, rhythm and speaker owners have no bank requests to enqueue.
     MR::loadAsyncToMainRAM("/AudioRes/SMR.szs", nullptr, _8, JKRDvdRipper::ALLOC_DIRECTION_BACKWARD);
+    MR::mountAsyncArchive("/AudioRes/Info/JaiRemixSeq.arc", _4);
     mInitializePhase = InitializePhase::Requested;
 }
 
@@ -113,8 +122,12 @@ void AudSystemWrapper::receiveResourceForInitialize() {
         aurora::throw_host_exception< std::logic_error >("Audio name resources were not requested");
     }
     mSmrRes = MR::receiveFile("/AudioRes/SMR.szs");
+    mJaiRemixSeqRes = MR::receiveArchive("/AudioRes/Info/JaiRemixSeq.arc");
     if (!mSmrRes) {
         aurora::throw_host_exception< std::runtime_error >("Audio initialization received no name resource");
+    }
+    if (!mJaiRemixSeqRes) {
+        aurora::throw_host_exception< std::runtime_error >("Audio initialization received no remix archive");
     }
     mInitializePhase = InitializePhase::Received;
 }
@@ -143,6 +156,13 @@ void AudSystemWrapper::createAudioSystem() {
         mSoundNameTable.init(mSoundNameBytes.data());
         AudSoundNameConverter::validateTable(&mSoundNameTable);
         createSoundNameConverter();
+
+        const auto* remix = static_cast< const u8* >(mJaiRemixSeqRes->getResource(static_cast< u16 >(0)));
+        const auto remixSize = mJaiRemixSeqRes->getResSize(remix);
+        if (!remix || remixSize == std::numeric_limits< u32 >::max()) {
+            aurora::throw_host_exception< std::runtime_error >("Audio remix archive has no bounded sequence resource");
+        }
+        mRemixSequenceWords = smgpc::resource::decode_remix_sequence({remix, remixSize});
 
         mStreamMixer = std::make_shared< aurora::audio::PcmAudioMixer >();
         mStreamMixer->open_default_playback();
@@ -178,6 +198,9 @@ void AudSystemWrapper::createAudioSystem() {
             ::operator delete(storage);
             throw;
         }
+        mRemixMgr = std::make_unique< AudRemixMgr >(_4);
+        mRemixMgr->init();
+        mRemixMgr->setRemixSeqResource(mRemixSequenceWords.data());
         mInitializePhase = InitializePhase::Initialized;
     } catch (...) {
         releaseResources();
@@ -212,6 +235,7 @@ void AudSystemWrapper::createSoundNameConverter() {
 
 void AudSystemWrapper::releaseResources() noexcept {
     const aurora::allocation::HostAllocationScope host;
+    mRemixMgr.reset();
     mSystemSeObject.reset();
     mSoundObjHolder.reset();
     mBgmMgr.reset();
@@ -237,6 +261,7 @@ void AudSystemWrapper::releaseResources() noexcept {
     mPreviousNameTable = nullptr;
     mSoundNameTable.init(nullptr);
     mSoundNameBytes.clear();
+    mRemixSequenceWords.clear();
 }
 
 void AudSystemWrapper::updateRhythm() {
@@ -248,6 +273,7 @@ void AudSystemWrapper::movement() {
         return;
     }
     mBgmMgr->movement();
+    mRemixMgr->update();
     mStreamMgr->calc();
     mStreamMgr->mixOut();
     mSoundObjHolder->update();

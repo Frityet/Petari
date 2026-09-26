@@ -1,0 +1,32 @@
+{
+  "time_utc": "2026-09-26T00:43:24.473508+00:00",
+  "main_sha256": "64a97368ede97670f0de7753a238b0fb5f7b2ff7de41dc7ac0ead357869b7382",
+  "test_sha256": "fa8d42b431c66134c160e57d2f22a1639b5bc024029ac8902d83e6fd5d06f326",
+  "stage": "EggStarGalaxy",
+  "scenario": 1,
+  "saved_slot": 1,
+  "completed_frames": 1800,
+  "game_exit_code": 0,
+  "ready_frame": 142,
+  "authored_remix_groups": 6,
+  "note_fairies": 1,
+  "authored_note_children": 43,
+  "opening_camera_frames": 479,
+  "scene_action_frame": 976,
+  "allocation_lifetime_test_groups": 8,
+  "allocation_test_exit_code": 0,
+  "focused_archive_camera_exit_code": 0,
+  "full_resource_holder_suite": "fails in a later layout-holder fixture; not counted as passing",
+  "validation_limit": "Diagnostic stage startup and automatic opening; no user inputs or played mission completion.",
+  "audio_limit": "Original remix resource owner restored; sequenced playback remains absent. Stage diagnostic mixed zero nonzero samples.",
+  "live_restart": {
+    "pid": 34659,
+    "stage": "AstroDome",
+    "scenario": 1,
+    "save_slot": 1,
+    "loaded_stars": 1,
+    "bundle_sha256": "4963f77bcb95ad27fa2dbe6a4233b346e2bac18d258d9183d005d54233acdf44",
+    "screenshot": "terrace-good-egg-ready.png",
+    "controls": "User only"
+  }
+}

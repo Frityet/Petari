@@ -51,7 +51,14 @@
 
 namespace {
     bool isUnclaimedGameSceneChild(const NameObj* pObject, const void*) noexcept {
-        return !NameObj::isNativeOwnershipClaimed(pObject);
+        if (NameObj::isNativeOwnershipClaimed(pObject)) {
+            return false;
+        }
+        // Array elements and embedded actors belong to their containing arena
+        // allocation. Scene::retireNativeExecution releases their host resources
+        // before bulk retirement; scalar delete is only valid at an allocation start.
+        const void* storage = dynamic_cast< const void* >(pObject);
+        return !JKRHeap::findFromRoot(const_cast< void* >(storage)) || JKRHeap::allocationHeap(storage);
     }
 
     CometRetryButton* getCometRetryButton() {

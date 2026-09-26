@@ -1,0 +1,2 @@
+allocFromHead: cannot alloc memory (0x100000 byte).
+[pass] 8 retained JKR heap lifetime groups

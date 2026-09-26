@@ -1,0 +1,78 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc' (arm64).
+(lldb) settings set -- target.run-args  "--disc" "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz" "--stage" "EggStarGalaxy" "--scenario" "1" "--save-slot" "1" "--max-frames" "600"
+(lldb) run
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-26 01:28:03.610093+0100 smg-pc[28403:7133777] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:28:03.610362+0100 smg-pc[28403:7133777] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:28:03.610624+0100 smg-pc[28403:7133808] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:28:03.610644+0100 smg-pc[28403:7133808] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:28:03.610918+0100 smg-pc[28403:7133778] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:28:03.610932+0100 smg-pc[28403:7133778] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:28:03.611229+0100 smg-pc[28403:7133778] [Connection] Will NOT re-try to establish the connection
+2026-09-26 01:28:03.611256+0100 smg-pc[28403:7133777] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:28:03.611271+0100 smg-pc[28403:7133777] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 01:28:04.829698+0100 smg-pc[28403:7133475] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[src/app/OriginalGameApplication.cpp:544][APP - INFO] Booting the original GameSystem
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[original-process] GameSystem::init completed
+[src/app/OriginalGameApplication.cpp:546][APP - INFO] Running the original GameSystem frame loop
+2026-09-26 01:28:05.133798+0100 smg-pc[28403:7133881] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x7a9521c380> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+[original-process] Loaded original save slot 1 (mario1): 1 stars
+[original-process] Requesting authored stage EggStarGalaxy scenario 1 through GameSequence
+warning: smg-pc was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 28403 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc' (arm64)
+Process 28403 stopped
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x74e339e6a0)
+       frame #0: 0x000000010008e75c smg-pc`CameraAnim::loadBin(this=0x0000007479f64010, pFile=0x000000748339e680) at CameraAnim.cpp:255:17 [opt]
+   252 	
+   253 	    u32 valueOffset = pHeader->mValueOffset;
+   254 	
+-> 255 	    mNrValues = *(reinterpret_cast< u32* >(&pEntry[valueOffset])) / sizeof(f32);
+    	                ^
+   256 	
+   257 	    mFileDataAccessor->set(pEntry, pEntry + valueOffset + 4);
+   258 	
+Target 0: (smg-pc) stopped.

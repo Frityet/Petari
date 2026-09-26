@@ -45,6 +45,9 @@ public:
     static void unregisterFinalizer(void*) noexcept;
     // Global delete consumes exact allocation provenance before freeing memory.
     static JKRHeap* releaseAllocation(void*) noexcept;
+    // Non-consuming lookup of an allocation start, excluding embedded objects
+    // and array elements. Bulk heap retirement still owns those storage ranges.
+    static JKRHeap* allocationHeap(const void*) noexcept;
 
     class TState {
     public:

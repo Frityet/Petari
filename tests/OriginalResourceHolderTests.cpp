@@ -1,6 +1,7 @@
 #include "NativeHeapFixture.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/System/ArchiveHolder.hpp"
+#include "Game/Camera/CameraAnim.hpp"
 #include "Game/System/FileLoader.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/FileUtil.hpp"
@@ -42,6 +43,7 @@
 #include <array>
 #include <bit>
 #include <cstring>
+#include <cstdlib>
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -216,7 +218,17 @@ namespace {
         ArchiveHolderArchiveEntry entry(const_cast<u8*>(source->bytes().data()), &(*domain), "/Memory/Duplicates.arc");
         auto& mounted = *entry.mArchive;
         const auto* raw_image = mounted.getResource("Image.bti");
-        const auto* raw_camera = mounted.getResource("View.canm");
+        auto* native_camera = static_cast<u8*>(mounted.getResource("View.canm"));
+        require(native_camera != source->resource_data("View.canm").data() && CameraAnim::getAnimFrame(native_camera) == 1,
+                "mounted archive publishes a native camera before any actor ResourceHolder exists");
+        const auto* header = reinterpret_cast<const CanmFileHeader*>(native_camera);
+        CamAnmDataAccessor camera_reader;
+        camera_reader.set(native_camera + sizeof(CanmFileHeader),
+                          native_camera + sizeof(CanmFileHeader) + header->mValueOffset + 4);
+        TVec3f camera_pos;
+        camera_reader.getPos(&camera_pos, 0);
+        require(camera_pos.x == 1 && camera_pos.y == 2 && camera_pos.z == 3 && camera_reader.getFovy(0) == 8,
+                "original camera accessors consume all native archive fields");
         const auto available = process.mem1_heap()->available_bytes();
         for (bool first_first : {false, true}) {
             auto first = std::make_unique<ResourceHolder>(mounted);
@@ -225,9 +237,9 @@ namespace {
             auto* second_image = second->mFileInfoTable->getRes("Image.bti");
             auto* first_camera = first->mFileInfoTable->getRes("View.canm");
             auto* second_camera = second->mFileInfoTable->getRes("View.canm");
-            require(first_image != second_image && first_camera != second_camera &&
+            require(first_image != second_image && first_camera == native_camera && second_camera == native_camera &&
                         mounted.getResource("Image.bti") == second_image && mounted.getResource("View.canm") == second_camera,
-                    "simultaneous holders own independent converted records and publish the newest archive cache identity");
+                    "holders own mutable texture records and share the archive's immutable camera data");
             auto* first_key = static_cast<J3DAnmTransformKey*>(first->mMotionResTable->getRes("Key"));
             auto* second_key = static_cast<J3DAnmTransformKey*>(second->mMotionResTable->getRes("Key"));
             require(first_key != second_key && first->mMotionResTable->findFileInfo("Key")->_8 ==
@@ -242,20 +254,20 @@ namespace {
             if (first_first) {
                 first.reset(); survivor = second.get();
                 require(mounted.getResource("Image.bti") == second_image && mounted.getResource("View.canm") == second_camera,
-                        "FIFO retirement preserves the newer live texture and camera cache records");
+                        "FIFO retirement preserves the newer texture and the archive camera");
             } else {
                 second.reset(); survivor = first.get();
                 require(mounted.getResource("Image.bti") == first_image && mounted.getResource("View.canm") == first_camera,
-                        "reverse retirement restores the previous live texture and camera cache records");
+                        "reverse retirement restores the previous texture and preserves the archive camera");
             }
             auto* key = static_cast<J3DAnmTransformKey*>(survivor->mMotionResTable->getRes("Key"));
             J3DTransformInfo result; key->mFrame = 4; key->getTransform(0, &result);
             require(result.mScale.x == 2 && result.mRotation.x == -12 && result.mTranslate.x == 4,
                     "surviving duplicate holder still owns its actual mutable animation tables");
             first.reset(); second.reset();
-            require(mounted.getResource("Image.bti") == raw_image && mounted.getResource("View.canm") == raw_camera &&
+            require(mounted.getResource("Image.bti") == raw_image && mounted.getResource("View.canm") == native_camera &&
                         process.mem1_heap()->available_bytes() == available,
-                    "either retirement order restores raw archive identities and releases all converted texture storage");
+                    "either retirement order releases converted textures while the archive camera remains available");
         }
         auto first = std::make_unique<ResourceHolder>(mounted);
         auto second = std::make_unique<ResourceHolder>(mounted);
@@ -266,7 +278,7 @@ namespace {
         require(mounted.mFiles[index].mFileData == &unrelated,
                 "retiring typed cache overrides must preserve a subsequent unrelated SDK cache replacement");
         mounted.mFiles[index].mFileData = const_cast<void*>(raw_image);
-        mounted.validateNativeRetirement();
+        entry.validateNativeRetirement();
     }
 
     void test_native_bti(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
@@ -743,7 +755,7 @@ namespace {
         require(holder == manager.createAndAdd("InvisibleWall10x10.arc", nullptr),
                 "original basename-hash lookup preserves the already-published holder");
         auto retained = holder->retainNativeResources();
-        rejects([&] { manager.validateHeapRetirement(&(*holder)); },
+        rejects([&] { manager.validateHeapRetirement(&holder->heap()); },
                 "a live model borrower rejects original manager heap retirement");
         require(holder->mArchive->getResSize(holder->mFileInfoTable->getRes("CollisionVersion")) == 7,
                 "rejected retirement leaves the original resource readable");
@@ -857,7 +869,7 @@ namespace {
             }
         }
         require(process.mem1_heap()->available_bytes() == before, "actual model texture owner releases its mapped MEM1 allocations");
-        std::cout << "resource cohort used=" << (*original).mSize - (*original).getTotalFreeSize()
+        std::cout << "resource cohort used=" << original->heap().mSize - original->heap().getTotalFreeSize()
                   << " MEM1 available=" << process.mem1_heap()->available_bytes() << '\n';
     }
 }
@@ -872,8 +884,14 @@ int main() {
             +[](JKRExpHeap* heap) { heap->destroy(); });
         require(test_heap != nullptr, "the bounded holder fixture arena fits within the actual scene heap");
         const auto arena = (*test_heap).retainNativeLifetime();
+        if (const auto* filter = std::getenv("SMGPC_RESOURCE_HOLDER_CASE")) {
+            require(std::string_view(filter) == "archive-camera", "unknown resource-holder fixture case");
+            test_duplicate_holders(process, arena);
+            std::cout << "PASS mounted camera, original accessors, duplicate holders and archive retirement\n";
+            return;
+        }
         test_sdk_tex_map(process); std::cout << "PASS actual SDK TexMap descriptors, GX roundtrip and retained encoded storage\n";
-        test_duplicate_holders(process, arena); std::cout << "PASS duplicate J3D/BAS owners and FIFO/reverse BTI/CANM cache retirement\n";
+        test_duplicate_holders(process, arena); std::cout << "PASS duplicate J3D/BAS owners, texture retirement and archive-owned CANM\n";
         test_native_bti(process, arena); std::cout << "PASS retained BTI native header, all archive identities, GX payload and JUT consumer\n";
         test_original_constructor(process, arena); std::cout << "PASS original holder, typed animation, control table and lifetime\n";
         test_original_csv_reader(process, arena); std::cout << "PASS original CSV helpers and fixed archive borrow preflight\n";

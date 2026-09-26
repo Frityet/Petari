@@ -26,6 +26,26 @@ namespace {
     };
     struct alignas(128) Aligned { std::array<std::uint64_t, 16> words; };
 
+    void test_allocation_start_lookup() {
+        auto runtime = smgpc::test::create_native_root_heap(1 << 20);
+        struct Value { virtual ~Value() = default; std::uint64_t words[2]{}; };
+        auto* single = new (runtime.get(), 0) Value;
+        auto* array = new (runtime.get(), 0) Value[3];
+        require(JKRHeap::allocationHeap(single) == runtime.get() && JKRHeap::allocationHeap(single) == runtime.get(),
+                "repeated provenance lookup preserves a scalar allocation for later deletion");
+        require(!JKRHeap::allocationHeap(&single->words) && !JKRHeap::allocationHeap(&array[0]) &&
+                    !JKRHeap::allocationHeap(&array[2]) && JKRHeap::findFromRoot(array) == runtime.get(),
+                "embedded members and all cookie-bearing array elements remain owned by their containing allocation");
+        const void* identity = single;
+        delete single;
+        require(!JKRHeap::allocationHeap(identity), "individual deletion consumes allocation provenance");
+        delete[] array;
+        auto* bulk = runtime->alloc(64, 16);
+        require(JKRHeap::allocationHeap(bulk) == runtime.get(), "explicit SDK allocations have the same provenance");
+        runtime->freeAll();
+        require(!JKRHeap::allocationHeap(bulk), "bulk release retires allocation-start metadata");
+    }
+
     void test_exp_reclaim_and_resize() {
         auto runtime = smgpc::test::create_native_root_heap(1 << 20);
         auto& heap = static_cast<JKRExpHeap&>((*runtime));
@@ -251,13 +271,14 @@ namespace {
 int main() {
     try {
         test_exp_reclaim_and_resize();
+        test_allocation_start_lookup();
         test_heap_bulk_and_typed_lifetime();
         test_scope_selection_and_host_escape();
         test_external_explicit_and_placement();
         test_disposer_allocations_preserve_current_heap();
         test_failure_restore_and_root_budget();
         test_native_threads_share_original_mutex();
-        std::cout << "[pass] 7 retained JKR heap lifetime groups\n";
+        std::cout << "[pass] 8 retained JKR heap lifetime groups\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "[fail] " << error.what() << '\n';

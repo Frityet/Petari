@@ -11,6 +11,7 @@ class AudBgmMgr;
 class AudSoundObject;
 class AudSoundObjHolder;
 class AudSoundNameConverter;
+class AudRemixMgr;
 class JKRExpHeap;
 class JKRHeap;
 class JKRMemArchive;
@@ -32,6 +33,7 @@ public:
     AudBgmMgr* getBgmMgr() const noexcept;
     AudSoundObject* getSystemSeObject() const noexcept;
     AudSoundObjHolder* getSoundObjHolder() const noexcept;
+    AudRemixMgr* getRemixMgr() const noexcept;
     void setTriggerSePermitted(bool) noexcept;
     void setLevelSePermitted(bool) noexcept;
     bool isSePermitted() const noexcept;
@@ -78,6 +80,7 @@ private:
     // Bytes precede all original borrowers; destruction releases the converter
     // and its arrays before the native table and decoded byte storage.
     std::vector< u8 > mSoundNameBytes;
+    std::vector< u32 > mRemixSequenceWords;
     JAUSoundNameTable mSoundNameTable{false};
     JAUSoundNameTable* mPreviousNameTable = nullptr;
     AudSoundNameConverter* mPreviousNameConverter = nullptr;
@@ -89,6 +92,7 @@ private:
     std::unique_ptr< AudBgmMgr > mBgmMgr;
     std::unique_ptr< AudSoundObjHolder > mSoundObjHolder;
     std::unique_ptr< AudSoundObject > mSystemSeObject;
+    std::unique_ptr< AudRemixMgr > mRemixMgr;
     InitializePhase mInitializePhase = InitializePhase::Created;
     bool mStaticWaveRequested = false;
     bool mStageWaveRequested = false;

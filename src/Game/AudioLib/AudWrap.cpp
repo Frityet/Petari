@@ -86,7 +86,7 @@ namespace AudWrap {
     }
 
     AudRemixMgr* getRemixMgr() {
-        return getSystem()->mRemixMgr;
+        return requireOwner(getWrapper()->getRemixMgr(), "AudRemixMgr");
     }
 
     AudRemixSequencer* getRemixSequencer() {

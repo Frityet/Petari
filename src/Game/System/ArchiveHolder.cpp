@@ -1,5 +1,6 @@
 #include "Game/System/ArchiveHolder.hpp"
 #include "Game/Util.hpp"
+#include "camera/CameraAnimation.hpp"
 #include "resource/JMapResource.hpp"
 #include "resource/JpcResource.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
@@ -12,6 +13,8 @@ struct ArchiveHolderArchiveEntry::NativeState {
     JKRHeap::Handle mDomain;
     std::vector< smgpc::resource::JMapSourceRegistration > mTables;
     std::vector< smgpc::resource::JpcSourceRegistration > mParticles;
+    std::vector< smgpc::camera::NativeCameraAnimationData > mCameraAnimations;
+    std::vector< std::shared_ptr< const void > > mConvertedEntries;
 };
 
 ArchiveHolderArchiveEntry::ArchiveHolderArchiveEntry(void* pData, JKRHeap* pHeap, const char* pArchiveName)
@@ -20,28 +23,36 @@ ArchiveHolderArchiveEntry::ArchiveHolderArchiveEntry(void* pData, JKRHeap* pHeap
     if (!archive->mountFixed(pData, JKR_MEM_BREAK_FLAG_0))
         aurora::throw_host_exception< std::logic_error >("ArchiveHolder requires a new valid fixed archive mount");
 
+    // Pending conversions must retire before the archive if construction fails.
+    std::unique_ptr< NativeState > native;
     {
         const aurora::allocation::HostAllocationScope host;
-        mNativeState = std::make_unique< NativeState >();
-        mNativeState->mDomain = pHeap->retainNativeLifetime();
+        native = std::make_unique< NativeState >();
+        native->mDomain = pHeap->retainNativeLifetime();
         const auto source = archive->retainSource();
         const std::weak_ptr< const void > lifetime = archive->retainNativeResources();
         for (const auto& entry : source->entries()) {
             const auto bytes = source->file_data(entry);
             if (!bytes.empty())
-                mNativeState->mTables.push_back(smgpc::resource::register_jmap_source(bytes, source, [lifetime] {
+                native->mTables.push_back(smgpc::resource::register_jmap_source(bytes, source, [lifetime] {
                     auto retained = lifetime.lock();
                     if (!retained)
                         aurora::throw_host_exception< std::logic_error >("JMap attachment requires a live original archive");
                     return retained;
                 }));
             if (bytes.size() >= 4 && std::memcmp(bytes.data(), "JPAC", 4) == 0)
-                mNativeState->mParticles.push_back(smgpc::resource::register_jpc_source(bytes, source));
+                native->mParticles.push_back(smgpc::resource::register_jpc_source(bytes, source));
+            if (!bytes.empty() && entry.name.ends_with(".canm")) {
+                native->mCameraAnimations.push_back(smgpc::camera::CameraAnimation::from_bytes(bytes).native_data());
+                native->mConvertedEntries.push_back(archive->overrideNativeResource(
+                    entry.file_entry_index, const_cast< u8* >(native->mCameraAnimations.back().bytes().data())));
+            }
         }
     }
     const s32 len = strlen(pArchiveName) + 1;
     mArchiveName = new (pHeap, 0) char[len];
     MR::copyString(mArchiveName, pArchiveName, len);
+    mNativeState = std::move(native);
     mArchive = archive.release();
 }
 
@@ -63,7 +74,7 @@ std::shared_ptr< const void > ArchiveHolderArchiveEntry::retainNativeResources()
 }
 
 void ArchiveHolderArchiveEntry::validateNativeRetirement(std::size_t releasingBorrows) const {
-    mArchive->validateNativeRetirement(releasingBorrows);
+    mArchive->validateNativeRetirement(releasingBorrows + mNativeState->mConvertedEntries.size());
 }
 
 ArchiveHolder::ArchiveHolder() {

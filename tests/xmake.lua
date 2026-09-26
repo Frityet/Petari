@@ -2413,6 +2413,15 @@ target("smg-pc-original-process-scenario-select-tests")
     add_deps {"smg-pc-app", "aurora-main"}
     add_tests("original_process_scenario_select", {group = "original-process", rundir = os.projectdir(), realtime_output = true})
 
+target("smg-pc-original-process-remix-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalProcessRemixTests.cpp")
+    add_deps {"smg-pc-app", "aurora-main"}
+    add_tests("original_process_remix", {group = "original-process", rundir = os.projectdir(), realtime_output = true})
+
 target("smg-pc-original-process-placement-transform-tests")
     set_kind("binary")
     set_default(false)

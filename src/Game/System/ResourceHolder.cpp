@@ -7,7 +7,6 @@
 #include "Game/Util/StringUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "JSystem/J3DGraphAnimator/J3DMaterialAnm.hpp"
-#include "camera/CameraAnimation.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <aurora/allocation.hpp>
@@ -55,7 +54,7 @@ namespace {
         s32 mCount;
     };
 
-    enum class BackingKind { Raw, Animation, Model, Map, Bas, Texture, CameraAnimation };
+    enum class BackingKind { Raw, Animation, Model, Map, Bas, Texture };
 
     BackingKind backingKind(std::string_view name) {
         // Match createAndRegisterObject's ordered, case-sensitive predicates.
@@ -74,8 +73,6 @@ namespace {
             return BackingKind::Model;
         if (name.ends_with(".bti"))
             return BackingKind::Texture;
-        if (name.ends_with(".canm"))
-            return BackingKind::CameraAnimation;
         return BackingKind::Raw;
     }
 
@@ -110,7 +107,6 @@ struct ResourceHolder::NativeResources {
     std::vector<std::shared_ptr<const std::vector<std::uint8_t>>> soundSources;
     std::vector<smgpc::resource::BasResource> soundAnimations;
     std::vector<std::shared_ptr<smgpc::resource::BtiTextureData>> textures;
-    std::vector<smgpc::camera::NativeCameraAnimationData> cameraAnimations;
     std::vector<smgpc::resource::J3dAnimationResource> animations;
     std::vector<smgpc::resource::J3dModelResource> models;
 
@@ -172,12 +168,6 @@ struct ResourceHolder::NativeResources {
                     break;
                 textures.push_back(std::make_shared<smgpc::resource::BtiTextureData>(bytes, mem1));
                 publishConvertedEntry(entry.file_entry_index, const_cast<ResTIMG*>(textures.back()->image()));
-                break;
-            case BackingKind::CameraAnimation:
-                if (bytes.empty())
-                    break;
-                cameraAnimations.push_back(smgpc::camera::CameraAnimation::from_bytes(bytes).native_data());
-                publishConvertedEntry(entry.file_entry_index, const_cast<std::uint8_t*>(cameraAnimations.back().bytes().data()));
                 break;
             case BackingKind::Raw:
                 break;

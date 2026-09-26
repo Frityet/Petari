@@ -1,0 +1,97 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc' (arm64).
+(lldb) settings set -- target.run-args  "--disc" "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz" "--stage" "EggStarGalaxy" "--scenario" "1" "--save-slot" "1" "--max-frames" "180"
+(lldb) breakpoint set --file AudWrap.cpp --line 17
+Breakpoint 1: 6 locations.
+(lldb) run
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-26 00:35:02.122332+0100 smg-pc[24587:7076740] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:35:02.122619+0100 smg-pc[24587:7076740] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:35:02.122781+0100 smg-pc[24587:7076722] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:35:02.122805+0100 smg-pc[24587:7076722] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:35:02.123697+0100 smg-pc[24587:7076721] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:35:02.123740+0100 smg-pc[24587:7076721] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:35:02.124201+0100 smg-pc[24587:7076721] [Connection] Will NOT re-try to establish the connection
+2026-09-26 00:35:02.124297+0100 smg-pc[24587:7076740] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:35:02.124331+0100 smg-pc[24587:7076740] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:35:03.557108+0100 smg-pc[24587:7076474] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[src/app/OriginalGameApplication.cpp:544][APP - INFO] Booting the original GameSystem
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[original-process] GameSystem::init completed
+[src/app/OriginalGameApplication.cpp:546][APP - INFO] Running the original GameSystem frame loop
+2026-09-26 00:35:03.963756+0100 smg-pc[24587:7076819] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x793021d3c0> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+[original-process] Loaded original save slot 1 (mario1): 1 stars
+[original-process] Requesting authored stage EggStarGalaxy scenario 1 through GameSequence
+warning: smg-pc was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 24587 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc' (arm64)
+Process 24587 stopped
+* thread #20, stop reason = breakpoint 1.1
+       frame #0: 0x000000010001362c smg-pc`AudSystem* (anonymous namespace)::requireOwner<AudSystem>(owner=0x0000000000000000, name=<unavailable>) at AudWrap.cpp:17:62 [opt] [inlined]
+   14  	    template < typename T >
+   15  	    T* requireOwner(T* owner, const char* name) {
+   16  	        if (owner == nullptr) {
+-> 17  	            aurora::throw_host_exception< std::logic_error >(std::string("Audio owner is unavailable: ") + name);
+    	                                                             ^
+   18  	        }
+   19  	        return owner;
+   20  	    }
+Target 0: (smg-pc) stopped.
+(lldb) bt 24
+* thread #20, stop reason = breakpoint 1.1
+   * frame #0: 0x000000010001362c smg-pc`AudSystem* (anonymous namespace)::requireOwner<AudSystem>(owner=0x0000000000000000, name=<unavailable>) at AudWrap.cpp:17:62 [opt] [inlined]
+     frame #1: 0x000000010001362c smg-pc`AudWrap::getSystem() at AudWrap.cpp:29:16 [opt]
+     frame #2: 0x0000000100013c28 smg-pc`AudWrap::getRemixMgr() at AudWrap.cpp:89:16 [opt]
+     frame #3: 0x00000001000606ac smg-pc`MR::getRemixMelodyNoteNum(melodyNo=2) at SoundUtil.cpp:355:16 [opt]
+     frame #4: 0x00000001003818c8 smg-pc`NoteFairy::init(this=0x00000073c2305190, rIter=0x00000073c1f39f10) at NoteFairy.cpp:0 [opt]
+     frame #5: 0x0000000100275020 smg-pc`PlacementInfoOrdered::initPlacement(this=0x00000073c1f38860) at PlacementInfoOrdered.cpp:100:23 [opt]
+     frame #6: 0x0000000100270e60 smg-pc`StageDataHolder::initPlacement(this=0x00000073c1f28700) at StageDataHolder.cpp:174:11 [opt]
+     frame #7: 0x00000001002737ac smg-pc`GameScene::init(this=0x00000073c1e1c430) at GameScene.cpp:169:9 [opt]
+     frame #8: 0x00000001001c3b68 smg-pc`GameSystemSceneController::initializeScene(this=0x00000073c16ec2d0) at GameSystemSceneController.cpp:132:13 [opt]
+     frame #9: 0x00000001001cc064 smg-pc`FunctionAsyncExecInfo::execute(this=0x00000073c171e7d0) at FunctionAsyncExecutor.cpp:24:5 [opt] [inlined]
+     frame #10: 0x00000001001cc038 smg-pc`FunctionAsyncExecutorThread::run(this=0x00000073c16fdb60) at FunctionAsyncExecutor.cpp:45:15 [opt]
+  ﹍ frame #11: 0x0000000100ac1abc smg-pc`(anonymous namespace)::run_managed_thread(record=0x000000792cda8900) at OSExecution.cpp:422:13 [opt]
+  ﹉ frame #13: 0x0000000100ac2fb8 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+     frame #14: 0x0000000100ac2fb8 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x000000792d716f60) at thread.h:178:3 [opt]
+     frame #15: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
