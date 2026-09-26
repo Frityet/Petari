@@ -72,52 +72,6 @@ AudSystemWrapper::~AudSystemWrapper() {
     releaseResources();
 }
 
-AudSystemWrapper* AudSystemWrapper::getCurrent() noexcept {
-    auto* system = SingletonHolder< GameSystem >::get();
-    return system && system->mObjHolder ? system->mObjHolder->mAudioSystem : nullptr;
-}
-
-bool AudSystemWrapper::isOutputDisabled() {
-    auto* wrapper = getCurrent();
-    return !wrapper || !wrapper->mAudSystem;
-}
-
-AudSceneMgr* AudSystemWrapper::getSceneMgr() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? mAudSystem->mSceneMgr : nullptr;
-}
-
-AudBgmMgr* AudSystemWrapper::getBgmMgr() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? &mAudSystem->mBgmMgr : nullptr;
-}
-
-AudSoundObject* AudSystemWrapper::getSystemSeObject() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? mAudSystem->mSystemSeObject : nullptr;
-}
-
-AudSoundObjHolder* AudSystemWrapper::getSoundObjHolder() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? mAudSystem->mSoundObjHolder : nullptr;
-}
-
-AudRemixMgr* AudSystemWrapper::getRemixMgr() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? mAudSystem->mRemixMgr : nullptr;
-}
-
-void AudSystemWrapper::setTriggerSePermitted(bool permitted) noexcept {
-    mTriggerSePermitted = permitted;
-    if (mAudSystem)
-        mAudSystem->_82B = !permitted;
-}
-
-void AudSystemWrapper::setLevelSePermitted(bool permitted) noexcept {
-    mLevelSePermitted = permitted;
-    if (mAudSystem)
-        mAudSystem->_82C = !permitted;
-}
-
-bool AudSystemWrapper::isSePermitted() const noexcept {
-    return mTriggerSePermitted && mLevelSePermitted;
-}
-
 void AudSystemWrapper::requestResourceForInitialize() {
     if (mInitializePhase != InitializePhase::Created) {
         aurora::throw_host_exception< std::logic_error >("Audio initialization was already requested");

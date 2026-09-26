@@ -1,9 +1,8 @@
 #include "Game/RhythmLib/AudMeObject.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 
 AudMeObject::AudMeObject(TVec3f* pPos, u8 numHandles, JKRHeap* pHeap)
-    : AudMeHandles(new (pHeap, 0) AudMeHandle[numHandles], numHandles), mPos(pPos), mIsAllocated(true) {
+    : AudMeHandles(new(pHeap, 0) AudMeHandle[numHandles], numHandles), mPos(pPos), mIsAllocated(true) {
 }
 
 AudMeObject::~AudMeObject() {
@@ -20,9 +19,6 @@ void AudMeObject::dispose() {
 }
 
 AudMeHandle* AudMeObject::startMe(u32 id) {
-    if (AudSystemWrapper::isOutputDisabled()) {
-        return nullptr;
-    }
     if (!mIsAllocated) {
         return nullptr;
     }

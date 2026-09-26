@@ -1,5 +1,4 @@
 #include "Game/AudioLib/AudMicWrap.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/AudioLib/AudAudience.hpp"
 #include "Game/AudioLib/AudParams.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
@@ -7,20 +6,10 @@
 
 namespace AudMicWrap {
     void setMicMtx(MtxPtr pMtx, s32 param2) {
-#if defined(TARGET_PC)
-        if (AudSystemWrapper::isOutputDisabled()) {
-            return;
-        }
-#endif
         AudWrap::getSystem()->setMicMtx(pMtx, param2);
     }
 
     void setMicEnv() {
-#if defined(TARGET_PC)
-        if (AudSystemWrapper::isOutputDisabled()) {
-            return;
-        }
-#endif
         AudSystem* pSystem = AudWrap::getSystem();
 
         pSystem->mAudience.mSetting.mFarDistance = AudParams::micFarDistance;

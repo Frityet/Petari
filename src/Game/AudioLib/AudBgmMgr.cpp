@@ -1,7 +1,6 @@
 #include "Game/AudioLib/AudBgmMgr.hpp"
 #include "Game/AudioLib/AudBgm.hpp"
 #include "Game/AudioLib/AudBgmKeeper.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include <JSystem/JAudio2/JAISound.hpp>
 
 AudBgmMgr::AudBgmMgr() : _8FC(false) {
@@ -31,9 +30,6 @@ void AudBgmMgr::movement() {
 }
 
 JAISoundHandle* AudBgmMgr::start(s32 bgmIndex, u32 soundID, bool lock) {
-    if (AudSystemWrapper::isOutputDisabled() && JAISoundID(soundID).getSectionID() != JAISoundID::SOUND_STREAM) {
-        return nullptr;
-    }
     if (mBgm[bgmIndex] != nullptr) {
         mBgm[bgmIndex]->rejectFromSyncStream();
         mBgm[bgmIndex]->stop(false);

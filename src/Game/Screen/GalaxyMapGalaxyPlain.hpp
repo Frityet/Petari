@@ -2,17 +2,30 @@
 
 #include "Game/Screen/LayoutActor.hpp"
 
+class GalaxyNamePlate;
+
 class GalaxyMapGalaxyPlain : public LayoutActor {
 public:
-    explicit GalaxyMapGalaxyPlain(const LayoutActor* pHost);
+    /// @brief Creates a new `GalaxyMapGalaxyPlain`.
+    /// @param pHost The pointer to the owning actor instance.
+    GalaxyMapGalaxyPlain(const LayoutActor* pHost);
 
-    void init(const JMapInfoIter& rIter) override;
-    void control() override;
-    void show(const char* pMessage, const char* pPaneName);
-    void show(const wchar_t* pMessage, const char* pPaneName);
-    [[nodiscard]] const char* getFollowPaneName() const;
+    virtual void init(const JMapInfoIter& rIter);
+    virtual void movement();
+    virtual void draw() const;
+    virtual void calcAnim();
+    virtual void appear();
+    virtual void kill();
+    virtual void control();
+
+    void show(const char*, const char*);
+    void adjustTransInScreen();
+    void show(const wchar_t*, const char*);
 
 private:
     /* 0x20 */ const LayoutActor* mHost;
     /* 0x24 */ const char* mPaneName;
+    /* 0x28 */ GalaxyNamePlate* mNamePlate;
+    /* 0x2C */ wchar_t* mGalaxyName;
+    /* 0x30 */ bool mIsShow;
 };

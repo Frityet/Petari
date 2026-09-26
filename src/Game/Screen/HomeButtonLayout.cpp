@@ -3,7 +3,6 @@
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Speaker/SpkSystem.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/System/GameSystemFunction.hpp"
 #include "Game/System/HomeButtonMenuWrapper.hpp"
 #include "Game/System/Language.hpp"
@@ -120,9 +119,7 @@ void HomeButtonLayout::exeDeactive() {
 
 void HomeButtonLayout::exeActive() {
     if (MR::isFirstStep(this)) {
-        if (!AudSystemWrapper::isOutputDisabled()) {
-            AudWrap::getSystem()->enterHomeButtonMenu();
-        }
+        AudWrap::getSystem()->enterHomeButtonMenu();
         MR::startStarPointerModeHomeButton(this);
         GameSystemFunction::onHomeButtonMenuBeginAllRumble();
         MR::setWPadHolderModeHomeButton();
@@ -152,9 +149,7 @@ void HomeButtonLayout::exeActive() {
         GameSystemFunction::onHomeButtonMenuCloseAllRumble();
         break;
     case HBM_SELECT_BTN1:
-        if (!AudSystemWrapper::isOutputDisabled()) {
-            AudWrap::getSystem()->preProcessToReset();
-        }
+        AudWrap::getSystem()->preProcessToReset();
         bVar1 = true;
         GameSystemFunction::requestGoWiiMenu(true);
         GameSystemFunction::onHomeButtonMenuEndAllRumble();
@@ -162,9 +157,7 @@ void HomeButtonLayout::exeActive() {
         break;
     case HBM_SELECT_BTN2:
         if (!_25) {
-            if (!AudSystemWrapper::isOutputDisabled()) {
-                AudWrap::getSystem()->preProcessToReset();
-            }
+            AudWrap::getSystem()->preProcessToReset();
         }
 
         bVar1 = true;
@@ -175,12 +168,8 @@ void HomeButtonLayout::exeActive() {
     }
 
     if (!bVar1) {
-        if (!AudSystemWrapper::isOutputDisabled()) {
-            AudWrap::getSystem()->exitHomeButtonMenu();
-        }
-        if (!AudSystemWrapper::isOutputDisabled()) {
-            SpkSystem::reconnect(-1);
-        }
+        AudWrap::getSystem()->exitHomeButtonMenu();
+        SpkSystem::reconnect(-1);
     }
 
     if (MR::isStarPointerModeHomeButton()) {

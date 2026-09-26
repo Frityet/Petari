@@ -1,7 +1,4 @@
 #include "Game/System/GameSystemErrorWatcher.hpp"
-#if defined(TARGET_PC)
-#include "Game/System/AudSystemWrapper.hpp"
-#endif
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -136,19 +133,11 @@ void GameSystemErrorWatcher::exeNoError() {
     if (pMessage != nullptr) {
         mMessage = pMessage;
 
-        setNerve(&GameSystemErrorWatcherErrorWindowIn::sInstance);
+        setNerve(GET_NERVE_ANON(GameSystemErrorWatcherErrorWindowIn));
 
-#if defined(TARGET_PC)
-        if (!AudSystemWrapper::isOutputDisabled()) {
-            if (AudWrap::getSystem() != nullptr) {
-                AudWrap::getSystem()->doDvdErrorProcess();
-            }
-        }
-#else
         if (AudWrap::getSystem() != nullptr) {
             AudWrap::getSystem()->doDvdErrorProcess();
         }
-#endif
     }
 }
 
@@ -190,21 +179,13 @@ void GameSystemErrorWatcher::exeErrorWindowOut() {
         if (pMessage != nullptr) {
             mMessage = pMessage;
 
-            setNerve(&GameSystemErrorWatcherErrorWindowIn::sInstance);
+            setNerve(GET_NERVE_ANON(GameSystemErrorWatcherErrorWindowIn));
         } else {
-#if defined(TARGET_PC)
-            if (!AudSystemWrapper::isOutputDisabled()) {
-                if (AudWrap::getSystem() != nullptr) {
-                    AudWrap::getSystem()->exitDvdErrorProcess();
-                }
-            }
-#else
             if (AudWrap::getSystem() != nullptr) {
                 AudWrap::getSystem()->exitDvdErrorProcess();
             }
-#endif
 
-            setNerve(&GameSystemErrorWatcherNoError::sInstance);
+            setNerve(GET_NERVE_ANON(GameSystemErrorWatcherNoError));
         }
     } else {
         MR::requestStarPointerModeErrorWindow(this);

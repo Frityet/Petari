@@ -1,6 +1,5 @@
 #include "Game/Screen/THPSimplePlayerWrapper.hpp"
 #include "Game/LiveActor/Nerve.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include <JSystem/JAudio2/JASAiCtrl.hpp>
@@ -112,9 +111,7 @@ bool THPSimplePlayerWrapper::init(s32 audio) {
 
 void THPSimplePlayerWrapper::quit() {
     LCDisable();
-    if (!AudSystemWrapper::isOutputDisabled()) {
-        JASDriver::registerMixCallback(nullptr, (JASMixMode)3);
-    }
+    JASDriver::registerMixCallback(nullptr, (JASMixMode)3);
     THPSimplePlayerStaticAudio::mPlayer = nullptr;
     _8 = 0;
 }
@@ -622,7 +619,7 @@ void THPSimplePlayerWrapper::endReadAudioComp() {
     mAudioInfo.sndFrequency = aurora::endian::read_big< decltype(mAudioInfo.sndFrequency) >(&mAudioInfo.sndFrequency);
     mAudioInfo.sndNumSamples = aurora::endian::read_big< decltype(mAudioInfo.sndNumSamples) >(&mAudioInfo.sndNumSamples);
     mAudioInfo.sndNumTracks = aurora::endian::read_big< decltype(mAudioInfo.sndNumTracks) >(&mAudioInfo.sndNumTracks);
-    mAudioExist = !AudSystemWrapper::isOutputDisabled();
+    mAudioExist = 1;
     _C += 0x10;
     _10++;
 }
@@ -691,9 +688,7 @@ void THPSimplePlayerWrapper::initAudio() {
     }
 
     THPSimplePlayerStaticAudio::mPlayer = this;
-    if (!AudSystemWrapper::isOutputDisabled()) {
-        JASDriver::registerMixCallback(THPSimplePlayerStaticAudio::audioCallback, (JASMixMode)3);
-    }
+    JASDriver::registerMixCallback(THPSimplePlayerStaticAudio::audioCallback, (JASMixMode)3);
 }
 
 bool THPSimplePlayerWrapper::isAudioProcessValid() {

@@ -1,5 +1,4 @@
 #include "Game/GameAudio/AudCameraWatcher.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/AudioLib/AudEffector.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
@@ -12,11 +11,6 @@ AudCameraWatcher::AudCameraWatcher() : NameObj("AudCameraWatcher"), _C(0) {
 }
 
 void AudCameraWatcher::playAtmosphereSE() {
-#if defined(TARGET_PC)
-    if (AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-#endif
     if (MR::isCameraInWater()) {
         MR::startAtmosphereLevelSE("SE_AT_LV_UNDER_WATER");
         AudWrap::getSystem()->mAudEffector->setCutoff(3);
@@ -31,11 +25,6 @@ void AudCameraWatcher::init(const JMapInfoIter& rIter) {
 }
 
 void AudCameraWatcher::movement() {
-#if defined(TARGET_PC)
-    if (AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-#endif
     MR::setMicMtx(const_cast< TPos3f& >(MR::getCameraViewMtx()), 0);
 
     // They could've just done something like setFarCamera(MR::getFovy() < 20.0f), but oh well.

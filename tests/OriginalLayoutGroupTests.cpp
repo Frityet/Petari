@@ -490,6 +490,13 @@ void tags() {
     require(MR::addPictureFontTag(picture, '0' + 0x10001) == picture + 3 && picture[2] == 1 && picture[4] == 0x7777 &&
                 MR::addPictureFontCode(picture, 0x10002) == picture + 1 && picture[0] == 2 && picture[1] == 0,
             "picture tags and literal glyph codes preserve original 16-bit stores on wider native wchar_t hosts");
+    wchar_t number[32]{};
+    require(MR::addNumberFontTag(number, 123) == number + 6 && number[0] == 0x1a && number[1] == 0x0c0a &&
+                number[2] == 0 && std::wcscmp(number + 3, L"123") == 0 && MR::getStringLengthWithMessageTag(number) == 6,
+            "original number-tag formatting retains the UTF16 header length despite native wchar_t width");
+    require(MR::addNumberFontTag(number, L"%02d/%d", 3, 12) == number + 8 && number[1] == 0x100a &&
+                std::wcscmp(number + 3, L"03/12") == 0 && MR::getStringLengthWithMessageTag(number) == 8,
+            "original variadic number tags preserve formatting and the following borrowed text position");
     const wchar_t wide[] = {L'A', 0xE9, 0x100, L'B', 0};
     char narrow[] = {0, 0, 0, 0x77};
     require(MR::convertUTF16ToASCII(narrow, wide, 4) == 2 && narrow[0] == 'A' &&

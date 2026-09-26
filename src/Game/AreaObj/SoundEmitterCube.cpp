@@ -1,5 +1,4 @@
 #include "Game/AreaObj/SoundEmitterCube.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/AudioLib/AudMicWrap.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
@@ -30,11 +29,6 @@ void SoundEmitterCube::init(const JMapInfoIter& rIter) {
 }
 
 void SoundEmitterCube::movement() {
-#if defined(TARGET_PC)
-    if (AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-#endif
     switch (mObjArg0) {
     case 0:
     case 3:

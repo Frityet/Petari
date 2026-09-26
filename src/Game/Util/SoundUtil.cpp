@@ -1,4 +1,3 @@
-#include "Game/Util/SoundUtil.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/AudioLib/AudMeNameConverter.hpp"
 #include "Game/AudioLib/AudMicWrap.hpp"
@@ -16,10 +15,10 @@
 #include "Game/GameAudio/AudTalkSoundData.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/RhythmLib/AudChordInfo.hpp"
 #include "Game/RhythmLib/AudMeObject.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
@@ -28,6 +27,7 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <JSystem/JAudio2/JAISound.hpp>
 
@@ -65,22 +65,12 @@ namespace MR {
     }
 
     JAISoundHandle* startAtmosphereSE(const char* pName, s32 param2, s32 param3) {
-#if defined(TARGET_PC)
-        if (AudSystemWrapper::isOutputDisabled()) {
-            return nullptr;
-        }
-#endif
         JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
 
         return AudWrap::getAtmosphereSeObject()->startSoundParam(id, param2, param3);
     }
 
     JAISoundHandle* startAtmosphereLevelSE(const char* pName, s32 param2, s32 param3) {
-#if defined(TARGET_PC)
-        if (AudSystemWrapper::isOutputDisabled()) {
-            return nullptr;
-        }
-#endif
         return AudWrap::getAtmosphereSeObject()->startLevelSoundParam(pName, param2, param3);
     }
 
@@ -255,9 +245,6 @@ namespace MR {
     }
 
     bool hasME() {
-        if (AudSystemWrapper::isOutputDisabled()) {
-            return false;
-        }
         AudChordInfo* pChordInfo = AudWrap::getSystem()->getChordInfo();
 
         return pChordInfo->mTable.mLoaded && pChordInfo->mCurChord != nullptr && pChordInfo->mCurScale != nullptr;
@@ -326,11 +313,6 @@ namespace MR {
     }
 
     void startRemixSound(s32 melodyNo, s32 param2, f32 param3) {
-#if defined(TARGET_PC)
-        if (AudSystemWrapper::isOutputDisabled()) {
-            return;
-        }
-#endif
         AudWrap::getRemixMgr()->getRemixNoteGroupDataFromMelodyNo(melodyNo);
 
         AudRemixSequencer* pRemixSequencer = AudWrap::getRemixSequencer();
@@ -358,9 +340,6 @@ namespace MR {
     void limitedSound(const char* pName, s32 param2) {
         JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
 
-        if (AudSystemWrapper::isOutputDisabled()) {
-            return;
-        }
         AudWrap::getSystem()->registerLimitedSound(id, param2);
     }
 
@@ -567,40 +546,24 @@ namespace MR {
     }
 
     void submitTrigSE() {
-        if (auto* output = AudSystemWrapper::getCurrent()) {
-            output->setTriggerSePermitted(false);
-            return;
-        }
         AudSystem* pSystem = AudWrap::getSystem();
 
         pSystem->_82B = 1;
     }
 
     void permitTrigSE() {
-        if (auto* output = AudSystemWrapper::getCurrent()) {
-            output->setTriggerSePermitted(true);
-            return;
-        }
         AudSystem* pSystem = AudWrap::getSystem();
 
         pSystem->_82B = 0;
     }
 
     void submitLevelSE() {
-        if (auto* output = AudSystemWrapper::getCurrent()) {
-            output->setLevelSePermitted(false);
-            return;
-        }
         AudSystem* pSystem = AudWrap::getSystem();
 
         pSystem->_82C = 1;
     }
 
     void permitLevelSE() {
-        if (auto* output = AudSystemWrapper::getCurrent()) {
-            output->setLevelSePermitted(true);
-            return;
-        }
         AudSystem* pSystem = AudWrap::getSystem();
 
         pSystem->_82C = 0;
@@ -617,9 +580,6 @@ namespace MR {
     }
 
     bool isPermitSE() {
-        if (auto* output = AudSystemWrapper::getCurrent()) {
-            return output->isSePermitted();
-        }
         return !AudWrap::getSystem()->_82B && !AudWrap::getSystem()->_82C;
     }
 
@@ -645,16 +605,10 @@ namespace MR {
     }
 
     void setSoundVolumeSetting(s32 param1, u32 param2) {
-        if (AudSystemWrapper::isOutputDisabled()) {
-            return;
-        }
         AudWrap::getSystem()->setSeVolumeSet(param1, param2);
     }
 
     void recoverSoundVolumeSetting(u32 param1) {
-        if (AudSystemWrapper::isOutputDisabled()) {
-            return;
-        }
         AudWrap::getSystem()->recoverSeVolumeSet(param1);
     }
 

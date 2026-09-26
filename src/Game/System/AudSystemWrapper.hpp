@@ -31,16 +31,6 @@ public:
     AudSystemWrapper(JKRSolidHeap*, JKRHeap*);
 #if defined(TARGET_PC)
     ~AudSystemWrapper();
-    static AudSystemWrapper* getCurrent() noexcept;
-    static bool isOutputDisabled();
-    AudSceneMgr* getSceneMgr() const noexcept;
-    AudBgmMgr* getBgmMgr() const noexcept;
-    AudSoundObject* getSystemSeObject() const noexcept;
-    AudSoundObjHolder* getSoundObjHolder() const noexcept;
-    AudRemixMgr* getRemixMgr() const noexcept;
-    void setTriggerSePermitted(bool) noexcept;
-    void setLevelSePermitted(bool) noexcept;
-    bool isSePermitted() const noexcept;
 #endif
 
     void requestResourceForInitialize();
@@ -96,7 +86,5 @@ private:
     CSSoundNameConverter* mPreviousSpeakerNameConverter = nullptr;
     std::shared_ptr< aurora::audio::JAudioSoundArchive > mAudioArchive;
     InitializePhase mInitializePhase = InitializePhase::Created;
-    bool mTriggerSePermitted = true;
-    bool mLevelSePermitted = true;
 #endif
 };

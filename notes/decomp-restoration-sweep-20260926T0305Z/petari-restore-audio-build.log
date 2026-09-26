@@ -1,0 +1,194 @@
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-app>[0m cache compiling.debug src/app/OriginalGameApplication.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudWrap.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObjHolder.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObject.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudBgmMgr.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudAnmSoundObject.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudRemixMgr.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudMicWrap.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObject_Takezawa.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudRemixSequencer.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObject_Gohara.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudBgm.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObject_Kawamura.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSystem.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/RhythmLib/AudMeObject.cpp[0m
+[0m[38;5;2;1m[ 10%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/GameAudio/AudSeKeeper.cpp[0m
+[0m[38;5;2;1m[ 10%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/GameAudio/AudCameraWatcher.cpp[0m
+[0m[38;5;2;1m[ 10%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/GameAudio/AudEffectDirector.cpp[0m
+[0m[38;5;2;1m[ 11%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/SystemUtil.cpp[0m
+[0m[38;5;2;1m[ 12%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/LiveActorUtil.cpp[0m
+[0m[38;5;2;1m[ 13%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/SoundUtil.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/LiveActor.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossLeg.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/OtaKingMagma.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/OtaKing.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/RingBeam.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemErrorWatcher.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemSceneController.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemFunction.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystem.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/SystemUtil.cpp:21:
+In file included from src/nw4r/lyt/layout.h:3:
+In file included from src/nw4r/lyt/animation.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/Game/Util/SystemUtil.cpp:21:
+In file included from src/nw4r/lyt/layout.h:4:
+In file included from src/nw4r/lyt/group.h:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof][0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemObjHolder.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/AudSystemWrapper.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/OceanRing.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/WaterRoad.cpp[0m
+[0m[38;5;2;1m[ 47%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AreaObj/SoundEmitterCube.cpp[0m
+[0m[38;5;2;1m[ 47%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AreaObj/SoundEmitterSphere.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/GameAudio/AudSeKeeper.cpp:7:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 48%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AreaObj/GlaringLightArea.cpp[0m
+[0m[38;5;3;1msrc/Game/AudioLib/AudSystem.cpp:60:59: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   60 |     int init_JAS_JAI_(JKRSolidHeap* pHeap) __attribute__((noinline)) {
+      |                                                           ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 49%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/THPSimplePlayerWrapper.cpp[0m
+[0m[38;5;3;1msrc/Game/Util/SoundUtil.cpp:275:40: warning: comparison of address of 'pBinder->mWallInfo.mParentTriangle' not equal to a null pointer is always true [-Wtautological-pointer-compare]
+  275 |         } else if (&pBinder->mWallInfo.mParentTriangle != nullptr) {
+      |                     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~    ~~~~~~~
+src/Game/Util/SoundUtil.cpp:277:40: warning: comparison of address of 'pBinder->mRoofInfo.mParentTriangle' not equal to a null pointer is always true [-Wtautological-pointer-compare]
+  277 |         } else if (&pBinder->mRoofInfo.mParentTriangle != nullptr) {
+      |                     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~    ~~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/GamePauseSequence.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/LiveActorUtil.cpp:3:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/Game/Util/LiveActorUtil.cpp:78:126: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   78 |     PartsModel* createSubModel(LiveActor* pActor, const char* pSubModelName, MtxPtr pMtx, int drawBufferType) __attribute__((noinline)) {
+      |                                                                                                                              ^
+src/Game/Util/LiveActorUtil.cpp:95:75: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   95 |     void changeBckForEffectKeeper(const LiveActor* pActor) __attribute__((noinline)) {
+      |                                                                           ^
+src/Game/Util/LiveActorUtil.cpp:103:81: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  103 |     void calcCollisionMtx(TPos3f* pMtx, const LiveActor* pActor) __attribute__((noinline)) {
+      |                                                                                 ^[0m
+[0m[38;5;2;1m[ 54%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/HomeButtonLayout.cpp[0m
+[0m[38;5;3;1mIn file included from src/app/OriginalGameApplication.cpp:6:
+src/Game/LiveActor/LiveActor.hpp:53:29: warning: 'init' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   53 |                virtual void init(const JMapInfoIter& rIter);
+      |                             ^
+src/Game/NameObj/NameObj.hpp:22:29: note: overridden virtual function is here
+   22 |                virtual void init(const JMapInfoIter& rIter);
+      |                             ^
+In file included from src/app/OriginalGameApplication.cpp:6:
+src/Game/LiveActor/LiveActor.hpp:54:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   54 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:27:29: note: overridden virtual function is here
+   27 |                virtual void movement();
+      |                             ^
+In file included from src/app/OriginalGameApplication.cpp:6:
+src/Game/LiveActor/LiveActor.hpp:55:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override][0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/GameScenePauseControl.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/OtaKingMagma.cpp:7:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 61%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioSound.cpp[0m
+[0m[38;5;2;1m[ 65%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/MapObj/ElectricRailMoving.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/OtaKing.cpp:15:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/MapObj/ElectricRail.cpp[0m
+[0m[38;5;3;1msrc/Game/System/GameSystemFunction.cpp:33:60: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   33 |     AudSystemWrapper* getAudSystemWrapper() __attribute__((noinline)) {
+      |                                                            ^
+src/Game/System/GameSystemFunction.cpp:37:72: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   37 |     SaveDataHandleSequence* getSaveDataHandleSequence() __attribute__((noinline)) {
+      |                                                                        ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 78%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/MapObj/MapObjActor.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/GameSystem.cpp:25:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;3;1msrc/Game/Enemy/RingBeam.cpp:240:17: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+  240 |     char* str = "Spread";
+      |                 ^
+src/Game/Enemy/RingBeam.cpp:308:21: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+  308 |         char* str = "Spread";
+      |                     ^
+2 warnings generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/GamePauseSequence.cpp:9:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;3;1msrc/Game/Map/OceanRing.cpp:216:9: warning: expression result unused [-Wunused-value]
+  216 |         static_cast< f32 >(index);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/System/GameSystemSceneController.cpp:19:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/System/GameSystemSceneController.cpp:31:62: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   31 |     AudSystemWrapper* getAudioSystemWrapper() __attribute__((noinline)) {
+      |                                                              ^
+2 warnings generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Map/WaterRoad.cpp:9:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;3;1msrc/Game/Screen/HomeButtonLayout.cpp:147:13: warning: 4 enumeration values not handled in switch: 'HBM_SELECT_NULL', 'HBM_SELECT_BTN3', 'HBM_SELECT_BTN4'... [-Wswitch]
+  147 |     switch (RSO::HBMGetSelectBtnNum()) {
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/MapObj/ElectricRailMoving.cpp:8:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/MapObj/MapObjActor.cpp:17:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/MapObj/ElectricRail.cpp:2:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-app>[0m [38;5;5;1marchiving.debug libsmg-pc-app.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-process-sfx-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-process-sfx-tests[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mlinking.debug smg-pc[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mgenerating.xcode.debug smg-pc.app[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 5.732s[0m

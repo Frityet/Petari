@@ -1,5 +1,4 @@
 #include "Game/AreaObj/SoundEmitterSphere.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/AudioLib/AudMicWrap.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
@@ -33,11 +32,6 @@ void SoundEmitterSphere::init(const JMapInfoIter& rIter) {
 }
 
 void SoundEmitterSphere::movement() {
-#if defined(TARGET_PC)
-    if (AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-#endif
     switch (mSoundIndex) {
     case 1:
     case 2:

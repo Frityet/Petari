@@ -3,7 +3,7 @@
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include <cctype>
-// #include <cstdarg>
+#include <cstdarg>
 #include <cstdio>
 #include <stdint.h>
 #if defined(TARGET_PC)
@@ -175,23 +175,25 @@ namespace MR {
         return &pDst[1];
     }
 
-    /*
     wchar_t* addNumberFontTag(wchar_t* pDst, const wchar_t* pFmt, ...) {
+        *pDst++ = 0x1A;
+        // Preserve the two original UTF-16 header words in native wchar_t storage.
+        wchar_t* pTag = pDst;
+        pDst += 2;
+
         va_list args;
         va_start(args, pFmt);
 
-        Tag* pTag = reinterpret_cast< Tag* >(pDst);
+        int num = vswprintf(pDst, 256, pFmt, args);
+        va_end(args);
 
-        int num = vswprintf(pTag->mBuffer, 256, pFmt, args);
+        pDst += num;
+        pTag[0] = (static_cast< u8 >(num * 2 + 6) << 8) | 10;
+        pTag[1] = 0;
+        *pDst = '\0';
 
-        pTag->_0 = 26;
-        pTag->mDataSize = num * sizeof(wchar_t) + sizeof(Tag);
-        pTag->_3 = 10;
-        pTag->mBuffer[num] = '\0';
-
-        return pDst + num;
+        return pDst;
     }
-    */
 
     const char* getBasename(const char* pPath) {
         const char* pBasename = strrchr(pPath, '/');

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Game/AudioLib/AudSystem.hpp"
+#include "Game/AudioLib/AudWrap.hpp"
 #include <JSystem/JAudio2/JAUSoundObject.hpp>
 #include <JSystem/JKernel/JKRDisposer.hpp>
 
@@ -75,7 +77,9 @@ public:
     bool modifyLimitedSound_Takezawa(JAISoundID);
     void modifySe_Gohara(JAISoundHandle*, s32, s32);
 
-    bool isEnableStartSound(JAISoundID soundID);
+    bool isEnableStartSound(JAISoundID soundID) {
+        return AudWrap::getSystem()->isEnableStartSound(soundID);
+    }
 
     /* 0x30 */ u32 mSeVersion;  // TODO: Kuribo and Metbo "_DARK"?
     /* 0x34 */ s32 mMapCode;

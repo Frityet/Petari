@@ -1,5 +1,4 @@
 #include "resource/TextEncoding.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/GameAudio/AudEffectDirector.hpp"
 #include "Game/AudioLib/AudEffector.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
@@ -54,11 +53,6 @@ void AudEffectDirector::setEffectType(s32 a1, s32 a2) {
 }
 
 void AudEffectDirector::setAudioEffectParam(s32 a1) {
-#if defined(TARGET_PC)
-    if (AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-#endif
     AudEffector* pAudEffector = AudWrap::getSystem()->getAudEffector();
 
     pAudEffector->setFxSend(::cAudEffectDataList[a1].mFxSend);

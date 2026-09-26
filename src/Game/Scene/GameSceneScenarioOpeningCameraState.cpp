@@ -3,7 +3,6 @@
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/ScenarioTitle.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
@@ -77,7 +76,7 @@ void GameSceneScenarioOpeningCameraState::exePlay() {
     if (trySkipTrigger()) {
         end();
         MR::forceToBlankCinemaFrame();
-        setNerve(&GameSceneScenarioOpeningCameraStateWait::sInstance);
+        setNerve(GET_NERVE_ANON(GameSceneScenarioOpeningCameraStateWait));
     } else {
         if (MR::isStep(this, MR::getStartAnimCameraFrame() - 60)) {
             MR::tryFrameToBlankCinemaFrame();
@@ -85,14 +84,12 @@ void GameSceneScenarioOpeningCameraState::exePlay() {
         }
 
         if (MR::isStep(this, MR::getStartAnimCameraFrame() - 20)) {
-            if (!AudSystemWrapper::isOutputDisabled()) {
-                AudWrap::getSystem()->set830(30);
-            }
+            AudWrap::getSystem()->set830(30);
         }
 
         if (MR::isStartAnimCameraEnd() && MR::isStopCinemaFrame()) {
             end();
-            setNerve(&GameSceneScenarioOpeningCameraStateWait::sInstance);
+            setNerve(GET_NERVE_ANON(GameSceneScenarioOpeningCameraStateWait));
         }
     }
 }

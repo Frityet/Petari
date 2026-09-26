@@ -8,6 +8,7 @@
 #include "JSystem/JAudio2/JASDSPInterface.hpp"
 #include "JSystem/JAudio2/JASDriverIF.hpp"
 #include "JSystem/JAudio2/JASDvdThread.hpp"
+#include "JSystem/JAudio2/JASHeapCtrl.hpp"
 #include "JSystem/JAudio2/JASLfo.hpp"
 #include "JSystem/JAudio2/JASTrack.hpp"
 #include "JSystem/JKernel/JKRSolidHeap.hpp"
@@ -307,6 +308,9 @@ namespace smgpc::audio {
             driver->worker.join();
         }
         JASDvd::destroyThread();
+        // Original ARAM children live in the audio arena. Unlink them through
+        // their original disposal path before that arena's storage is retired.
+        JASKernel::getAramHeap()->free();
         JASAramStream::sLoadThread = nullptr;
         JASDriver::sDspSyncCallback = {};
         JASDriver::sSubFrameCallback = {};

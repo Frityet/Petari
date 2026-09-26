@@ -1,8 +1,5 @@
 #include "Game/Screen/GamePauseSequence.hpp"
 #include "resource/TextEncoding.hpp"
-#if defined(TARGET_PC)
-#include "Game/System/AudSystemWrapper.hpp"
-#endif
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -45,13 +42,7 @@ void GamePauseSequence::initWindowMenu(const MR::FunctorBase& rFunc) {
 }
 
 void GamePauseSequence::startPause(MenuType type) {
-#if defined(TARGET_PC)
-    if (!AudSystemWrapper::isOutputDisabled()) {
-        AudWrap::getSystem()->enterPauseMenu();
-    }
-#else
     AudWrap::getSystem()->enterPauseMenu();
-#endif
     mMenuType = type;
     appear();
     MR::startStarPointerModePauseMenu(this);
@@ -62,10 +53,10 @@ void GamePauseSequence::startPause(MenuType type) {
     switch (mMenuType) {
     case ActivePause:
         mPauseMenu->appear();
-        setNerve(&GamePauseSequenceActivePauseMenu::sInstance);
+        setNerve(GET_NERVE_ANON(GamePauseSequenceActivePauseMenu));
         break;
     case SceneInformation:
-        setNerve(&GamePauseSequenceSceneInformation::sInstance);
+        setNerve(GET_NERVE_ANON(GamePauseSequenceSceneInformation));
         break;
     }
 }

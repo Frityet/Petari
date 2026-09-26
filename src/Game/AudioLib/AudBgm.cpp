@@ -10,8 +10,6 @@
 #include "Game/RhythmLib/AudBgmTempoAdjuster.hpp"
 #include "Game/RhythmLib/AudRhythmMeSystem.hpp"
 #include "Game/RhythmLib/AudRhythmSeqParser.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
-#include <JSystem/JAudio2/JAIStreamMgr.hpp>
 #include <JSystem/JAudio2/JAISound.hpp>
 #include <JSystem/JAudio2/JAISoundChild.hpp>
 #include <JSystem/JAudio2/JAISoundInfo.hpp>
@@ -24,6 +22,7 @@ void AudBgm::resetAuxVolume() {
     if (mVolumeController == nullptr) {
         return;
     }
+
     mVolumeController->moveAuxVolume(1.0f, 0);
     mVolumeController->moveNoteFairyVolume(1.0f, 0);
 }
@@ -50,17 +49,17 @@ void AudSingleBgm::movement() {
 }
 
 JAISoundHandle* AudSingleBgm::start(u32 soundID, bool lock) {
-    if (AudSystemWrapper::isOutputDisabled() && JAISoundID(soundID).getSectionID() != JAISoundID::SOUND_STREAM) return nullptr;
     JAISoundID id = soundID;
     mSoundID = soundID;
 
     if (mHandle.isSoundAttached()) {
         mHandle->stop();
     }
+
     resetAuxVolume();
 
     if (id.getSectionID() == 0x2) {  // STM
-        JAIStreamMgr::getInstance()->startSound(id, &mHandle, nullptr);
+        AudWrap::getSystem()->getStreamMgr().startSound(id, &mHandle, nullptr);
     } else {  // BGM or MBGM
         AudSoundInfo* info = AudWrap::getSoundInfo();
         AudWrap::getSystem()->getSeqMgr().startSound(id, &mHandle, nullptr);
@@ -74,6 +73,7 @@ JAISoundHandle* AudSingleBgm::start(u32 soundID, bool lock) {
         if (mVolumeController != nullptr) {
             mHandle->getAuxiliary().moveVolume(mVolumeController->getVolume(), 0);
         }
+
         if (lock) {
             mHandle->lockWhenPrepared();
         }
@@ -98,6 +98,7 @@ bool AudSingleBgm::isPreparedPlay() {
     if (mHandle.isSoundAttached()) {
         return mHandle->isPrepared();
     }
+
     return false;
 }
 
@@ -113,6 +114,7 @@ JAISoundHandle* AudSingleBgm::getRhythmHandle() {
             return &mHandle;
         }
     }
+
     return nullptr;
 }
 
@@ -157,6 +159,7 @@ void AudSingleBgm::changeTrackMuteState(s32 track, s32 time) {
                 mTrackController[i].setMuteState(AudFader::FadeState_FadeIn, time, false);
             }
         }
+
         return;
     }
 
@@ -215,10 +218,10 @@ void AudMultiBgm::init() {
 }
 
 JAISoundHandle* AudMultiBgm::start(u32 soundID, bool lock) {
-    if (AudSystemWrapper::isOutputDisabled()) return nullptr;
     if (!isStopping()) {
         stop(0);
     }
+
     mIsLocked = lock;
     return prepare(soundID);
 }
@@ -360,6 +363,7 @@ void AudMultiBgm::changeTrackMuteState(s32 track, s32 time) {
                 mTrackController[i].setMuteState(AudFader::FadeState_FadeIn, time, false);
             }
         }
+
         return;
     }
 
@@ -368,6 +372,7 @@ void AudMultiBgm::changeTrackMuteState(s32 track, s32 time) {
         if (track == 1) {
             time *= 3;
         }
+
         break;
     }
 
@@ -425,6 +430,7 @@ bool AudMultiBgm::isStopping() const {
     if (mHandle.isSoundAttached()) {
         return mHandle->isStopping();
     }
+
     return true;
 }
 
@@ -432,6 +438,7 @@ bool AudMultiBgm::isPaused() const {
     if (mHandle.isSoundAttached()) {
         return mHandle->isPaused();
     }
+
     return false;
 }
 
@@ -439,6 +446,7 @@ JAISoundID AudMultiBgm::getSoundID() const {
     if (!mHandle.isSoundAttached()) {
         return 0;
     }
+
     return mHandle->getID();
 }
 
@@ -461,7 +469,6 @@ void AudMultiBgm::updateTrackControl() {
 }
 
 JAISoundHandle* AudMultiBgm::prepare(u32 id) {
-    if (AudSystemWrapper::isOutputDisabled()) return nullptr;
     u32 bgmId = id & ~(0x01010000);
 
     u32 seqID = AudBgmSetting::getSeqIdForMultiBgm(bgmId);
@@ -507,6 +514,7 @@ bool AudMultiBgm::isPrepared() {
     if (mRhythmHandle.isSoundAttached()) {
         rhythmHandlePrepared = mRhythmHandle->isPrepared();
     }
+
     if (mHandle.isSoundAttached()) {
         handlePrepared = mHandle->isPrepared();
     }
@@ -522,6 +530,7 @@ void AudMultiBgm::unlock() {
     if (mRhythmHandle.isSoundAttached()) {
         mRhythmHandle->unlockIfLocked();
     }
+
     if (mHandle.isSoundAttached()) {
         mHandle->unlockIfLocked();
     }
