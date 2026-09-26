@@ -1539,6 +1539,7 @@ target("smg-pc-brk-real-resource-tests")
     })
 
 target("smg-pc-picture-font-tag-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")

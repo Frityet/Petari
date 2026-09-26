@@ -30,7 +30,8 @@ target("smg-pc-game")
     remove_files("NWC24/NWC24SendThread.cpp")
     add_files({"../nw4r/ut/ut_CharWriter.cpp", "../nw4r/ut/ut_TextWriterBase.cpp",
                "../nw4r/ut/ut_TagProcessorBase.cpp", "../nw4r/ut/ut_CharStrmReader.cpp",
-               "../nw4r/ut/ut_Font.cpp", "../nw4r/ut/ut_ResFont.cpp"}, {cxxflags = "-ffp-contract=off"})
+               "../nw4r/ut/ut_Font.cpp", "../nw4r/ut/ut_ResFont.cpp",
+               "../nw4r/ut/ut_ResFontBase.cpp", "../nw4r/ut/ut_binaryFileFormat.cpp"}, {cxxflags = "-ffp-contract=off"})
     add_files({"../nw4r/lyt/lyt_animation.cpp", "../nw4r/lyt/lyt_group.cpp",
                "../nw4r/lyt/lyt_layout.cpp", "../nw4r/lyt/lyt_arcResourceAccessor.cpp",
                "../nw4r/lyt/lyt_resourceAccessor.cpp", "../nw4r/lyt/lyt_common.cpp",

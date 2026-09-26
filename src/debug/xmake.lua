@@ -127,6 +127,7 @@ target("smg-pc-brfnt-probe")
     set_kind("binary")
     set_default(false)
     add_files("BrfntProbe.cpp")
+    add_files("../render/capture/ScreenshotService.cpp")
     add_deps {
         "smg-pc-debug-common",
         "smg-pc-game",

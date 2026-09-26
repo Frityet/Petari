@@ -1,6 +1,8 @@
-#include "layout/BrfntFont.hpp"
-#include "layout/LayoutResourceResolver.hpp"
-#include "layout/LayoutRuntime.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "runtime/RuntimeServices.hpp"
+#include "Game/Util/SystemUtil.hpp"
+#include "resource/TplTexture.hpp"
+#include <nw4r/ut/binaryFileFormat.h>
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/RarcArchive.hpp"
 
@@ -8,13 +10,8 @@
 
 #include <algorithm>
 #include <array>
-#include <cctype>
-#include <chrono>
-#include <cmath>
 #include <cstdint>
-#include <filesystem>
 #include <iostream>
-#include <optional>
 #include <set>
 #include <stdexcept>
 #include <string>
@@ -22,12 +19,6 @@
 #include <vector>
 
 namespace {
-
-struct RetailFixture {
-    std::filesystem::path font_archive;
-    std::filesystem::path message_archive;
-    std::filesystem::path press_start_archive;
-};
 
 void require(bool condition, std::string_view message) {
     if (!condition) {
@@ -43,83 +34,6 @@ void require_throws(Operation&& operation, std::string_view message) {
         return;
     }
     throw std::runtime_error(std::string(message));
-}
-
-[[nodiscard]] std::optional<RetailFixture> find_retail_fixture() {
-    for (auto root = std::filesystem::current_path(); !root.empty();
-         root = root.parent_path()) {
-        const std::filesystem::path candidates[]{
-            root / "orig/RMGK01/files/KrKorean",
-            root / "container/orig/RMGK01/files/KrKorean",
-        };
-        for (const auto& directory : candidates) {
-            const auto fixture = RetailFixture{
-                .font_archive = directory / "LayoutData/Font.arc",
-                .message_archive = directory / "MessageData/Message.arc",
-                .press_start_archive = directory / "LayoutData/PressStart.arc",
-            };
-            auto error = std::error_code{};
-            if (std::filesystem::is_regular_file(fixture.font_archive, error) &&
-                !error &&
-                std::filesystem::is_regular_file(fixture.message_archive,
-                                                 error) &&
-                !error &&
-                std::filesystem::is_regular_file(fixture.press_start_archive,
-                                                 error) &&
-                !error) {
-                return fixture;
-            }
-        }
-        if (root == root.root_path()) {
-            break;
-        }
-    }
-    return std::nullopt;
-}
-
-[[nodiscard]] std::string lower_basename(std::string_view path) {
-    auto name = std::filesystem::path(path).filename().string();
-    std::ranges::transform(name, name.begin(), [](unsigned char character) {
-        return static_cast<char>(std::tolower(character));
-    });
-    if (!name.ends_with(".brfnt")) {
-        name.append(".brfnt");
-    }
-    return name;
-}
-
-[[nodiscard]] const smgpc::resource::RarcEntry& require_font_entry(
-    const smgpc::resource::RarcArchive& archive, std::string_view name) {
-    auto requested_names = std::vector<std::string>{lower_basename(name)};
-    const auto dot = requested_names.front().rfind(".brfnt");
-    const auto stem = requested_names.front().substr(0U, dot);
-    constexpr std::string_view locale_suffixes[]{
-        "jpn", "eng", "fra", "ger", "ita", "spa", "kor"};
-    for (const auto suffix : locale_suffixes) {
-        if (stem.ends_with(suffix) && stem.size() > suffix.size()) {
-            requested_names.push_back(
-                stem.substr(0U, stem.size() - suffix.size()) + ".brfnt");
-            break;
-        }
-    }
-    const auto found = std::ranges::find_if(
-        archive.entries(), [&requested_names](const auto& entry) {
-            const auto loaded = lower_basename(entry.path);
-            return std::ranges::find(requested_names, loaded) !=
-                   requested_names.end();
-        });
-    if (found == archive.entries().end()) {
-        throw std::runtime_error("retail Font.arc is missing " +
-                                 std::string(name));
-    }
-    return *found;
-}
-
-[[nodiscard]] smgpc::layout::BrfntFont
-load_font(const smgpc::resource::RarcArchive& archive,
-          std::string_view name) {
-    return smgpc::layout::parse_brfnt_font(
-        archive.file_data(require_font_entry(archive, name)));
 }
 
 void append_picture_tag(std::u16string& text, std::uint16_t payload) {
@@ -138,34 +52,21 @@ void append_picture_tag(std::u16string& text, std::uint16_t payload) {
     return static_cast<std::uint16_t>(tokens.front().text.front());
 }
 
-[[nodiscard]] std::size_t picture_glyph_rgb_count(
-    const smgpc::layout::BrfntFont& font,
-    const smgpc::layout::BrfntGlyph& glyph) {
-    require(glyph.sheet_index < font.sheets.size(),
-            "PictureFont glyph sheet index must be in range");
-    const auto& sheet = font.sheets[glyph.sheet_index];
-    const auto draw_width = glyph.widths.glyph_width == 0U
-                                ? glyph.width
-                                : std::min<std::uint8_t>(
-                                      glyph.width,
-                                      glyph.widths.glyph_width);
-    auto colors = std::set<std::uint32_t>{};
-    for (auto y = 0U; y < glyph.height; ++y) {
-        for (auto x = 0U; x < draw_width; ++x) {
-            const auto source_x = static_cast<std::uint16_t>(glyph.x + x);
-            const auto source_y = static_cast<std::uint16_t>(glyph.y + y);
-            require(source_x < sheet.width && source_y < sheet.height,
-                    "PictureFont glyph cell must remain within its sheet");
-            const auto offset =
-                (static_cast<std::size_t>(source_y) * sheet.width + source_x) *
-                4U;
-            if (sheet.rgba[offset + 3U] == 0U) {
-                continue;
+[[nodiscard]] std::size_t picture_glyph_rgb_count(const nw4r::ut::ResFont& font, const nw4r::ut::Glyph& glyph) {
+    const auto sheet = smgpc::resource::decode_raw_gx_texture(
+        {static_cast<const u8*>(glyph.pTexture), u32(font.mFontInfo->pGlyph->sheetSize)},
+        glyph.texWidth, glyph.texHeight, static_cast<smgpc::resource::TplTextureFormat>(glyph.texFormat));
+    const auto draw_width = glyph.widths.glyphWidth == 0 ? font.GetCellWidth() :
+        std::min(font.GetCellWidth(), int(glyph.widths.glyphWidth));
+    std::set<u32> colors;
+    for (int y = 0; y < glyph.height; ++y) {
+        for (int x = 0; x < draw_width; ++x) {
+            const auto source_x = glyph.cellX + x, source_y = glyph.cellY + y;
+            require(source_x < sheet.width && source_y < sheet.height, "PictureFont glyph remains inside its sheet");
+            const size_t offset = (size_t(source_y) * sheet.width + source_x) * 4;
+            if (sheet.rgba[offset + 3]) {
+                colors.insert((u32(sheet.rgba[offset]) << 16) | (u32(sheet.rgba[offset + 1]) << 8) | sheet.rgba[offset + 2]);
             }
-            colors.insert(
-                (static_cast<std::uint32_t>(sheet.rgba[offset]) << 16U) |
-                (static_cast<std::uint32_t>(sheet.rgba[offset + 1U]) << 8U) |
-                static_cast<std::uint32_t>(sheet.rgba[offset + 2U]));
         }
     }
     return colors.size();
@@ -235,10 +136,8 @@ struct CorpusProof {
 };
 
 [[nodiscard]] CorpusProof test_retail_corpus(
-    const RetailFixture& fixture,
-    const smgpc::layout::BrfntFont& picture_font) {
-    const auto archive =
-        smgpc::resource::RarcArchive::from_file(fixture.message_archive);
+    const smgpc::resource::RarcArchive& archive,
+    const nw4r::ut::ResFont& picture_font) {
     const auto messages =
         smgpc::resource::BmgMessageArchive::from_message_archive(archive);
     auto tag_count = std::size_t{};
@@ -270,9 +169,7 @@ struct CorpusProof {
             }
             actual_picture_count += token.text.size();
             for (const auto code : token.text) {
-                require(picture_font.glyph_for_exact(
-                            static_cast<std::uint16_t>(code))
-                            .has_value(),
+                require(picture_font.HasGlyph(static_cast<std::uint16_t>(code)),
                         "every authored RMGK01 group-3 tag must resolve to an exact PictureFont glyph");
             }
         }
@@ -288,50 +185,42 @@ struct CorpusProof {
     };
 }
 
-void test_actual_picture_font(const smgpc::resource::RarcArchive& archive,
-                              const smgpc::layout::BrfntFont& decoded) {
-    const auto bytes = archive.file_data(require_font_entry(archive, "PictureFont"));
-    nw4r::ut::ResFont font;
-    require(font.SetResource(const_cast<std::uint8_t*>(bytes.data()), bytes.size()),
-            "actual SDK PictureFont installs the retained authored BRFNT bytes");
+void test_actual_picture_font(const nw4r::ut::ResFont& font) {
+    const auto* begin = static_cast<const u8*>(font.mResource);
+    const auto* header = reinterpret_cast<const nw4r::ut::BinaryFileHeader*>(begin);
+    require(header->signature == 'RFNU', "GameSystemFontHolder uses the original relocated font resource");
+    const auto* end = begin + header->fileSize;
     size_t checked = 0;
-    for (std::uint32_t code = 0; code <= 0xffff; ++code) {
-        const auto expected = decoded.glyph_for_exact(static_cast<std::uint16_t>(code));
-        if (!expected) continue;
-        nw4r::ut::Glyph glyph;
-        font.GetGlyph(&glyph, static_cast<std::uint16_t>(code));
-        require(glyph.pTexture == bytes.data() + decoded.sheet_image_offset + expected->sheet_index * decoded.sheet_size &&
-                glyph.cellX == expected->x && glyph.cellY == expected->y && glyph.height == expected->height &&
-                glyph.widths.left == expected->widths.left && glyph.widths.glyphWidth == expected->widths.glyph_width &&
-                glyph.widths.charWidth == expected->widths.char_width && glyph.texFormat == GX_TF_RGB5A3,
-                "every actual PictureFont glyph retains exact encoded sheet identity, cell, width and color format");
+    for (u32 code = 0; code <= 0xffff; ++code) {
+        if (!font.HasGlyph(static_cast<u16>(code))) continue;
+        nw4r::ut::Glyph glyph{};
+        font.GetGlyph(&glyph, static_cast<u16>(code));
+        const auto* sheet = static_cast<const u8*>(glyph.pTexture);
+        require(sheet >= begin && sheet < end && u32(font.mFontInfo->pGlyph->sheetSize) <= size_t(end - sheet) &&
+                    glyph.cellX + font.GetCellWidth() <= glyph.texWidth && glyph.cellY + glyph.height <= glyph.texHeight &&
+                    glyph.texFormat == GX_TF_RGB5A3,
+                "every authored PictureFont glyph borrows a complete encoded sheet and a valid colored cell");
         ++checked;
     }
-    require(checked > 32 && picture_glyph_rgb_count(decoded, *decoded.glyph_for_exact('0')) > 1,
-            "retail PictureFont contains its full glyph map and genuinely colored icon pixels");
+    nw4r::ut::Glyph icon{};
+    font.GetGlyph(&icon, '0');
+    require(checked > 32 && picture_glyph_rgb_count(font, icon) > 1,
+            "the original PictureFont exposes its full glyph map and colored icon pixels");
+    std::cout << "actual_picture_font_glyphs=" << checked << '\n';
 }
 
 }  // namespace
 
 int main() {
-    test_ordered_token_formatting();
-
-    const auto fixture = find_retail_fixture();
-    if (!fixture.has_value()) {
-        std::cout << "[skip] extracted RMGK01 PictureFont/message/layout proof\n";
-        std::cout << "[pending] Original picture-tag rendering and retail corpus require the actual resource fixture.\n";
-        return 77;
-    }
-
-    const auto font_archive =
-        smgpc::resource::RarcArchive::from_file(fixture->font_archive);
-    const auto picture_font = load_font(font_archive, "PictureFont");
-    const auto corpus = test_retail_corpus(*fixture, picture_font);
-    test_actual_picture_font(font_archive, picture_font);
-    std::cout << "picture_tags=" << corpus.tag_count << ";payloads=" << corpus.payload_count
-              << ";actual_font_glyphs=verified\n";
-    std::cout << "PictureFont resource checks passed: 3/3\n";
-    std::cout << "[pending] Original mixed picture-tag rendering requires the actual GameSystem font owner; "
-                 "the former CPU raster path has been removed.\n";
-    return 77;
+    return smgpc::test::run_stage_resource_process("original-picture-font", [] {
+        test_ordered_token_formatting();
+        smgpc::runtime::DvdFileSystemService dvd{"/"};
+        const auto messages = smgpc::resource::RarcArchive::from_bytes(dvd.read_file("/KrKorean/MessageData/Message.arc"));
+        const auto* font = static_cast<nw4r::ut::ResFont*>(MR::getPictureFontNW4R());
+        require(font && font->mResource, "the original GameSystem font owner published PictureFont");
+        const auto corpus = test_retail_corpus(messages, *font);
+        test_actual_picture_font(*font);
+        std::cout << "picture_tags=" << corpus.tag_count << ";payloads=" << corpus.payload_count << '\n';
+        std::cout << "Original PictureFont resources and message corpus passed\n";
+    });
 }

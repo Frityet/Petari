@@ -11,6 +11,8 @@
 #include "resource/RarcArchive.hpp"
 
 #include <nw4r/ut/ResFont.h>
+#include <nw4r/ut/binaryFileFormat.h>
+#include <aurora/endian.hpp>
 
 #include <algorithm>
 #include <array>
@@ -35,16 +37,6 @@ namespace {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
-    }
-
-    template < typename Exception, typename Operation >
-    void require_throws(Operation&& operation, std::string_view message) {
-        try {
-            operation();
-        } catch (const Exception&) {
-            return;
-        }
-        throw std::runtime_error(std::string(message));
     }
 
     struct RetailFontFiles {
@@ -84,12 +76,69 @@ namespace {
         return false;
     }
 
+    void test_original_font_tables() {
+        // Literal Wii bytes cover all three CMAP methods, a backward-linked
+        // width block, original fallback rules, and in-place RFNT -> RFNU reuse.
+        std::array<u8, 264> bytes{};
+        const auto u16at = [&](size_t offset, u16 value) { aurora::endian::write_big(bytes.data() + offset, value); };
+        const auto u32at = [&](size_t offset, u32 value) { aurora::endian::write_big(bytes.data() + offset, value); };
+        const auto block = [&](size_t offset, u32 kind, u32 size) { u32at(offset, kind); u32at(offset + 4, size); };
+        u32at(0, 'RFNT'); u16at(4, 0xfeff); u16at(6, 0x104); u32at(8, bytes.size()); u16at(12, 16); u16at(14, 7);
+        block(16, 'FINF', 32); bytes[24] = 1; bytes[25] = 2; u16at(26, 1);
+        bytes[29] = 1; bytes[30] = 7; bytes[31] = nw4r::ut::FONT_ENCODING_UTF16;
+        u32at(32, 56); u32at(36, 160); u32at(40, 184); bytes[44] = bytes[45] = bytes[46] = 1;
+        block(48, 'TGLP', 80); bytes[56] = bytes[57] = bytes[58] = bytes[59] = 1;
+        u32at(60, 32); u16at(64, 1); u16at(66, GX_TF_I4); u16at(68, 4); u16at(70, 4);
+        u16at(72, 8); u16at(74, 8); u32at(76, 96);
+        block(128, 'CWDH', 24); u16at(136, 0); u16at(138, 1);
+        bytes[145] = bytes[148] = 1; bytes[146] = 2; bytes[149] = 3;
+        block(152, 'CWDH', 24); u16at(160, 4); u16at(162, 5); u32at(164, 136);
+        bytes[168] = 1; bytes[169] = 1; bytes[170] = 4;
+        bytes[171] = 0xff; bytes[172] = 1; bytes[173] = 5;
+        block(176, 'CMAP', 24); u16at(184, 'A'); u16at(186, 'B'); u32at(192, 208);
+        block(200, 'CMAP', 28); u16at(208, 0x80); u16at(210, 0x82); u16at(212, 1); u32at(216, 236);
+        u16at(220, 2); u16at(222, 0xffff); u16at(224, 3);
+        block(228, 'CMAP', 36); u16at(236, 0x1000); u16at(238, 0x3000); u16at(240, 2); u16at(248, 3);
+        u16at(250, 0x1000); u16at(252, 4); u16at(254, 0x2000); u16at(256, 5); u16at(258, 0x3000); u16at(260, 6);
+
+        nw4r::ut::ResFont font;
+        require(font.SetResource(bytes.data(), bytes.size()) && aurora::endian::read_u32(bytes.data()) == 'RFNU',
+                "original loader relocates the actual resource in place and marks it RFNU");
+        const std::array<u16, 7> codes{'A', 'B', 0x80, 0x82, 0x1000, 0x2000, 0x3000};
+        const std::array<int, 7> widths{2, 3, 7, 7, 4, 5, 7};
+        for (size_t i = 0; i < codes.size(); ++i) {
+            require(font.FindGlyphIndex(codes[i]) == i && font.GetCharWidth(codes[i]) == widths[i],
+                    "original direct, table and binary-scan maps resolve exact indices and linked/default widths");
+        }
+        require(!font.HasGlyph(0x81) && !font.HasGlyph(0x1800) && font.GetCharWidth(0x81) == 3 &&
+                    font.SetAlternateChar(0x2000) && !font.SetAlternateChar(0x1800) && font.GetCharWidth(0x81) == 5,
+                "map holes and failed binary searches use the current original alternate glyph");
+        nw4r::ut::Glyph glyph{};
+        font.GetGlyph(&glyph, 0x2000);
+        require(glyph.pTexture == bytes.data() + 96 && glyph.cellX == 3 && glyph.cellY == 3 && glyph.widths.left == -1,
+                "original glyph construction uses the borrowed sheet and exact authored cell/width values");
+        nw4r::ut::ResFont shared;
+        require(shared.SetResource(bytes.data()), "a second original font can borrow the already-relocated resource");
+        font.SetLineFeed(11);
+        font.SetDefaultCharWidths({-2, 3, 9});
+        require(shared.GetLineFeed() == 11 && shared.GetCharWidth(0x80) == 9 && shared.GetDefaultCharWidths().left == -2,
+                "font mutations update shared FINF bytes, with no substitute per-font cache");
+        auto copied = bytes;
+        nw4r::ut::ResFont relocated_copy;
+        require(relocated_copy.SetResource(copied.data()), "relocating the complete RFNU buffer preserves its internal pointers");
+        relocated_copy.GetGlyph(&glyph, 0x2000);
+        require(glyph.pTexture == copied.data() + 96 && relocated_copy.GetCharWidth('A') == 2,
+                "copied resources resolve both forward and backward pointers within their new allocation");
+        font.RemoveResource();
+        require(font.IsManaging(nullptr) && shared.GetLineFeed() == 11,
+                "original resource removal releases only this borrow and leaves other fonts intact");
+        std::cout << "Original NW4R font tables, shared mutations and 64-bit resource relocation passed\n";
+    }
+
     void test_absent_and_malformed_resources_fail_honestly() {
         auto font = nw4r::ut::ResFont{};
-        require(!font.SetResource(nullptr) && !font.SetAlternateChar('?') && !font.HasGlyph('?') && font.IsManaging(nullptr),
-                "an empty ResFont must report that no resource or glyph is installed");
-        require_throws< std::logic_error >([&] { (void)font.GetWidth(); },
-                                           "font metrics without a resource must be unavailable");
+        require(!font.SetResource(nullptr, 0) && font.IsManaging(nullptr),
+                "the bounded native entry rejects absent storage without installing a resource");
 
 
         auto malformed = std::array< std::uint8_t, 16U >{
@@ -138,8 +187,6 @@ namespace {
         auto missing = nw4r::ut::Glyph{};
         font.GetGlyph(&question, '?');
         font.GetGlyph(&missing, 0xffffU);
-        require_throws< std::invalid_argument >([&] { font.GetGlyph(nullptr, '?'); },
-                                                "GetGlyph must reject absent output storage");
         const auto* resource_begin = static_cast< const std::uint8_t* >(resource);
         const auto* resource_end = resource_begin + resource_size;
         const auto* question_texture = static_cast< const std::uint8_t* >(question.pTexture);
@@ -198,8 +245,6 @@ namespace {
         font.RemoveResource();
         require(font.IsManaging(nullptr) && std::ranges::all_of(boxes, [&font](const auto* box) { return box->mpFont == &font; }),
                 "font removal preserves the original borrowed object identity without hidden copied resources");
-        require_throws<std::logic_error>([&] { boxes.front()->GetTextDrawRect(); },
-                                        "measuring an actual font with no installed resource fails explicitly");
         require(font.SetResource(resource) && font.SetAlternateChar('?'), "the same live font can reinstall its real resource");
         require(boxes.front()->GetTextDrawRect().GetWidth() == missing_rects.front().GetWidth(),
                 "existing actual TextBox font pointers observe reinstalled resources");
@@ -223,6 +268,7 @@ namespace {
 int main() {
     return smgpc::test::run_stage_resource_process("original-mii-font", [] {
         test_absent_and_malformed_resources_fail_honestly();
+        test_original_font_tables();
         const RetailFontFiles files;
         test_retail_mii_font_and_layout_binding(files.fixture);
         std::cout << "Mii font resource and layout binding tests passed: 2/2\n";

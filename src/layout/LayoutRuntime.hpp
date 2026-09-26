@@ -15,7 +15,6 @@
 
 #include "Game/Util/GamePadUtil.hpp"
 #include "RendererService.hpp"
-#include "layout/BrfntFont.hpp"
 #include <nw4r/ut/ResFont.h>
 #include <aurora/nw4r/brlan.hpp>
 #include "layout/BrlytLayout.hpp"
@@ -28,7 +27,6 @@ namespace nw4r::lyt {
 
 namespace nw4r::ut {
     class Font;
-    struct HostFontResourceState;
 }
 
 class LayoutHolder;
@@ -197,9 +195,6 @@ public:
         std::string name;
         std::shared_ptr<std::vector<std::uint8_t>> source_bytes;
         std::shared_ptr<nw4r::ut::ResFont> native_font;
-        [[nodiscard]] const BrfntFont& font() const {
-            return *native_font->GetHostResourceState().lock()->font;
-        }
     };
 
 private:

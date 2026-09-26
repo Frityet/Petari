@@ -1,5 +1,4 @@
 #include "nw4r/ut/Font.h"
-#include <aurora/allocation.hpp>
 
 namespace nw4r {
     namespace ut {
@@ -29,17 +28,3 @@ namespace nw4r {
         }
     };  // namespace ut
 };  // namespace nw4r
-
-namespace nw4r::ut {
-    Font::Font() {
-        aurora::allocation::HostAllocationScope host;
-        mHostResourceState = std::make_shared<HostFontResourceState>();
-    }
-
-    Font::~Font() = default;
-
-    std::weak_ptr<const HostFontResourceState> Font::GetHostResourceState() const noexcept {
-        return mHostResourceState;
-    }
-
-}  // namespace nw4r::ut

@@ -1,7 +1,8 @@
 #include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include "capture/ScreenshotService.hpp"
-#include "layout/BrfntFont.hpp"
+#include "nw4r/ut/ResFont.h"
+#include "resource/TplTexture.hpp"
 #include "resource/RarcArchive.hpp"
 
 #include <cstdint>
@@ -57,36 +58,41 @@ int main(int argc, char **argv) try {
 
     const auto archive_path = smgpc::debug::disc_files_root() / "KrKorean" / "LayoutData" / "Font.arc";
     const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
-    const auto font = smgpc::layout::parse_brfnt_font(archive.file_data(font_name));
-
+    const auto data = archive.file_data(font_name);
+    std::vector<u8> bytes(data.begin(), data.end());
+    nw4r::ut::ResFont font;
+    if (!font.SetResource(bytes.data(), bytes.size())) {
+        aurora::throw_host_exception<std::runtime_error>("Original NW4R reader rejected font resource");
+    }
+    const auto* texture = font.mFontInfo->pGlyph.get();
     std::cout << "font," << font_name << '\n';
-    std::cout << "metrics,height=" << static_cast<unsigned>(font.height) << ",width=" << static_cast<unsigned>(font.width)
-              << ",cell=" << static_cast<unsigned>(font.cell_width) << "x" << static_cast<unsigned>(font.cell_height)
-              << ",sheet=" << font.sheet_width << "x" << font.sheet_height << ",sheets=" << font.sheets.size() << '\n';
-    for (const auto &map : font.code_maps) {
-        std::cout << "map,begin=0x" << std::hex << map.begin << ",end=0x" << map.end << std::dec
-                  << ",method=" << static_cast<unsigned>(map.method) << '\n';
+    std::cout << "metrics,height=" << font.GetHeight() << ",width=" << font.GetWidth()
+              << ",cell=" << font.GetCellWidth() << "x" << font.GetCellHeight()
+              << ",sheet=" << u16(texture->sheetWidth) << "x" << u16(texture->sheetHeight)
+              << ",sheets=" << u16(texture->sheetNum) << '\n';
+    for (auto* map = font.mFontInfo->pMap.get(); map; map = map->pNext) {
+        std::cout << "map,begin=0x" << std::hex << u16(map->ccodeBegin) << ",end=0x" << u16(map->ccodeEnd) << std::dec
+                  << ",method=" << u16(map->mappingMethod) << '\n';
     }
-
     for (const auto code : codes) {
-        const auto glyph = font.glyph_for(code);
         std::cout << "glyph,code=0x" << std::hex << code << std::dec;
-        if (!glyph.has_value()) {
-            std::cout << ",missing\n";
-            continue;
-        }
-
-        std::cout << ",sheet=" << glyph->sheet_index << ",xy=" << glyph->x << "," << glyph->y << ",size="
-                  << static_cast<unsigned>(glyph->width) << "x" << static_cast<unsigned>(glyph->height)
-                  << ",widths=" << static_cast<int>(glyph->widths.left) << "/" << static_cast<unsigned>(glyph->widths.glyph_width) << "/"
-                  << static_cast<int>(glyph->widths.char_width) << '\n';
+        if (!font.HasGlyph(code)) { std::cout << ",missing\n"; continue; }
+        nw4r::ut::Glyph glyph{};
+        font.GetGlyph(&glyph, code);
+        const auto sheet = (static_cast<const u8*>(glyph.pTexture) - texture->sheetImage.get()) / u32(texture->sheetSize);
+        std::cout << ",sheet=" << sheet << ",xy=" << glyph.cellX << "," << glyph.cellY
+                  << ",size=" << font.GetCellWidth() << "x" << unsigned(glyph.height)
+                  << ",widths=" << int(glyph.widths.left) << "/" << unsigned(glyph.widths.glyphWidth)
+                  << "/" << int(glyph.widths.charWidth) << '\n';
     }
-
     const auto output_root = smgpc::debug::pc_port_root() / ".cache" / "font-probes";
     const auto screenshot_service = smgpc::render::capture::create_png_screenshot_service();
-    for (auto sheet = 0U; sheet < font.sheets.size(); ++sheet) {
+    for (u16 sheet = 0; sheet < texture->sheetNum; ++sheet) {
         const auto output = output_root / (font_name + "-sheet" + std::to_string(sheet) + ".png");
-        write_texture_png(*screenshot_service, output, font.sheets[sheet]);
+        const auto decoded = smgpc::resource::decode_raw_gx_texture(
+            {texture->sheetImage + sheet * u32(texture->sheetSize), u32(texture->sheetSize)},
+            texture->sheetWidth, texture->sheetHeight, static_cast<smgpc::resource::TplTextureFormat>(u16(texture->sheetFormat)));
+        write_texture_png(*screenshot_service, output, decoded);
         std::cout << "sheet_png," << output << '\n';
     }
 
