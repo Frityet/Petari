@@ -9,6 +9,15 @@
 #include <utility>
 
 namespace smgpc::resource {
+    namespace {
+        thread_local J3dAllocationIdentity* current_identity = nullptr;
+    }
+
+    J3dAllocationIdentity::Scope::Scope(J3dAllocationIdentity& identity)
+        : _previous(std::exchange(current_identity, &identity)) {}
+
+    J3dAllocationIdentity::Scope::~Scope() { current_identity = _previous; }
+
     struct J3dAllocationIdentity::State {
         std::mutex mutex;
         // Original cached addresses have their top two bits set to10. Shifting
@@ -77,7 +86,19 @@ namespace smgpc::resource {
 
     J3dAllocationIdentity::J3dAllocationIdentity(J3dAllocationIdentity&& other) noexcept
         : _state(std::move(other._state)), _base(std::exchange(other._base, 0)),
-          _extent(std::exchange(other._extent, 0)), _reservation(std::exchange(other._reservation, 0)) {}
+          _extent(std::exchange(other._extent, 0)), _reservation(std::exchange(other._reservation, 0)),
+          _native_allocation(std::exchange(other._native_allocation, nullptr)) {}
+
+    std::uint32_t J3dAllocationIdentity::original_address(const void* allocation, std::size_t original_offset) {
+        if (current_identity == nullptr || allocation == nullptr)
+            aurora::throw_host_exception<std::logic_error>("Original J3D pointer conversion requires a retained allocation identity");
+        auto& identity = *current_identity;
+        if (identity._native_allocation != nullptr && identity._native_allocation != allocation)
+            aurora::throw_host_exception<std::logic_error>("Distinct native allocations cannot share an original J3D identity");
+        const auto result = identity.address(original_offset);
+        identity._native_allocation = allocation;
+        return result;
+    }
 
     std::uint32_t J3dAllocationIdentity::address(std::size_t original_offset) const {
         if (_base == 0 || original_offset >= _extent) aurora::throw_host_exception<std::out_of_range>("J3D allocation identity offset is outside its extent");

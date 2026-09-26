@@ -142,6 +142,22 @@ namespace {
         J3dAllocationIdentity reused(0x120);
         require(reused.address(0) == freed, "released original-width reservation is reclaimed");
         rejects([&] { (void)reused.address(0x120); });
+        int outer_allocation = 0, inner_allocation = 0;
+        rejects([&] { (void)J3dAllocationIdentity::original_address(&outer_allocation); });
+        {
+            const J3dAllocationIdentity::Scope outer(reused);
+            require(J3dAllocationIdentity::original_address(&outer_allocation, 0x4c) == freed + 0x4c,
+                    "original material stride survives native pointer and object widths");
+            {
+                const J3dAllocationIdentity::Scope inner(*second);
+                require(J3dAllocationIdentity::original_address(&inner_allocation) == second->address(),
+                        "nested SDK loads select their own retained address range");
+            }
+            require(J3dAllocationIdentity::original_address(&outer_allocation) == freed,
+                    "nested SDK loads restore the enclosing address range");
+            rejects([&] { (void)J3dAllocationIdentity::original_address(&inner_allocation); });
+        }
+        rejects([&] { (void)J3dAllocationIdentity::original_address(&outer_allocation); });
     }
 
     void check_original_model(J3DModelData& model, View bytes) {
@@ -212,6 +228,18 @@ namespace {
             require(model && model->getModelDataType() == 1, "actual v26 binary model dispatch");
             require((*domain).find(model) == &(*domain), "actual model belongs to original heap domain");
             check_original_model(*model, bytes);
+            const auto mat = block(bytes, "MAT3");
+            const auto ids = read32(mat, 0x10);
+            const auto first_id = read16(mat, ids);
+            const auto base = model->getMaterialNodePointer(0)->mDiffFlag - first_id;
+            for (u16 i = 0; i < model->getMaterialNum(); ++i) {
+                const auto identity = model->getMaterialNodePointer(i)->mDiffFlag;
+                if ((flags & 0x3000) == 0x1000)
+                    require(identity == 0xc0000000U, "original locked materials retain the fixed state word");
+                else
+                    require(identity == base + read16(mat, ids + i * 2) && (identity & 0xc0000000U) == 0,
+                            "original normal/patched materials preserve remap equivalence without state-bit collisions");
+            }
             std::cout << "[resource] complete mario.bdl flags=" << std::hex << flags << std::dec << '\n';
         }
         auto domain = smgpc::test::create_native_solid_heap(runtime, 8 * 1024 * 1024);
@@ -254,6 +282,31 @@ namespace {
             require(model && model->getModelDataType() == 0, "original BMD3 path builds from native authored blocks");
             for (u16 i = 0; i < model->getShapeNum(); ++i)
                 require(model->getShapeNodePointer(i)->checkFlag(0x200), "original BMD no-matrix flag finalization");
+            const auto mat = block(bmd, "MAT3");
+            const auto ids = read32(mat, 0x10);
+            auto* unique = model->getMaterialTable().field_0x10;
+            require(unique, "original unique material storage exists");
+            const auto base = unique[0].mDiffFlag << 4;
+            for (u16 i = 0; i < model->getMaterialNum(); ++i) {
+                const auto id = read16(mat, ids + i * 2);
+                const auto* material = model->getMaterialNodePointer(i);
+                require(material->mpOrigMaterial == unique + id && material->mDiffFlag == (base + id * 0x4c) >> 4,
+                        "original unique material links and Wii-size address arithmetic agree");
+            }
+        }
+        {
+            auto bmt = bytes; set_type(bmt, "bmt3");
+            J3dModelResource authored_table(bmt, domain, mem1);
+            auto* table = authored_table.load_material_table();
+            const auto mat = block(bmt, "MAT3");
+            const auto ids = read32(mat, 0x10);
+            require(table && table->mMaterialNum == read16(mat, 8), "original nonempty material table reader");
+            const auto base = table->getMaterialNodePointer(0)->mDiffFlag - read16(mat, ids);
+            require(base >= 0x80000000U && base < 0xc0000000U,
+                    "original material-table identities use unshifted Wii addresses");
+            for (u16 i = 0; i < table->mMaterialNum; ++i)
+                require(table->getMaterialNodePointer(i)->mDiffFlag == base + read16(mat, ids + i * 2),
+                        "original material-table remaps preserve unshifted identity words");
         }
         auto bdl3 = bytes; set_type(bdl3, "bdl3");
         J3dModelResource legacy(bdl3, domain, mem1);

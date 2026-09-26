@@ -9,7 +9,7 @@ class J3DMaterialTable;
 
 namespace smgpc::resource {
     // Retained v26 material construction. Uses original material factories and
-    // loader sequences, with explicit native backing and allocation ownership.
+    // loader readers, with explicit native backing and allocation ownership.
     class J3dMaterialTableData final {
     public:
         enum class Mode { Model, BinaryModel, MaterialTable };

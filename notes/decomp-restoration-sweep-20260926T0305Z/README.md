@@ -112,3 +112,23 @@ Test fixtures needed updates to the original vector fields and the current scene
 ## Remaining work
 
 This is an ongoing restoration sweep, not a claim that every source difference has been eliminated. The current audit covers 3,211 Game files: 1,715 exact-source, 375 compile-only, 1,120 compatibility-temporary and one embedded-data file without a donor source counterpart. The compatibility-temporary category includes native ownership, serialized byte order, wide-character/varargs ABI work, formatting, and true replacement logic. Larger substantive work remains in the complete J3D model loader, archive/resource adapters, save-data validation boundaries and other construction facades. The 6,161 unreviewed symbol providers are an inventory, not a count of replacement algorithms. The summary in after/ records this checkpoint; raw audit tables remain local. No interactive full-game playthrough was performed in this sweep, and the user-controlled save and game inputs were untouched.
+
+
+## Batch 15: original J3D model-loader material readers
+
+Restore the donor J3DModelLoader readers and calculator implementation, and call the original material readers from the retained resource boundary. Remove the host material-construction algorithms. Preserve native bounds checks, decoded data, allocation retirement and original-width identity addresses. The original full-file loader still needs a native file representation before it can replace the remaining joint/geometry orchestration; do not claim that work complete.
+
+Implemented and validated:
+
+- `J3DModelLoader.cpp` now contains the donor implementation. The active resource boundary calls its original v26 normal/table/patched/locked material readers and `modifyMaterial`; the copied host construction loops were deleted. Finalization calls the original `setupBBoardInfo` instead of its hand-copied facade.
+- Donor `J3DModelLoaderCalcSize.cpp`, `J3DMaterialFactory_v21.cpp` and its header are compiled to provide the actual SDK classes/vtables. These three files are byte-identical to the donor. This does not yet add native MAT2 decoding or claim full-file original loader dispatch.
+- Remaining changes in the SDK loader are the existing bounded-resource entrypoints/finalization bridge, public GX typedef spellings, omission of a redundant implicit-constructor definition, and the original-width address conversion at material identity casts. Scoped bindings reject unrelated allocations sharing one identity and restore enclosing bindings during nested loads.
+- Native material ownership captures the actual arrays/materials published by the original readers. Byte decoding, authored range validation and retained-heap teardown stay outside Game. No Game algorithm changed.
+
+Evidence:
+
+- Current `smg-pc` and three validation targets built successfully (`batch15-build.log`). The initial compile needed the public GX typedef names; no tests from that failed build were used.
+- `batch15-model.log`: four complete-model groups pass with real Mario BDL data, all three binary material modes, BMD unique-material links/Wii stride identities, nonempty BMT unshifted identities, resource alias lifetimes, malformed-boundary rejection and complete heap retirement. Added scoped-identity checks cover nested restoration and invalid aliasing.
+- `batch15-material.log`: four material-resource groups pass, including all real Mario normal/patched/locked factories.
+- `batch15-stage.log`: real Gateway scenario 1 ran 120 frames, checked 9 original RailRider placements, and exited through normal teardown. Audio was muted; this is bounded integration evidence, not a fresh whole-game playthrough.
+- Audit: zero duplicate strong providers; 6,237 unreviewed provider records. Game file classifications remain 1,715 exact, 375 compile-only, 1,120 compatibility-bearing and one embedded-data-only file.

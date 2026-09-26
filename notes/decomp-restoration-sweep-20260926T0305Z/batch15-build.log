@@ -1,0 +1,80 @@
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/J3dModelResource.cpp[0m
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/J3dMaterialTableData.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphLoader/J3DModelLoader.cpp[0m
+[0m[38;5;2;1m[ 92%]:[0m [38;5;5;1m<smg-pc-original-j3d-model-resource-tests>[0m cache compiling.debug tests/OriginalJ3DModelResourceTests.cpp[0m
+[0m[38;5;2;1m[ 92%]:[0m [38;5;5;1m<smg-pc-original-j3d-material-resource-tests>[0m cache compiling.debug tests/OriginalJ3DMaterialResourceTests.cpp[0m
+[0m[38;5;2;1m[ 92%]:[0m [38;5;5;1m<smg-pc-original-stage-session-tests>[0m cache compiling.debug tests/OriginalStageSessionTests.cpp[0m
+[0m[38;5;3;1mIn file included from src/resource/J3dModelResource.cpp:11:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphLoader/J3DModelLoader.cpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/resource/J3dMaterialTableData.cpp:7:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;3;1mIn file included from tests/OriginalStageSessionTests.cpp:1:
+In file included from tests/OriginalStageResourceProcessFixture.hpp:9:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+In file included from tests/OriginalStageSessionTests.cpp:12:
+src/Game/Scene/StageDataHolder.hpp:16:18: warning: 'init' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   16 |     virtual void init(const JMapInfoIter&);
+      |                  ^
+src/Game/NameObj/NameObj.hpp:22:29: note: overridden virtual function is here
+   22 |                virtual void init(const JMapInfoIter& rIter);
+      |                             ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-app>[0m [38;5;5;1marchiving.debug libsmg-pc-app.a[0m
+[0m[38;5;3;1mIn file included from tests/OriginalJ3DMaterialResourceTests.cpp:1:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:426:17: warning: 'countDLSize' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  426 |     virtual s32 countDLSize();
+      |                 ^
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:361:17: note: overridden virtual function is here
+  361 |     virtual s32 countDLSize() {
+      |                 ^
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:427:18: warning: 'load' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  427 |     virtual void load();
+      |                  ^
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:345:18: note: overridden virtual function is here
+  345 |     virtual void load() {[0m
+[0m[38;5;3;1mIn file included from tests/OriginalJ3DModelResourceTests.cpp:6:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:426:17: warning: 'countDLSize' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  426 |     virtual s32 countDLSize();
+      |                 ^
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:361:17: note: overridden virtual function is here
+  361 |     virtual s32 countDLSize() {
+      |                 ^
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:427:18: warning: 'load' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  427 |     virtual void load();
+      |                  ^
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:345:18: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-stage-session-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-stage-session-tests[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-j3d-material-resource-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-j3d-material-resource-tests[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-j3d-model-resource-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-j3d-model-resource-tests[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mlinking.debug smg-pc[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mgenerating.xcode.debug smg-pc.app[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 13.573s[0m

@@ -109,6 +109,8 @@ target("smg-pc-game")
     add_files("../JSystem/J3DGraphAnimator/J3DAnimation.cpp",
               "../JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
               "../JSystem/J3DGraphLoader/J3DModelLoader.cpp",
+              "../JSystem/J3DGraphLoader/J3DModelLoaderCalcSize.cpp",
+              "../JSystem/J3DGraphLoader/J3DMaterialFactory_v21.cpp",
               "../JSystem/J3DGraphLoader/J3DJointFactory.cpp",
               "../JSystem/J3DGraphLoader/J3DMaterialFactory.cpp")
     add_files("../JSystem/J3DGraphBase/J3DDrawBuffer.cpp",

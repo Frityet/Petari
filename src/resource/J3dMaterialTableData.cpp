@@ -6,7 +6,7 @@
 #include "JSystem/J3DGraphAnimator/J3DMaterialAttach.hpp"
 #include "JSystem/J3DGraphBase/J3DMaterial.hpp"
 #include "JSystem/J3DGraphLoader/J3DMaterialFactory.hpp"
-#include "JSystem/JSupport/JSupport.hpp"
+#include "JSystem/J3DGraphLoader/J3DModelLoader.hpp"
 #include "JSystem/JUtility/JUTNameTab.hpp"
 
 #include <algorithm>
@@ -70,7 +70,6 @@ namespace smgpc::resource {
         std::vector<MaterialAllocation> materials;
         std::vector<std::uint32_t> tex_no_offsets;
         J3DMaterialTable table;
-        const J3DMaterialBlock* material_block = nullptr;
         bool attached = false;
 
         Storage(Bytes bytes, std::uint32_t flags, Mode mode, JKRHeap::Handle owner)
@@ -87,6 +86,8 @@ namespace smgpc::resource {
             require_range(bytes, 0, size);
             bytes = bytes.first(size);
             const auto count = u32_at(bytes, 0xC);
+            J3DModelLoader_v26 loader;
+            loader.mpMaterialTable = &table;
             std::size_t cursor = 0x20;
             for (std::uint32_t i = 0; i < count; ++i) {
                 require_range(bytes, cursor, 8);
@@ -104,63 +105,43 @@ namespace smgpc::resource {
                     const aurora::allocation::ClientAllocationScope original_allocations_routing({true, true});
                     if (type == 0x4D415433U) {
                         if (mode == Mode::MaterialTable) {
-                            read_material_table(retained->material(), 0x51100000U);
+                            read_material(loader, retained->material(), 0x51100000U, normal, true);
                         } else if (mode == Mode::Model) {
-                            read_material(retained->material(), flags);
+                            read_material(loader, retained->material(), flags, normal, false);
                         } else {
                             const auto material_flags = 0x50100000U | (flags & 0x03000000U);
-                            material_block = &retained->material();
-                            if ((flags & 0x3000U) == 0) read_material(*material_block, material_flags);
-                            else if ((flags & 0x3000U) == 0x2000U) read_patched_material(*material_block, material_flags);
+                            loader.mpMaterialBlock = &retained->material();
+                            if ((flags & 0x3000U) == 0) read_material(loader, *loader.mpMaterialBlock, material_flags, normal, false);
+                            else if ((flags & 0x3000U) == 0x2000U) read_material(loader, *loader.mpMaterialBlock, material_flags, patched, false);
                         }
                     } else {
-                        read_material_dl(retained->display_list(), flags);
-                        modify_material(flags);
+                        read_material_dl(loader, retained->display_list(), flags);
                     }
                 }
                 cursor += block_size;
             }
         }
 
-        JUTNameTab* create_name(const void* block, const void* offset) {
-            if (offset == nullptr) return nullptr;
-            auto name = std::unique_ptr<JUTNameTab>(new JUTNameTab(JSUConvertOffsetToPtr<ResNTAB>(block, offset)));
-            auto* result = name.get();
+        // The original loader owns construction policy. Keep its published
+        // allocations alive until the decoded resource and native heap retire.
+        void retain_created_materials(MaterialType type) {
             aurora::allocation::HostAllocationScope host;
-            names.push_back(std::move(name));
-            return result;
+            names.emplace_back(table.mMaterialName);
+            pointer_arrays.emplace_back(table.mMaterialNodePointer);
+            unique_arrays.emplace_back(table.field_0x10);
+            tex_no_offsets.assign(table.mMaterialNum, 0);
+            for (u16 i = 0; i < table.mMaterialNum; ++i)
+                materials.emplace_back(table.mMaterialNodePointer[i], type);
         }
-        J3DMaterial** create_pointer_array(std::uint16_t count) {
-            auto array = std::unique_ptr<J3DMaterial*[]>(new J3DMaterial*[count]);
-            auto* result = array.get();
-            aurora::allocation::HostAllocationScope host;
-            pointer_arrays.push_back(std::move(array));
-            tex_no_offsets.assign(count, 0);
-            return result;
-        }
-        J3DMaterial* create_unique_array(std::uint16_t count) {
-            auto array = std::unique_ptr<J3DMaterial[]>(new (0x20) J3DMaterial[count]);
-            auto* result = array.get();
-            aurora::allocation::HostAllocationScope host;
-            unique_arrays.push_back(std::move(array));
-            return result;
-        }
-        J3DMaterial* create(const J3DMaterialFactory& factory, J3DMaterial* existing, MaterialType type, int index, std::uint32_t flags) {
-            auto* result = factory.create(existing, type, index, flags);
-            if (existing == nullptr) {
-                MaterialAllocation allocation(result, type);
-                aurora::allocation::HostAllocationScope host;
-                materials.push_back(std::move(allocation));
-            }
-            return result;
-        }
-        J3dAllocationIdentity& identity(const J3DMaterialFactory& factory, bool unique) {
+
+        J3dAllocationIdentity& identity(const J3DMaterialFactory& factory, std::uint16_t count,
+                                       std::uint16_t unique_count, bool unique) {
             std::size_t maximum_id = 0;
-            for (u16 i = 0; i < table.mMaterialNum; ++i) maximum_id = std::max<std::size_t>(maximum_id, factory.getMaterialID(i));
-            if (unique && table.mMaterialNum != 0 && maximum_id >= table.mUniqueMatNum)
+            for (u16 i = 0; i < count; ++i) maximum_id = std::max<std::size_t>(maximum_id, factory.getMaterialID(i));
+            if (unique && count != 0 && maximum_id >= unique_count)
                 fail("MAT3 unique material remap exceeds the original counted array");
-            const auto extent = unique ? std::max<std::size_t>(1, table.mUniqueMatNum * original_material_stride)
-                                       : std::max<std::size_t>(16 * (maximum_id + 1), table.mMaterialNum * 4U);
+            const auto extent = unique ? std::max<std::size_t>(1, unique_count * original_material_stride)
+                                       : std::max<std::size_t>(16 * (maximum_id + 1), count * 4U);
             aurora::allocation::HostAllocationScope host;
             auto owner = std::make_unique<J3dAllocationIdentity>(extent);
             auto* result = owner.get();
@@ -168,97 +149,30 @@ namespace smgpc::resource {
             return *result;
         }
 
-        // Original J3DModelLoader_v26::readMaterial, 0x8043EC04. The explicit
-        // lifetime helpers above retain original allocations; identity words use
-        // disjoint original-width addresses instead of truncating host pointers.
-        void read_material(const J3DMaterialBlock& block, std::uint32_t flags) {
+        void read_material(J3DModelLoader_v26& loader, const J3DMaterialBlock& block,
+                           std::uint32_t flags, MaterialType type, bool table_only) {
             J3DMaterialFactory factory(block);
-            table.mMaterialNum = block.mMaterialNum;
-            table.mUniqueMatNum = factory.countUniqueMaterials();
-            table.mMaterialName = create_name(&block, block.mpNameTable);
-            table.mMaterialNodePointer = create_pointer_array(table.mMaterialNum);
-            if (flags & 0x200000U) table.field_0x10 = create_unique_array(table.mUniqueMatNum);
-            else table.field_0x10 = nullptr;
-            auto& addresses = identity(factory, (flags & 0x200000U) != 0);
-            if (flags & 0x200000U) {
-                for (u16 i = 0; i < table.mUniqueMatNum; ++i) {
-                    create(factory, &table.field_0x10[i], normal, i, flags);
-                    table.field_0x10[i].mDiffFlag = addresses.address(i * original_material_stride) >> 4;
-                }
-            }
-            for (u16 i = 0; i < table.mMaterialNum; ++i)
-                table.mMaterialNodePointer[i] = create(factory, nullptr, normal, i, flags);
-            if (flags & 0x200000U) {
-                for (u16 i = 0; i < table.mMaterialNum; ++i) {
-                    table.mMaterialNodePointer[i]->mDiffFlag = addresses.address(factory.getMaterialID(i) * original_material_stride) >> 4;
-                    table.mMaterialNodePointer[i]->mpOrigMaterial = &table.field_0x10[factory.getMaterialID(i)];
-                }
-            } else {
-                for (u16 i = 0; i < table.mMaterialNum; ++i)
-                    table.mMaterialNodePointer[i]->mDiffFlag = (addresses.address() >> 4) + factory.getMaterialID(i);
-            }
+            const bool unique = !table_only && type == normal && (flags & 0x200000U);
+            auto& addresses = identity(factory, block.mMaterialNum, factory.countUniqueMaterials(), unique);
+            const J3dAllocationIdentity::Scope address_binding(addresses);
+            if (table_only) loader.readMaterialTable(&block, flags);
+            else if (type == patched) loader.readPatchedMaterial(&block, flags);
+            else loader.readMaterial(&block, flags);
+            retain_created_materials(type);
         }
 
-        // Original J3DModelLoader_v26::readMaterialTable, 0x8043F2CC.
-        void read_material_table(const J3DMaterialBlock& block, std::uint32_t flags) {
-            J3DMaterialFactory factory(block);
-            table.mMaterialNum = block.mMaterialNum;
-            table.mMaterialName = create_name(&block, block.mpNameTable);
-            table.mMaterialNodePointer = create_pointer_array(table.mMaterialNum);
-            for (u16 i = 0; i < table.mMaterialNum; ++i)
-                table.mMaterialNodePointer[i] = create(factory, nullptr, normal, i, flags);
-            auto& addresses = identity(factory, false);
-            for (u16 i = 0; i < table.mMaterialNum; ++i)
-                table.mMaterialNodePointer[i]->mDiffFlag = addresses.address() + factory.getMaterialID(i);
-        }
-
-        // Original J3DModelLoader::readPatchedMaterial, 0x8043F608.
-        void read_patched_material(const J3DMaterialBlock& block, std::uint32_t flags) {
-            J3DMaterialFactory factory(block);
-            table.mMaterialNum = block.mMaterialNum;
-            table.mUniqueMatNum = factory.countUniqueMaterials();
-            table.mMaterialName = create_name(&block, block.mpNameTable);
-            table.mMaterialNodePointer = create_pointer_array(table.mMaterialNum);
-            table.field_0x10 = nullptr;
-            auto& addresses = identity(factory, false);
-            for (u16 i = 0; i < table.mMaterialNum; ++i) {
-                table.mMaterialNodePointer[i] = create(factory, nullptr, patched, i, flags);
-                table.mMaterialNodePointer[i]->mDiffFlag = (addresses.address() >> 4) + factory.getMaterialID(i);
-            }
-        }
-
-        // Original J3DModelLoader::readMaterialDL, 0x8043F744.
-        void read_material_dl(const J3DMaterialDLBlock& block, std::uint32_t flags) {
-            J3DMaterialFactory factory(block);
+        void read_material_dl(J3DModelLoader_v26& loader, const J3DMaterialDLBlock& block, std::uint32_t flags) {
             if (table.mMaterialNum > block.mMaterialNum)
                 fail("MDL3 cannot patch more materials than its authored tables contain");
-            if (table.mMaterialNum == 0) {
-                table.field_0x1c = 1;
-                table.mMaterialNum = block.mMaterialNum;
-                table.mUniqueMatNum = block.mMaterialNum;
-                table.mMaterialName = create_name(&block, block.mpNameTable);
-                table.mMaterialNodePointer = create_pointer_array(table.mMaterialNum);
-                table.field_0x10 = nullptr;
-                for (u16 i = 0; i < table.mMaterialNum; ++i)
-                    table.mMaterialNodePointer[i] = create(factory, nullptr, locked, i, flags);
-                for (u16 i = 0; i < table.mMaterialNum; ++i)
-                    table.mMaterialNodePointer[i]->mDiffFlag = 0xC0000000U;
-            } else {
-                for (u16 i = 0; i < table.mMaterialNum; ++i)
-                    table.mMaterialNodePointer[i] = create(factory, table.mMaterialNodePointer[i], locked, i, flags);
-            }
+            if ((flags & 0x2000U) && (loader.mpMaterialBlock == nullptr ||
+                    (table.mMaterialNum == 0 ? block.mMaterialNum : table.mMaterialNum) > loader.mpMaterialBlock->mMaterialNum))
+                fail("Patched MDL3 requires a preceding MAT3 with matching material indices");
+            const bool creates_materials = table.mMaterialNum == 0;
+            loader.readMaterialDL(&block, flags);
+            if (creates_materials) retain_created_materials(locked);
+            loader.modifyMaterial(flags);
+            J3DMaterialFactory factory(block);
             for (u16 i = 0; i < table.mMaterialNum; ++i) tex_no_offsets[i] = factory.mpPatchingInfo[i].mTexNoOffset;
-        }
-
-        // Original J3DModelLoader::modifyMaterial, 0x8043F8F0.
-        void modify_material(std::uint32_t flags) {
-            if (flags & 0x2000U) {
-                if (material_block == nullptr || table.mMaterialNum > material_block->mMaterialNum)
-                    fail("Patched MDL3 requires a preceding MAT3 with matching material indices");
-                J3DMaterialFactory factory(*material_block);
-                for (u16 i = 0; i < table.mMaterialNum; ++i)
-                    factory.modifyPatchedCurrentMtx(table.mMaterialNodePointer[i], i);
-            }
         }
     };
 
