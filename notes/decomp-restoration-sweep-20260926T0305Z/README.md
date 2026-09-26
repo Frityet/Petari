@@ -166,3 +166,22 @@ Implemented and validated:
 - `batch17-model.log`: all four complete-model groups pass, with added SDK-heap provenance checks for all real model shapes.
 - `batch17-stage.log`: real Gateway completes 120 frames, nine RailRider placement checks and normal teardown; audio muted.
 - `batch17-audit.log`: zero duplicate strong providers. Vertex-count/source-offset handling and full-file dispatch remain the next J3D restoration work.
+
+
+## Batch 18: original J3D vertex reader
+
+Retain source-to-native offset metadata at the typed resource boundary and call the original `readVertex` for both CPU footprint discovery and final vertex-table construction. Preserve original source distances across independently converted and aligned native arrays.
+
+Implemented and validated:
+
+- `J3dNativeBlock` retains the source mappings previously discarded after construction and exposes a scoped source-offset view. This is a typed metadata relocation boundary, independent of any game object or stage.
+- The donor `J3DModelLoader::readVertex` now performs vertex publication and count arithmetic. Only the five address/offset expressions involved in counts use the original-source mapping, because host alignment and independent endian conversions change native distances.
+- The decoder calls that same original reader on a bounded layout of raw array bytes plus native format records to discover CPU read footprints before conversion. It then copies/converts the actual required bytes, including original cross-table/block lookahead. Final attachment calls the original reader again with the converted arrays and retained source offsets.
+- Deleted the host's count formulas and manual normal/color/texture-count and vertex-pointer publication. Authored range checks remain at the decoder boundary.
+- `batch18-build.log`: current main, geometry-resource, complete-model and Gateway targets build successfully.
+- `batch18-geometry.log`: six groups pass, including original format/successor/+1 count rules, packed colors, zero/absent arrays, actual next-table/next-block bytes, array registration extents, repeated-slot retirement and real Mario counts (2,742 normals, 41 colors, 977 texture metadata entries).
+- `batch18-model.log`: all four complete-model groups pass across normal/patched/locked and unique material paths, aliases, malformed inputs and heap retirement.
+- `batch18-stage.log`: real Gateway completes 120 frames, nine RailRider checks and normal teardown with audio muted.
+- `batch18-audit.log`: zero duplicate strong providers. This batch changes no Game algorithm.
+
+Current J3D boundary: original readers now handle materials, joints, information, envelopes, draw matrices, shapes, vertices and billboard setup. The retained resource owner still orchestrates file dispatch/finalization and constructs texture wrappers; native MAT2 decoding remains unimplemented. Those are remaining restoration tasks. No claim of removing every port implementation or validating a complete game playthrough is made.

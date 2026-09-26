@@ -33,6 +33,13 @@ namespace smgpc::resource {
 
         std::unique_ptr<std::byte[], DeleteStorage> _bytes;
         std::size_t _size;
+        struct SourceRange {
+            std::size_t source;
+            std::size_t size;
+            std::size_t native;
+        };
+        std::vector<SourceRange> _sources;
+        static inline thread_local const J3dNativeBlock* _source_context = nullptr;
 
         explicit J3dNativeBlock(std::size_t size)
             : _bytes(static_cast<std::byte*>(::operator new[](size, std::align_val_t(storage_alignment)))),
@@ -41,6 +48,29 @@ namespace smgpc::resource {
         }
 
     public:
+        // Original readers sometimes use pointer differences as file offsets.
+        // Preserve those offsets across native alignment and independently
+        // converted arrays without changing their original count arithmetic.
+        class SourceScope final {
+            const J3dNativeBlock* _previous;
+        public:
+            explicit SourceScope(const J3dNativeBlock& block)
+                : _previous(std::exchange(_source_context, &block)) {}
+            ~SourceScope() { _source_context = _previous; }
+            SourceScope(const SourceScope&) = delete;
+            SourceScope& operator=(const SourceScope&) = delete;
+        };
+
+        [[nodiscard]] static std::uintptr_t source_offset(const Header* block, const void* pointer) {
+            const auto offset = reinterpret_cast<std::uintptr_t>(pointer) - reinterpret_cast<std::uintptr_t>(block);
+            if (_source_context == nullptr || &_source_context->header() != block) return offset;
+            for (const auto& range : _source_context->_sources) {
+                if (offset >= range.native && offset - range.native <= range.size)
+                    return range.source + (offset - range.native);
+            }
+            aurora::throw_host_exception<std::out_of_range>("J3D native pointer has no retained source offset");
+        }
+
         J3dNativeBlock(const J3dNativeBlock&) = delete;
         J3dNativeBlock& operator=(const J3dNativeBlock&) = delete;
 
@@ -69,11 +99,6 @@ namespace smgpc::resource {
                         std::construct_at(reinterpret_cast<T*>(storage + this->offset + i * sizeof(T)), values[i]);
                     }
                 }
-            };
-            struct SourceRange {
-                std::size_t source;
-                std::size_t size;
-                std::size_t native;
             };
             std::size_t _size = sizeof(Header);
             std::vector<std::unique_ptr<Part>> _parts;
@@ -156,6 +181,7 @@ namespace smgpc::resource {
                 auto result = std::unique_ptr<J3dNativeBlock>(new J3dNativeBlock(_size));
                 std::construct_at(reinterpret_cast<Header*>(result->_bytes.get()), header);
                 for (const auto& part : _parts) part->construct(result->_bytes.get());
+                result->_sources = std::move(_sources);
                 _finished = true;
                 return result;
             }

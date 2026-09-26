@@ -1,6 +1,7 @@
 #include "resource/J3dModelResource.hpp"
 #include "resource/J3dAllocationIdentity.hpp"
 #include "resource/J3dShapeAllocations.hpp"
+#include "resource/J3dNativeBlock.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphLoader/J3DModelLoader.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
@@ -267,9 +268,10 @@ void J3DModelLoader::readVertex(J3DVertexBlock const* i_block) {
     if (vertex_data.mVtxNrmArray == NULL) {
         vertex_data.mNrmNum = 0;
     } else if (nrm_end != NULL) {
-        vertex_data.mNrmNum = ((uintptr_t)nrm_end - (uintptr_t)vertex_data.mVtxNrmArray) / nrm_size + 1;
+        vertex_data.mNrmNum = (smgpc::resource::J3dNativeBlock<J3DVertexBlock>::source_offset(i_block, nrm_end) -
+                              smgpc::resource::J3dNativeBlock<J3DVertexBlock>::source_offset(i_block, vertex_data.mVtxNrmArray)) / nrm_size + 1;
     } else {
-        vertex_data.mNrmNum = (i_block->mBlockSize - (uintptr_t)i_block->mpVtxNrmArray) / nrm_size + 1;
+        vertex_data.mNrmNum = (i_block->mBlockSize - smgpc::resource::J3dNativeBlock<J3DVertexBlock>::source_offset(i_block, vertex_data.mVtxNrmArray)) / nrm_size + 1;
     }
 
     void* color0_end = NULL;
@@ -282,15 +284,16 @@ void J3DModelLoader::readVertex(J3DVertexBlock const* i_block) {
     if (vertex_data.mVtxColorArray[0] == NULL) {
         vertex_data.mColNum = 0;
     } else if (color0_end != NULL) {
-        vertex_data.mColNum = ((uintptr_t)color0_end - (uintptr_t)vertex_data.mVtxColorArray[0]) / 4 + 1;
+        vertex_data.mColNum = (smgpc::resource::J3dNativeBlock<J3DVertexBlock>::source_offset(i_block, color0_end) -
+                              smgpc::resource::J3dNativeBlock<J3DVertexBlock>::source_offset(i_block, vertex_data.mVtxColorArray[0])) / 4 + 1;
     } else {
-        vertex_data.mColNum = (i_block->mBlockSize - (uintptr_t)i_block->mpVtxColorArray[0]) / 4 + 1;
+        vertex_data.mColNum = (i_block->mBlockSize - smgpc::resource::J3dNativeBlock<J3DVertexBlock>::source_offset(i_block, vertex_data.mVtxColorArray[0])) / 4 + 1;
     }
 
     if (vertex_data.mVtxTexCoordArray[0] == NULL) {
         vertex_data.mTexCoordNum = 0;
     } else {
-        vertex_data.mTexCoordNum = (i_block->mBlockSize - (uintptr_t)i_block->mpVtxTexCoordArray[0]) / 8 + 1;
+        vertex_data.mTexCoordNum = (i_block->mBlockSize - smgpc::resource::J3dNativeBlock<J3DVertexBlock>::source_offset(i_block, vertex_data.mVtxTexCoordArray[0])) / 8 + 1;
     }
 }
 

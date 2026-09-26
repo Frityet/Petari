@@ -1,0 +1,10 @@
+duplicate_strong_symbols=0.0
+unreviewed_symbol_providers=6246.0
+source closeness audit written to notes/decomp-restoration-sweep-20260926T0305Z/after
+audited_original_game_files=3211
+compat_layer_files=510
+exact-source=1715
+compile-only=375
+debug-only=0
+compat-temporary=1120
+decomp-needed=1

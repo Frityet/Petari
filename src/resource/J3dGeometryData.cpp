@@ -148,9 +148,6 @@ namespace smgpc::resource {
         std::uint32_t load_flags = 0;
         std::uint32_t packet_count = 0;
         std::uint32_t vertex_count = 0;
-        std::uint32_t normal_count = 0;
-        std::uint32_t color_count = 0;
-        std::uint32_t texcoord_count = 0;
         bool attached = false;
 
         Storage(Bytes bytes, std::uint32_t flags) : load_flags(flags) {
@@ -202,18 +199,43 @@ namespace smgpc::resource {
                 return GXVtxAttrFmtList{attr, GX_POS_XYZ, GX_F32, 0};
             };
             const auto normal_size = find_format(GX_VA_NRM).type == GX_F32 ? 12U : 6U;
-            const auto count_to = [&](std::size_t begin, std::size_t end, std::uint32_t stride) -> std::uint32_t {
-                if (begin == 0) return 0;
-                if (end < begin) aurora::throw_host_exception<std::runtime_error>("J3D vertex count boundary precedes its array");
-                return static_cast<std::uint32_t>((end - begin) / stride + 1);
-            };
-            // Original readVertex uses these specific successor choices and +1;
-            // native placement changes pointer distances, so derive from source.
+            // Reject reversed authored ranges before the original unsigned
+            // pointer arithmetic. Counts themselves come from readVertex.
             const auto normal_end = offsets[3] ? offsets[3] : offsets[4] ? offsets[4] : offsets[6] ? offsets[6] : block.size();
             const auto color_end = offsets[5] ? offsets[5] : offsets[6] ? offsets[6] : block.size();
-            normal_count = count_to(offsets[2], normal_end, normal_size);
-            color_count = count_to(offsets[4], color_end, 4);
-            texcoord_count = count_to(offsets[6], block.size(), 8);
+            if ((offsets[2] && normal_end < offsets[2]) || (offsets[4] && color_end < offsets[4]))
+                aurora::throw_host_exception<std::runtime_error>("J3D vertex count boundary precedes its array");
+            std::uint32_t normal_count, color_count, texcoord_count;
+            {
+                // The original reader inspects the native format list and
+                // array addresses; it never reads the array values here. Keep
+                // one bounded raw layout to obtain its exact CPU footprints
+                // before independently converting those arrays.
+                VertexBlock::Builder layout_builder;
+                layout_builder.header.mBlockType = builder.header.mBlockType;
+                layout_builder.header.mBlockSize = builder.header.mBlockSize;
+                layout_builder.header.mpVtxAttrFmtList = VertexBlock::Builder::pointer_offset(
+                    layout_builder.append<GXVtxAttrFmtList>(formats));
+                const auto raw = layout_builder.append_bytes(block);
+                layout_builder.map_source_range(0, block.size(), raw);
+                const auto pointer = [&](std::size_t index) {
+                    return offsets[index] ? VertexBlock::Builder::pointer_offset(raw + offsets[index]) : nullptr;
+                };
+                layout_builder.header.mpVtxPosArray = pointer(1);
+                layout_builder.header.mpVtxNrmArray = pointer(2);
+                layout_builder.header.mpVtxNBTArray = pointer(3);
+                for (std::size_t i = 0; i < 2; ++i) layout_builder.header.mpVtxColorArray[i] = pointer(4 + i);
+                for (std::size_t i = 0; i < 8; ++i) layout_builder.header.mpVtxTexCoordArray[i] = pointer(6 + i);
+                const auto layout = std::move(layout_builder).finish();
+                J3DModelData metadata;
+                J3DModelLoader_v26 loader;
+                loader.mpModelData = &metadata;
+                const VertexBlock::SourceScope source_offsets(*layout);
+                loader.readVertex(&layout->header());
+                normal_count = metadata.getVertexData().mNrmNum;
+                color_count = metadata.getVertexData().mColNum;
+                texcoord_count = metadata.getVertexData().mTexCoordNum;
+            }
 
             const auto array = [&](std::size_t index, GXAttr attr, std::size_t footprint) -> void* {
                 const auto source_offset = offsets[index];
@@ -256,6 +278,10 @@ namespace smgpc::resource {
                 if (aligned_size != 0) {
                     native_arrays.emplace_back(native_offset, aligned_size);
                 }
+                // Independently endian-converted arrays may overlap in the
+                // source but have distinct native storage. Only their starting
+                // addresses participate in the original count arithmetic.
+                builder.map_source_range(source_offset, 0, native_offset);
                 return VertexBlock::Builder::pointer_offset(native_offset);
             };
             const auto pos_size = find_format(GX_VA_POS).type == GX_F32 ? 12U : 6U;
@@ -423,15 +449,12 @@ namespace smgpc::resource {
         auto& block = storage.vertex->header();
         vertex.mPacketNum = storage.packet_count;
         vertex.mVtxNum = storage.vertex_count;
-        vertex.mNrmNum = storage.normal_count;
-        vertex.mColNum = storage.color_count;
-        vertex.mTexCoordNum = storage.texcoord_count;
-        vertex.mVtxAttrFmtList = JSUConvertOffsetToPtr<GXVtxAttrFmtList>(&block, block.mpVtxAttrFmtList);
-        vertex.mVtxPosArray = JSUConvertOffsetToPtr<void>(&block, block.mpVtxPosArray);
-        vertex.mVtxNrmArray = JSUConvertOffsetToPtr<void>(&block, block.mpVtxNrmArray);
-        vertex.mVtxNBTArray = JSUConvertOffsetToPtr<void>(&block, block.mpVtxNBTArray);
-        for (std::size_t i = 0; i < 2; ++i) vertex.mVtxColorArray[i] = JSUConvertOffsetToPtr<GXColor>(&block, block.mpVtxColorArray[i]);
-        for (std::size_t i = 0; i < 8; ++i) vertex.mVtxTexCoordArray[i] = JSUConvertOffsetToPtr<void>(&block, block.mpVtxTexCoordArray[i]);
+        {
+            J3DModelLoader_v26 loader;
+            loader.mpModelData = &model;
+            const Storage::VertexBlock::SourceScope source_offsets(*storage.vertex);
+            loader.readVertex(&block);
+        }
         // readShape only consumes INF hierarchy and SHP metadata. Use an
         // actual SDK construction context, then retain its published table.
         J3DModelData construction;
