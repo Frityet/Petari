@@ -3,6 +3,8 @@
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/NPC/TalkNodeCtrl.hpp"
 #include "Game/Screen/MessageTagSkipTagProcessor.hpp"
+#include "Game/Screen/ReplaceTagProcessor.hpp"
+#include "Game/Util/EventUtil.hpp"
 #include "Game/System/MessageHolder.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "nw4r/ut/CharStrmReader.h"
@@ -157,6 +159,28 @@ void verify_original_message_tag_processor(const nw4r::ut::Font& metrics_font) {
     MessageEditorMessageTag tag(params.data());
     require(tag.getParam32(0) == 0x12345678 && tag.getParam32(1) == 0xabcdef01 && tag.getSkipLength() == 6,
             "recovered tag parameters combine original big-endian words at both u32 positions");
+    require(tag.getGroup() == 8 && tag.getTag() == 0 && tag.getParamLength() == 8 &&
+                tag.getParam8(0) == 0x12 && tag.getParam8(1) == 0x34 && tag.getParam16(1) == 0x5678 &&
+                tag.getParamPtr(2) == params.data() + 3,
+            "donor tag accessors preserve byte, word and borrowed payload addressing on native wchar_t");
+    wchar_t replaced[128]{};
+    const wchar_t number_format[] = {'N', '=', 0x1a, 0x0e06, 5, 0, 0, 0, 1, 0};
+    ReplaceTagFunction::ReplaceArgs(replaced, 128, number_format, 99, 7);
+    require(std::wcscmp(replaced, L"N=07") == 0,
+            "original number substitution selects the indexed native vararg and keeps its zero padding");
+    const wchar_t string_format[] = {'S', '=', 0x1a, 0x0e07, 0, 0, 0, 0, 1, 0};
+    ReplaceTagFunction::ReplaceArgs(replaced, 128, string_format, L"first", L"second");
+    require(std::wcscmp(replaced, L"S=second") == 0,
+            "original string substitution selects the indexed native pointer vararg");
+    const wchar_t picture_format[] = {'A', 0x1a, 0x0603, 0x2b, 'B', 0x1a, 0x0601, 1, 'C', 0};
+    require(ReplaceTagProcessor::Replace(replaced, picture_format) == 5 && replaced[0] == 'A' && replaced[1] == 0x1a &&
+                replaced[2] == 0x0603 && replaced[3] == (MR::isPlayerLuigi() ? 0x1c : 0x12) &&
+                replaced[4] == 'B' && replaced[5] == 0,
+            "original player icon replacement preserves UTF16 tag words and stops at the authored page boundary");
+    const wchar_t retained_format[] = {'A', 0x1a, 0x080b, 2, 0, 'Z', 0};
+    require(ReplaceTagProcessor::Replace(replaced, retained_format) == 6 &&
+                std::memcmp(replaced, retained_format, sizeof(retained_format)) == 0,
+            "unhandled original tag groups retain their full payload, including embedded zero words");
     ResFont font;
     font.InitReaderFunc(FONT_ENCODING_UTF16);
     auto reader = font.GetCharStrmReader();

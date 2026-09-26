@@ -592,7 +592,7 @@ CustomTagProcessor::Operation CustomTagProcessor::exeSystemGroupRuby(nw4r::ut::R
 }
 
 #include "Game/Screen/CustomTagProcessor.hpp"
-#include "Game/Screen/MessageEditorMessageTag.hpp"
+#include "Game/Screen/MessageTagSkipTagProcessor.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "nw4r/ut/TextWriterBase.h"
@@ -720,7 +720,7 @@ CustomTagProcessor::Operation CustomTagProcessor::exeStringGroup(nw4r::ut::Rect*
 }
 
 #include "Game/Screen/CustomTagProcessor.hpp"
-#include "Game/Screen/MessageEditorMessageTag.hpp"
+#include "Game/Screen/MessageTagSkipTagProcessor.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "nw4r/ut/TextWriterBase.h"
 

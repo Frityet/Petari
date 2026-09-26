@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <stdint.h>
 #if defined(TARGET_PC)
-#include "Game/Screen/MessageEditorMessageTag.hpp"
+#include "Game/Screen/MessageTagSkipTagProcessor.hpp"
 #include <cstring>
 #include <cwchar>
 #include <strings.h>

@@ -1,6 +1,6 @@
 #include "Game/Util/MessageUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "Game/Screen/MessageEditorMessageTag.hpp"
+#include "Game/Screen/MessageTagSkipTagProcessor.hpp"
 #include "Game/Map/RaceManager.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/System/MessageHolder.hpp"
@@ -272,11 +272,3 @@ namespace MR {
         snprintf(pDst, bufferSize, "CometName_%s", pCometName);
     }
 };  // namespace MR
-
-bool MessageEditorMessageTag::isGroupTagId(int group, int tag) const {
-#if defined(TARGET_PC)
-    return (static_cast< u32 >(*mMessage) & 0xFFU) == group && mMessage[1] == tag;
-#else
-    return reinterpret_cast< const u8* >(mMessage)[1] == group && mMessage[1] == tag;
-#endif
-}

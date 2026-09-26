@@ -1,0 +1,186 @@
+[0m[38;5;2;1m[ 11%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/LayoutUtil.cpp[0m
+[0m[38;5;2;1m[ 13%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/StringUtil.cpp[0m
+[0m[38;5;2;1m[ 14%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/MessageUtil.cpp[0m
+[0m[38;5;2;1m[ 14%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NWC24/LuigiMailDirector.cpp[0m
+[0m[38;5;2;1m[ 14%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NWC24/ReceiverTagMail.cpp[0m
+[0m[38;5;2;1m[ 48%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/ReplaceTagProcessor.cpp[0m
+[0m[38;5;2;1m[ 49%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/CustomTagProcessor.cpp[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/StaffRoll.cpp[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/LayoutManager.cpp[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/PowerStarList.cpp[0m
+[0m[38;5;2;1m[ 52%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/LayoutCoreUtil.cpp[0m
+[0m[38;5;2;1m[ 52%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/MessageTagSkipTagProcessor.cpp[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NameObj/NameObjFactory.cpp[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NPC/TalkTextFormer.cpp[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NPC/TalkNodeCtrl.cpp[0m
+[0m[38;5;2;1m[ 80%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/layout/Nw4rLayoutRecords.cpp[0m
+[0m[38;5;2;1m[ 91%]:[0m [38;5;5;1m<smg-pc-original-message-holder-tests>[0m cache compiling.debug tests/OriginalMessageHolderTests.cpp[0m
+[0m[38;5;2;1m[ 91%]:[0m [38;5;5;1m<smg-pc-original-message-holder-tests>[0m cache compiling.debug tests/OriginalTalkNodeTests.cpp[0m
+[0m[38;5;2;1m[ 91%]:[0m [38;5;5;1m<smg-pc-original-layout-group-tests>[0m cache compiling.debug tests/OriginalLayoutGroupTests.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/LayoutCoreUtil.cpp:1:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+In file included from src/Game/Screen/LayoutCoreUtil.cpp:1:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:5:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;3;1mIn file included from src/Game/NPC/TalkTextFormer.cpp:7:
+In file included from src/Game/Screen/CustomTagProcessor.hpp:4:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/Game/NPC/TalkTextFormer.cpp:7:
+In file included from src/Game/Screen/CustomTagProcessor.hpp:4:
+In file included from src/nw4r/lyt/textBox.h:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof][0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/CustomTagProcessor.cpp:1:
+In file included from src/Game/Screen/CustomTagProcessor.hpp:4:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/Game/Screen/CustomTagProcessor.cpp:1:
+In file included from src/Game/Screen/CustomTagProcessor.hpp:4:
+In file included from src/nw4r/lyt/textBox.h:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof][0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/PowerStarList.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+In file included from src/Game/Screen/PowerStarList.cpp:25:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+src/Game/Screen/PowerStarList.cpp:101:79: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  101 |     s32 getSortPriority(const GalaxyStatusAccessor* pAccessor) __attribute__((noinline)) {
+      |                                                                               ^
+src/Game/Screen/PowerStarList.cpp:123:52: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  123 |     s32 getDisplayRaceBestTimeNum() __attribute__((noinline)) {
+      |                                                    ^
+4 warnings generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/LayoutUtil.cpp:4:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+In file included from src/Game/Util/LayoutUtil.cpp:4:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:5:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/LayoutManager.cpp:1:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:3:
+In file included from src/nw4r/lyt/animation.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/Game/Screen/LayoutManager.cpp:1:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:4:[0m
+[0m[38;5;3;1mIn file included from src/Game/NameObj/NameObjFactory.cpp:11:
+In file included from src/Game/MapObj.hpp:99:
+src/Game/MapObj/FloaterFloatingForce.hpp:21:16: warning: returning reference to local temporary object [-Wreturn-stack-address]
+   21 |         return TVec3f(0.0f, 0.0f, 0.0f);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from src/Game/NameObj/NameObjFactory.cpp:17:
+In file included from src/Game/Screen.hpp:20:
+In file included from src/Game/Screen/CustomTagProcessor.hpp:4:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare][0m
+[0m[38;5;3;1mIn file included from src/layout/Nw4rLayoutRecords.cpp:8:
+In file included from src/nw4r/lyt/group.h:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+In file included from src/layout/Nw4rLayoutRecords.cpp:8:
+src/nw4r/lyt/group.h:55:37: warning: 'offsetof' on non-standard-layout type 'Group' [-Winvalid-offsetof]
+   55 |         typedef ut::LinkList<Group, __builtin_offsetof(Group, mLink)> GroupList;
+      |                                     ^                         ~~~~~
+In file included from src/layout/Nw4rLayoutRecords.cpp:9:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;3;1mIn file included from tests/OriginalMessageHolderTests.cpp:18:
+In file included from src/Game/System/FileLoader.hpp:3:
+In file included from src/Game/System/ArchiveHolder.hpp:4:
+In file included from src/JSystem/JKernel/JKRMemArchive.hpp:3:
+src/JSystem/JKernel/JKRArchive.hpp:122:33: warning: 'getResource' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  122 |     [[nodiscard]] virtual void *getResource(const char *pPath) const;
+      |                                 ^
+src/JSystem/JKernel/JKRFileLoader.hpp:15:19: note: overridden virtual function is here
+   15 |     virtual void* getResource(const char*) const = 0;
+      |                   ^
+In file included from tests/OriginalMessageHolderTests.cpp:18:
+In file included from src/Game/System/FileLoader.hpp:3:
+In file included from src/Game/System/ArchiveHolder.hpp:4:
+In file included from src/JSystem/JKernel/JKRMemArchive.hpp:3:
+src/JSystem/JKernel/JKRArchive.hpp:124:33: warning: 'getResource' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  124 |     [[nodiscard]] virtual void *getResource(std::uint32_t, const char *pPath) const;[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-app>[0m [38;5;5;1marchiving.debug libsmg-pc-app.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-message-holder-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-message-holder-tests[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mlinking.debug smg-pc[0m
+[0m[38;5;3;1mIn file included from tests/OriginalLayoutGroupTests.cpp:5:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+In file included from tests/OriginalLayoutGroupTests.cpp:5:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:5:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-layout-group-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-layout-group-tests[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mgenerating.xcode.debug smg-pc.app[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 5.311s[0m
