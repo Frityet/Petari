@@ -308,3 +308,17 @@ JKRArchive::SDIFileEntry* JKRArchive::findIdResource(u16 id) const {
         if (mFiles[i].mFileID == id && (mFiles[i].mFlag & FILE_FLAG_FILE)) return &mFiles[i];
     return nullptr;
 }
+
+JKRArchive::SDIFileEntry* JKRArchive::findPtrResource(const void* pResource) const {
+    if (!mInfoBlock || !pResource) return nullptr;
+    SDIFileEntry* current = mFiles;
+    for (s32 i = 0; i < mInfoBlock->mNrFiles; i++) {
+        if (current->mFileData == pResource) {
+            return current;
+        }
+
+        current++;
+    }
+
+    return nullptr;
+}

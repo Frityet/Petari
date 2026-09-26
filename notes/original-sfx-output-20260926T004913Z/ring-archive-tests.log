@@ -1,0 +1,10 @@
+PASS compressed member reads by ID and path
+PASS full typed catalog
+PASS original finder
+PASS IDs and resource bytes
+PASS relative directories
+PASS retained archive lifetime
+PASS bounded string table
+PASS bounded lookup names
+PASS fixed mount volume and byte identity
+PASS native cache override lifetime and arbitrary retirement

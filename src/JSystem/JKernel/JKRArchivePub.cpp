@@ -112,8 +112,8 @@ void *JKRArchive::getIdxResource(u32 fileIndex) {
 }
 
 void *JKRArchive::getResource(const char *pPath) const {
-    const auto data = resource_data(pPath == nullptr ? std::string_view{} : std::string_view(pPath));
-    return data.empty() ? nullptr : const_cast<std::uint8_t *>(data.data());
+    const auto* entry = mArchive && pPath ? mArchive->find_resource(pPath) : nullptr;
+    return entry ? const_cast<JKRArchive*>(this)->fetchResource(findIdxResource(entry->file_entry_index), nullptr) : nullptr;
 }
 
 void *JKRArchive::getResource(std::uint32_t, const char *pPath) const {
@@ -121,13 +121,8 @@ void *JKRArchive::getResource(std::uint32_t, const char *pPath) const {
 }
 
 void *JKRArchive::getResource(std::uint16_t id) const {
-    const auto *entry = mArchive == nullptr ? nullptr : mArchive->find_by_file_id(id);
-    if (entry == nullptr) {
-        return nullptr;
-    }
-
-    const auto data = resource_data(*entry);
-    return data.empty() ? nullptr : const_cast<std::uint8_t *>(data.data());
+    auto* file = findIdResource(id);
+    return file ? const_cast<JKRArchive*>(this)->fetchResource(file, nullptr) : nullptr;
 }
 
 std::uint32_t JKRArchive::getResSize(const void *pResource) const {
@@ -146,26 +141,19 @@ std::uint32_t JKRArchive::getResSize(const void *pResource) const {
 }
 
 std::uint32_t JKRArchive::readResource(void *pBuffer, std::uint32_t bufferSize, const char *pPath) const {
-    const auto data = resource_data(pPath == nullptr ? std::string_view{} : std::string_view(pPath));
-    if (data.empty() || pBuffer == nullptr || bufferSize == 0U) {
-        return 0U;
-    }
-
-    const auto copy_size = std::min<std::size_t>(bufferSize, data.size());
-    std::memcpy(pBuffer, data.data(), copy_size);
-    return static_cast<std::uint32_t>(copy_size);
+    const auto* entry = mArchive && pPath ? mArchive->find_resource(pPath) : nullptr;
+    if (!entry || !pBuffer || !bufferSize) return 0;
+    u32 size;
+    fetchResource(pBuffer, bufferSize, findIdxResource(entry->file_entry_index), &size);
+    return size;
 }
 
 std::uint32_t JKRArchive::readResource(void *pBuffer, std::uint32_t bufferSize, std::uint16_t fileId) const {
-    const auto *entry = mArchive == nullptr ? nullptr : mArchive->find_by_file_id(fileId);
-    if (entry == nullptr || pBuffer == nullptr || bufferSize == 0U) {
-        return 0U;
-    }
-
-    const auto data = resource_data(*entry);
-    const auto copy_size = std::min<std::size_t>(bufferSize, data.size());
-    std::memcpy(pBuffer, data.data(), copy_size);
-    return static_cast<std::uint32_t>(copy_size);
+    SDIFileEntry* file = findIdResource(fileId);
+    if (!file || !pBuffer || !bufferSize) return 0;
+    u32 size;
+    fetchResource(pBuffer, bufferSize, file, &size);
+    return size;
 }
 
 bool JKRArchive::contains(const char *pPath) const {

@@ -1,5 +1,8 @@
 #include "JSystem/JKernel/JKRArchive.hpp"
 #include "JSystem/JKernel/JKRFileFinder.hpp"
+#include "JSystem/JKernel/JKRDecomp.hpp"
+#include "NativeHeapFixture.hpp"
+#include <aurora/endian.hpp>
 
 #include <array>
 #include <cstring>
@@ -194,6 +197,50 @@ namespace {
         try { JKRMemArchive arc(parsed); } catch (const std::invalid_argument&) { rejected = true; }
         require(rejected, "bounded native catalog rejects unterminated names in declared string extent");
     }
+    void test_compressed_member_reads() {
+        const aurora::os::GuestThreadExecutionScope execution;
+        OSInit();
+        auto heap = smgpc::test::create_native_root_heap(2 * 1024 * 1024);
+        auto* previousSystem = heap->becomeSystemHeap();
+        JKRDecomp::create(2);
+        struct Retire {
+            JKRHeap* previous;
+            ~Retire() { delete JKRDecomp::getManager(); JKRHeap::sSystemHeap = previous; }
+        } retire{previousSystem};
+        const std::array<u8, 24> yaz{'Y','a','z','0',0,0,0,10,0,0,0,0,0,0,0,0,0xe8,'A','B','C',0x40,2,'!',0};
+        const std::array<u8, 28> yay{'Y','a','y','0',0,0,0,8,0,0,0,20,0,0,0,20,0xff,0,0,0,'S','Y','S','T','E','M','!','!'};
+        const auto check = [&](std::span<const u8> compressed, const char* expected, u32 expanded, u8 flags) {
+            auto bytes = fixture();
+            const auto dataOffset = 0x20 + aurora::endian::read_big<u32>(bytes.data() + 12);
+            bytes.resize(dataOffset + compressed.size() + 1);
+            std::copy(compressed.begin(), compressed.end(), bytes.begin() + dataOffset);
+            bytes.back() = 7;
+            put32(bytes, 4, bytes.size()); put32(bytes, 16, compressed.size() + 1);
+            bytes[0x70 + 4] = flags;
+            put32(bytes, 0x70 + 12, compressed.size());
+            put32(bytes, 0x70 + 5 * 20 + 8, compressed.size());
+            JKRMemArchive arc(smgpc::resource::RarcArchive::from_bytes(std::move(bytes)));
+            for (bool byId : {false, true}) {
+                for (u32 capacity : {0U, 3U, expanded, expanded + 4}) {
+                    std::array<u8, 24> output;
+                    output.fill(0xa5);
+                    const auto count = byId ? arc.readResource(output.data(), capacity, u16(42))
+                                            : arc.readResource(output.data(), capacity, "/a.bck");
+                    require(count == std::min(capacity, expanded) && std::memcmp(output.data(), expected, count) == 0,
+                            "ID and path archive reads expand member compression before returning data");
+                    require(std::all_of(output.begin() + count, output.end(), [](u8 b) { return b == 0xa5; }),
+                            "compressed reads preserve bytes after the caller's capacity or expanded extent");
+                }
+            }
+            const void* raw = arc.getResource(u16(42));
+            require(raw && arc.getResSize(raw) == compressed.size() && arc.getExpandedResSize(raw) == expanded,
+                    "memory archive borrowed resources preserve separate encoded and expanded sizes");
+            require(arc.findIdResource(7) && arc.readResource(nullptr, 4, u16(7)) == 0,
+                    "null destinations cannot start asynchronous decompression");
+        };
+        check(yaz, "ABCABCABC!", 10, 0x95);
+        check(yay, "SYSTEM!!", 8, 0x15);
+    }
     void test_native_cache_override_retirement() {
         std::array<unsigned, 3> order{0, 1, 2};
         do {
@@ -248,6 +295,7 @@ namespace {
 }
 int main() {
     const std::array tests{
+        std::pair{"compressed member reads by ID and path", test_compressed_member_reads},
         std::pair{"full typed catalog", test_catalog}, std::pair{"original finder", test_finder},
         std::pair{"IDs and resource bytes", test_ids_and_data}, std::pair{"relative directories", test_relative_directory},
         std::pair{"retained archive lifetime", test_lifetime}, std::pair{"bounded string table", test_missing_string_extent},

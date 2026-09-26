@@ -1,0 +1,114 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-original-process-sfx-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-sfx-tests' (arm64).
+(lldb) breakpoint set -n JASBank::noteOnOsc
+Breakpoint 1: where = smg-pc-original-process-sfx-tests`JASBank::noteOnOsc(int, unsigned char, unsigned char, unsigned short, void (*)(unsigned int, JASChannel*, JASDsp::TChannel*, void*), void*) + 48 at JASBank.cpp:79:27, address = 0x00000001004bd7a4
+(lldb) run
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-26 02:45:27.605909+0100 smg-pc-original-process-sfx-tests[54129:7281878] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:45:27.606086+0100 smg-pc-original-process-sfx-tests[54129:7281878] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:45:27.606262+0100 smg-pc-original-process-sfx-tests[54129:7281877] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:45:27.606275+0100 smg-pc-original-process-sfx-tests[54129:7281877] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:45:27.606544+0100 smg-pc-original-process-sfx-tests[54129:7281878] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:45:27.606554+0100 smg-pc-original-process-sfx-tests[54129:7281878] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:45:27.606822+0100 smg-pc-original-process-sfx-tests[54129:7281878] [Connection] Will NOT re-try to establish the connection
+2026-09-26 02:45:27.606851+0100 smg-pc-original-process-sfx-tests[54129:7281879] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:45:27.606862+0100 smg-pc-original-process-sfx-tests[54129:7281879] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:45:28.379305+0100 smg-pc-original-process-sfx-tests[54129:7281849] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[src/app/OriginalGameApplication.cpp:544][APP - INFO] Booting the original GameSystem
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[aurora:info:aurora::gpu::cache] Pruned 4 stale Dawn cache entries
+[original-process] GameSystem::init completed
+[src/app/OriginalGameApplication.cpp:546][APP - INFO] Running the original GameSystem frame loop
+setupAramHeap 4000, 4000, e00000
+2026-09-26 02:45:28.552477+0100 smg-pc-original-process-sfx-tests[54129:7281945] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x752c11bf80> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+[original-process] Loaded original save slot 1 (mario1): 2 stars
+[original-process] Requesting authored stage EggStarGalaxy scenario 1 through GameSequence
+[aurora:warning:aurora::gpu] WebGPU message: Calling [RenderPassEncoder "EFB 1"].Draw with a vertex count of 0 is unusual.
+warning: smg-pc-original-process-sfx-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 54129 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-sfx-tests' (arm64)
+Process 54129 stopped
+* thread #41, stop reason = breakpoint 1.1
+       frame #0: 0x00000001004bd7a4 smg-pc-original-process-sfx-tests`JASBank::noteOnOsc(progNo=0, pitch='Y', velocity='z', priority=64, param_4=(smg-pc-original-process-sfx-tests`JASTrack::channelUpdateCallback(unsigned int, JASChannel*, JASDsp::TChannel*, void*) at JASTrack.cpp:672:5), param_5=0x00000079d94f97d8) at JASBank.cpp:79:27 [opt]
+   76  	                               void* param_5) {
+   77  	    static const JASOscillator::Data OSC_ENV = {0, 1.0f, nullptr, OSC_RELEASE_TABLE, 1.0f, 0.0f};
+   78  	
+-> 79  	    JASChannel* channel = new JASChannel(param_4, param_5);
+    	                          ^
+   80  	    if (channel == nullptr) {
+   81  	        return nullptr;
+   82  	    }
+Target 0: (smg-pc-original-process-sfx-tests) stopped.
+(lldb) up
+frame #1: 0x00000001000167dc smg-pc-original-process-sfx-tests`JASTrack::channelStart(this=0x00000079d94f95b8, pChannelMgr=0x00000079d94f97d8, pitch=89, velocity=122, updateTimer=0) at OverwriteJAudio.cpp:85:27 [opt]
+   82  	        bank = mBankTable->getBank(mBankNumber);
+   83  	    }
+   84  	
+-> 85  	    JASChannel* channel = JASBank::noteOn(bank, mProgNumber, pitch, velocity, mNoteOnPrio | mReleasePrio << 8, channelUpdateCallback, pChannelMgr);
+    	                          ^
+   86  	    if (channel == nullptr) {
+   87  	        if (AudUtil::isProperCurrentStageOrAudioDebugMode()) {
+   88  	            JASInstParam params;
+(lldb) frame variable this->mSeqCtrl.mReader
+(JASSeqReader) this->mSeqCtrl.mReader = {
+  mSeqBuff = 0x00000079d95f0f40
+  mSeqCursor = 0x00000079d95f0f43
+  mNumStacks = 0
+  mStackPtrs = {
+    [0] = 0x0000000000000000
+    [1] = 0x0000000000000000
+    [2] = 0x0000000000000000
+    [3] = 0x0000000000000000
+    [4] = 0x0000000000000000
+    [5] = 0x0000000000000000
+    [6] = 0x0000000000000000
+    [7] = 0x0000000000000000
+  }
+  mLoopCounts = ([0] = 0, [1] = 0, [2] = 0, [3] = 0, [4] = 0, [5] = 0, [6] = 0, [7] = 0)
+}
+(lldb) memory read -s1 -c64 this->mSeqCtrl.mReader.mSeqBuff
+0x79d95f0f40: 59 61 7a 30 00 00 20 c0 00 00 00 00 00 00 00 00  Yaz0.. .........
+0x79d95f0f50: ff c1 00 00 00 67 d8 62 00 f6 78 e0 00 64 a0 02  .....g.b..x..d..
+0x79d95f0f60: f0 78 f0 04 fd 63 f0 1e e0 00 61 20 04 5f 55 20  .x...c....a ._U 
+0x79d95f0f70: 09 5e 20 0e 5c 20 13 5a 20 18 59 f9 f0 26 e0 00  .^ .\ .Z .Y..&..

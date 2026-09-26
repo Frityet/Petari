@@ -126,10 +126,11 @@ public:
     [[nodiscard]] virtual void *getResource(std::uint16_t id) const;
 
     [[nodiscard]] virtual std::uint32_t getResSize(const void *pResource) const;
-    [[nodiscard]] std::uint32_t getExpandedResSize(const void *pResource) const;
+    [[nodiscard]] virtual std::uint32_t getExpandedResSize(const void *pResource) const;
 
     [[nodiscard]] void* getIdxResource(u32);
     virtual void* fetchResource(SDIFileEntry*, u32*) = 0;
+    virtual void* fetchResource(void*, u32, SDIFileEntry*, u32*) const = 0;
 
     [[nodiscard]] u32 countResource() const;
     [[nodiscard]] virtual s32 countFile(const char*) const;
@@ -153,6 +154,7 @@ public:
 
     static JKRArchive* mount(const char*, EMountMode, JKRHeap*, EMountDirection);
     [[nodiscard]] SDIFileEntry* findIdResource(u16) const;
+    [[nodiscard]] SDIFileEntry* findPtrResource(const void*) const;
     static u32 sCurrentDirID;
     static JKRArchive* check_mount_already(std::uintptr_t);
     // Distinct from JKRDisposer::mHeap: this owns archive bytes, while the
@@ -210,6 +212,8 @@ public:
     bool mountFixed(std::span<const u8>, JKRMemBreakFlag);
 
     void* fetchResource(SDIFileEntry*, u32*) override;
+    void* fetchResource(void*, u32, SDIFileEntry*, u32*) const override;
+    u32 getExpandedResSize(const void*) const override;
     static s32 fetchResource_subroutine(u8*, u32, u8*, u32, int);
 
     RarcHeader* mHeader = nullptr;

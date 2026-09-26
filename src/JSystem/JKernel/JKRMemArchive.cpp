@@ -164,3 +164,47 @@ JKRArchive* JKRArchive::mount(const char* path, EMountMode mode, JKRHeap* heap, 
     archive->mMountMode = mode;
     return archive;
 }
+
+void* JKRMemArchive::fetchResource(void* pData, u32 dataSize, SDIFileEntry* pFile, u32* pSize) const {
+    u32 size = pFile->mDataSize;
+
+    if (size > dataSize) {
+        size = dataSize;
+    }
+
+    if (pFile->mFileData != nullptr) {
+        memcpy(pData, pFile->mFileData, size);
+    } else {
+        s32 compression;
+
+        if ((pFile->mFlag & FILE_FLAG_COMPRESSED) == 0) {
+            compression = JKR_COMPRESSION_NONE;
+        } else if ((pFile->mFlag & FILE_FLAG_IS_YAZ0) != 0) {
+            compression = JKR_COMPRESSION_SZS;
+        } else {
+            compression = JKR_COMPRESSION_SZP;
+        }
+
+        size = fetchResource_subroutine(mFileDataStart + pFile->mDataOffset, size, reinterpret_cast< u8* >(pData), dataSize, compression);
+    }
+
+    if (pSize != nullptr) {
+        *pSize = size;
+    }
+
+    return pData;
+}
+
+u32 JKRMemArchive::getExpandedResSize(const void* pResource) const {
+    SDIFileEntry* file = findPtrResource(pResource);
+
+    if (file == nullptr) {
+        return -1;
+    }
+
+    if ((file->mFlag & FILE_FLAG_COMPRESSED) == 0) {
+        return getResSize(pResource);
+    }
+
+    return JKRDecompExpandSize(reinterpret_cast< u8* >(const_cast< void* >(pResource)));
+}
