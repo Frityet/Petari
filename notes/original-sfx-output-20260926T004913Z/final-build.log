@@ -1,0 +1,123 @@
+[  1%]: <smg-pc-app> cache compiling.debug src/app/OriginalGameApplication.cpp
+[  2%]: <aurora-base> cache compiling.debug aurora/lib/audio_dma.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudSoundObject.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudBgmMgr.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudMicWrap.cpp
+[  9%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudBgm.cpp
+[ 10%]: <smg-pc-game> cache compiling.debug src/Game/RhythmLib/AudMeObject.cpp
+[ 10%]: <smg-pc-game> cache compiling.debug src/Game/GameAudio/AudCameraWatcher.cpp
+[ 10%]: <smg-pc-game> cache compiling.debug src/Game/GameAudio/AudEffectDirector.cpp
+[ 11%]: <smg-pc-game> cache compiling.debug src/Game/Util/SystemUtil.cpp
+[ 13%]: <smg-pc-game> cache compiling.debug src/Game/Util/SoundUtil.cpp
+[ 39%]: <smg-pc-game> cache compiling.debug src/Game/System/GameSystemErrorWatcher.cpp
+[ 40%]: <smg-pc-game> cache compiling.debug src/Game/System/GameSystemSceneController.cpp
+[ 41%]: <smg-pc-game> cache compiling.debug src/Game/System/GameSystemFunction.cpp
+[ 41%]: <smg-pc-game> cache compiling.debug src/Game/System/GameSystem.cpp
+[ 42%]: <smg-pc-game> cache compiling.debug src/Game/System/GameSystemObjHolder.cpp
+[ 42%]: <smg-pc-game> cache compiling.debug src/Game/System/AudSystemWrapper.cpp
+[ 47%]: <smg-pc-game> cache compiling.debug src/Game/AreaObj/SoundEmitterCube.cpp
+[ 47%]: <smg-pc-game> cache compiling.debug src/Game/AreaObj/SoundEmitterSphere.cpp
+[ 49%]: <smg-pc-game> cache compiling.debug src/Game/Screen/THPSimplePlayerWrapper.cpp
+[ 51%]: <smg-pc-game> cache compiling.debug src/Game/Screen/GamePauseSequence.cpp
+[ 53%]: <smg-pc-game> cache compiling.debug src/Game/Screen/HomeButtonLayout.cpp
+[ 55%]: <smg-pc-game> cache compiling.debug src/Game/Scene/GameScenePauseControl.cpp
+In file included from src/Game/Util/SystemUtil.cpp:21:
+In file included from src/nw4r/lyt/layout.h:3:
+In file included from src/nw4r/lyt/animation.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/Game/Util/SystemUtil.cpp:21:
+In file included from src/nw4r/lyt/layout.h:4:
+In file included from src/nw4r/lyt/group.h:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+[ 55%]: <smg-pc-game> cache compiling.debug src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp
+[ 81%]: <smg-pc-game> cache compiling.debug src/resource/AudioInfoResource.cpp
+[ 82%]: <smg-pc-game> cache compiling.debug src/runtime/JasAudioDriver.cpp
+src/Game/System/GameSystemFunction.cpp:33:60: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   33 |     AudSystemWrapper* getAudSystemWrapper() __attribute__((noinline)) {
+      |                                                            ^
+src/Game/System/GameSystemFunction.cpp:37:72: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   37 |     SaveDataHandleSequence* getSaveDataHandleSequence() __attribute__((noinline)) {
+      |                                                                        ^
+2 warnings generated.
+[ 85%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASAiCtrl.cpp
+In file included from src/Game/System/GameSystem.cpp:25:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.
+[ 88%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASDriverIF.cpp
+[ 90%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASAudioReseter.cpp
+[ 90%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JAUInitializer.cpp
+[ 90%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASDSPInterface.cpp
+[ 91%]: <smg-pc-original-process-sfx-tests> cache compiling.debug tests/OriginalProcessSfxTests.cpp
+[ 91%]: <smg-pc-original-jai-sound-ownership-tests> cache compiling.debug tests/OriginalJaiSoundOwnershipTests.cpp
+[ 91%]: <aurora-base> archiving.debug libaurora-base.a
+In file included from src/Game/System/GameSystemSceneController.cpp:19:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/System/GameSystemSceneController.cpp:31:62: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   31 |     AudSystemWrapper* getAudioSystemWrapper() __attribute__((noinline)) {
+      |                                                              ^
+2 warnings generated.
+src/Game/Util/SoundUtil.cpp:288:40: warning: comparison of address of 'pBinder->mWallInfo.mParentTriangle' not equal to a null pointer is always true [-Wtautological-pointer-compare]
+  288 |         } else if (&pBinder->mWallInfo.mParentTriangle != nullptr) {
+      |                     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~    ~~~~~~~
+src/Game/Util/SoundUtil.cpp:290:40: warning: comparison of address of 'pBinder->mRoofInfo.mParentTriangle' not equal to a null pointer is always true [-Wtautological-pointer-compare]
+  290 |         } else if (&pBinder->mRoofInfo.mParentTriangle != nullptr) {
+      |                     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~    ~~~~~~~
+2 warnings generated.
+[ 92%]: <aurora-platform> archiving.debug libaurora-platform.a
+[ 92%]: <aurora-os> archiving.debug libaurora-os.a
+[ 92%]: <aurora-card> archiving.debug libaurora-card.a
+[ 92%]: <aurora-ms> archiving.debug libaurora-ms.a
+[ 92%]: <aurora-si> archiving.debug libaurora-si.a
+In file included from src/app/OriginalGameApplication.cpp:6:
+src/Game/LiveActor/LiveActor.hpp:53:29: warning: 'init' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   53 |                virtual void init(const JMapInfoIter& rIter);
+      |                             ^
+src/Game/NameObj/NameObj.hpp:22:29: note: overridden virtual function is here
+   22 |                virtual void init(const JMapInfoIter& rIter);
+      |                             ^
+In file included from src/app/OriginalGameApplication.cpp:6:
+src/Game/LiveActor/LiveActor.hpp:54:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   54 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:27:29: note: overridden virtual function is here
+   27 |                virtual void movement();
+      |                             ^
+In file included from src/app/OriginalGameApplication.cpp:6:
+src/Game/LiveActor/LiveActor.hpp:55:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+[ 92%]: <aurora-pad> archiving.debug libaurora-pad.a
+[ 93%]: <aurora-vi> archiving.debug libaurora-vi.a
+[ 93%]: <aurora-dvd> archiving.debug libaurora-dvd.a
+[ 93%]: <aurora-gx> archiving.debug libaurora-gx.a
+[ 93%]: <aurora-core> archiving.debug libaurora-core.a
+[ 93%]: <aurora-gd> archiving.debug libaurora-gd.a
+[ 93%]: <smg-pc-render> archiving.debug libsmg-pc-render.a
+[ 93%]: <aurora-thp> archiving.debug libaurora-thp.a
+In file included from src/Game/Screen/GamePauseSequence.cpp:12:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.
+src/Game/Screen/HomeButtonLayout.cpp:150:13: warning: 4 enumeration values not handled in switch: 'HBM_SELECT_NULL', 'HBM_SELECT_BTN3', 'HBM_SELECT_BTN4'... [-Wswitch]
+  150 |     switch (RSO::HBMGetSelectBtnNum()) {
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+[ 94%]: <smg-pc-game> archiving.debug libsmg-pc-game.a
+[ 94%]: <smg-pc-app> archiving.debug libsmg-pc-app.a
+[ 94%]: <smg-pc-original-jai-sound-ownership-tests> linking.debug smg-pc-original-jai-sound-ownership-tests
+[ 94%]: <smg-pc> linking.debug smg-pc
+[ 94%]: <smg-pc-original-process-sfx-tests> linking.debug smg-pc-original-process-sfx-tests
+[ 94%]: <smg-pc> generating.xcode.debug smg-pc.app
+create ok!
+[100%]: build ok, spent 5.147s

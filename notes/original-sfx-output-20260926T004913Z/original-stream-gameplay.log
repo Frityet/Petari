@@ -1,0 +1,81 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-original-process-remix-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-remix-tests' (arm64).
+(lldb) run
+[remix-probe] PASS original packed-resource consumer, timer and truncation checks
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-26 02:53:35.822074+0100 smg-pc-original-process-remix-tests[55604:7294949] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:53:35.822288+0100 smg-pc-original-process-remix-tests[55604:7294949] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:53:35.822454+0100 smg-pc-original-process-remix-tests[55604:7294950] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:53:35.822472+0100 smg-pc-original-process-remix-tests[55604:7294950] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:53:35.822738+0100 smg-pc-original-process-remix-tests[55604:7294948] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:53:35.822749+0100 smg-pc-original-process-remix-tests[55604:7294948] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:53:35.822983+0100 smg-pc-original-process-remix-tests[55604:7294948] [Connection] Will NOT re-try to establish the connection
+2026-09-26 02:53:35.823005+0100 smg-pc-original-process-remix-tests[55604:7294949] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:53:35.823015+0100 smg-pc-original-process-remix-tests[55604:7294949] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 02:53:36.620285+0100 smg-pc-original-process-remix-tests[55604:7294877] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[src/app/OriginalGameApplication.cpp:544][APP - INFO] Booting the original GameSystem
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[aurora:info:aurora::gpu::cache] Pruned 4 stale Dawn cache entries
+[original-process] GameSystem::init completed
+[src/app/OriginalGameApplication.cpp:546][APP - INFO] Running the original GameSystem frame loop
+setupAramHeap 4000, 4000, e00000
+2026-09-26 02:53:36.812429+0100 smg-pc-original-process-remix-tests[55604:7294977] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x756d27b860> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+[original-process] Loaded original save slot 1 (mario1): 2 stars
+[original-process] Requesting authored stage EggStarGalaxy scenario 1 through GameSequence
+2026-09-26 02:53:37.553831+0100 smg-pc-original-process-remix-tests[55604:7294877] [default] IOServiceAddInterestNotification: 0xe00002c7
+2026-09-26 02:53:37.553889+0100 smg-pc-original-process-remix-tests[55604:7294877] [default] IOServiceAddInterestNotification: 0xe00002c7
+2026-09-26 02:53:37.573749+0100 smg-pc-original-process-remix-tests[55604:7294877] [default] IOServiceAddInterestNotification: 0xe00002c7
+2026-09-26 02:53:37.573794+0100 smg-pc-original-process-remix-tests[55604:7294877] [default] IOServiceAddInterestNotification: 0xe00002c7
+2026-09-26 02:53:37.573825+0100 smg-pc-original-process-remix-tests[55604:7294877] [default] IOServiceAddInterestNotification: 0xe00002c7
+2026-09-26 02:53:37.573852+0100 smg-pc-original-process-remix-tests[55604:7294877] [default] IOServiceAddInterestNotification: 0xe00002c7
+[remix-probe] PASS ready at frame 146: 6 groups, 1 fairies, 43 notes; opening camera=479 frames
+[aurora:warning:aurora::gpu] WebGPU message: Calling [RenderPassEncoder "EFB 1"].Draw with a vertex count of 0 is unusual.
+[aurora:warning:aurora::gpu] WebGPU message: Calling [RenderPassEncoder "EFB 2"].Draw with a vertex count of 0 is unusual.
+[remix-probe] PASS original opening reaches SceneAction at frame 562
+[src/app/OriginalGameApplication.cpp:583][APP - INFO] Original GameSystem stopped after 1800 completed frames
+[original-audio] DSP submitted_frames=1097600 nonzero_samples=1994828
+[aurora:warning:aurora::gpu] Device lost: Device was destroyed.
+Process 55604 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-remix-tests' (arm64)
+Process 55604 exited with status = 0 (0x00000000)

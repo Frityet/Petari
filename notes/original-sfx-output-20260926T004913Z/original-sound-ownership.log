@@ -1,0 +1,2 @@
+[pass] original JAISoundID layout and JAISoundStatus flags/prepare transitions
+[pass] Original stream pool allocation, child ownership and cancellation before preparation

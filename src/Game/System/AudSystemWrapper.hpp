@@ -1,17 +1,21 @@
 #pragma once
 
-#include <revolution/types.h>
 #include <JSystem/JAudio2/JAUSoundTable.hpp>
 #include <memory>
+#include <revolution/types.h>
 #include <vector>
 
-namespace smgpc::resource { class AudioInfoResources; }
+namespace smgpc::resource {
+    class AudioInfoResources;
+}
 class AudSystem;
 class AudSceneMgr;
 class AudBgmMgr;
 class AudSoundObject;
 class AudSoundObjHolder;
 class AudSoundNameConverter;
+class AudMeNameConverter;
+class CSSoundNameConverter;
 class AudRemixMgr;
 class JKRExpHeap;
 class JKRHeap;
@@ -19,7 +23,6 @@ class JKRMemArchive;
 class JKRSolidHeap;
 class JAIStreamMgr;
 namespace aurora::audio {
-    class PcmAudioMixer;
     class JAudioSoundArchive;
 }
 
@@ -82,18 +85,17 @@ private:
     // and its arrays before the native table and decoded byte storage.
     std::vector< u8 > mSoundNameBytes;
     std::vector< u8 > mNativeAudioArchive;
-    std::unique_ptr<smgpc::resource::AudioInfoResources> mInfoResources;
+    std::unique_ptr< smgpc::resource::AudioInfoResources > mInfoResources;
     JAUSoundNameTable mSoundNameTable{false};
     JAUSoundNameTable* mPreviousNameTable = nullptr;
     AudSoundNameConverter* mPreviousNameConverter = nullptr;
     std::unique_ptr< AudSoundNameConverter > mSoundNameConverter;
-    std::shared_ptr< aurora::audio::PcmAudioMixer > mStreamMixer;
-    std::shared_ptr< aurora::audio::JAudioSoundArchive > mStreamArchive;
+    std::unique_ptr< AudMeNameConverter > mMeNameConverter;
+    std::unique_ptr< CSSoundNameConverter > mSpeakerNameConverter;
+    AudMeNameConverter* mPreviousMeNameConverter = nullptr;
+    CSSoundNameConverter* mPreviousSpeakerNameConverter = nullptr;
+    std::shared_ptr< aurora::audio::JAudioSoundArchive > mAudioArchive;
     InitializePhase mInitializePhase = InitializePhase::Created;
-    bool mStaticWaveRequested = false;
-    bool mStageWaveRequested = false;
-    bool mScenarioWaveRequested = false;
-    bool mResetRequested = false;
     bool mTriggerSePermitted = true;
     bool mLevelSePermitted = true;
 #endif

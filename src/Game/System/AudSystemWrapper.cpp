@@ -1,11 +1,17 @@
 #include "Game/System/AudSystemWrapper.hpp"
 #include "Game/AudioLib/AudBgmMgr.hpp"
+#include "Game/AudioLib/AudMeNameConverter.hpp"
+#include "Game/AudioLib/AudMicWrap.hpp"
 #include "Game/AudioLib/AudParams.hpp"
 #include "Game/AudioLib/AudRemixMgr.hpp"
 #include "Game/AudioLib/AudSceneMgr.hpp"
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
-#include "Game/AudioLib/AudSoundObject.hpp"
 #include "Game/AudioLib/AudSoundObjHolder.hpp"
+#include "Game/AudioLib/AudSoundObject.hpp"
+#include "Game/AudioLib/AudSpeakerWrap.hpp"
+#include "Game/AudioLib/AudSystem.hpp"
+#include "Game/AudioLib/CSSoundNameConverter.hpp"
+#include "Game/RhythmLib/AudRhythmMeSystem.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemObjHolder.hpp"
 #include "Game/Util/FileUtil.hpp"
@@ -13,20 +19,16 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "resource/AudioInfoResource.hpp"
 #include "runtime/JasAudioDriver.hpp"
-#include "Game/AudioLib/AudSystem.hpp"
-#include "Game/AudioLib/AudMicWrap.hpp"
-#include "Game/RhythmLib/AudRhythmMeSystem.hpp"
+#include <JSystem/JAudio2/JAIStreamMgr.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JKernel/JKRMemArchive.hpp>
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
-#include <JSystem/JAudio2/JAIStreamMgr.hpp>
-#include <aurora/j_audio_stream.hpp>
-#include <dolphin/dvd.h>
-#include <cstdio>
-#include <limits>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <aurora/j_audio_sound_archive.hpp>
+#include <cstdio>
+#include <dolphin/dvd.h>
+#include <limits>
 #include <new>
 #include <stdexcept>
 
@@ -36,7 +38,12 @@ namespace {
         DVDFileInfo file{};
         if (!DVDOpen(path.c_str(), &file))
             aurora::throw_host_exception< std::runtime_error >("Cannot open audio resource: " + path);
-        struct CloseFile { DVDFileInfo* file; ~CloseFile() { DVDClose(file); } } close{&file};
+        struct CloseFile {
+            DVDFileInfo* file;
+            ~CloseFile() {
+                DVDClose(file);
+            }
+        } close{&file};
         if (file.length > std::numeric_limits< s32 >::max())
             aurora::throw_host_exception< std::runtime_error >("Audio resource exceeds the DVD read range: " + path);
         std::vector< u8 > bytes(file.length);
@@ -48,11 +55,11 @@ namespace {
     void retireWrapper(void* object) noexcept {
         static_cast< AudSystemWrapper* >(object)->~AudSystemWrapper();
     }
-}
+}  // namespace
 
 AudSystemWrapper::AudSystemWrapper(JKRSolidHeap* audioHeap, JKRHeap* resourceHeap)
-    : mAudSystem(nullptr), _4(audioHeap), _8(resourceHeap), mSmrRes(nullptr), mJaiSeqRes(nullptr), mJaiCordRes(nullptr),
-      mJaiMeRes(nullptr), mJaiRemixSeqRes(nullptr), mSpkHeap(nullptr), mSpkRes(nullptr), _28(false), _29(false), _2A(false) {
+    : mAudSystem(nullptr), _4(audioHeap), _8(resourceHeap), mSmrRes(nullptr), mJaiSeqRes(nullptr), mJaiCordRes(nullptr), mJaiMeRes(nullptr),
+      mJaiRemixSeqRes(nullptr), mSpkHeap(nullptr), mSpkRes(nullptr), _28(false), _29(false), _2A(false) {
     if (!JKRHeap::findFromRoot(this) || !audioHeap || !resourceHeap) {
         aurora::throw_host_exception< std::logic_error >("An audio wrapper requires its actual original process heaps");
     }
@@ -97,12 +104,14 @@ AudRemixMgr* AudSystemWrapper::getRemixMgr() const noexcept {
 
 void AudSystemWrapper::setTriggerSePermitted(bool permitted) noexcept {
     mTriggerSePermitted = permitted;
-    if (mAudSystem) mAudSystem->_82B = !permitted;
+    if (mAudSystem)
+        mAudSystem->_82B = !permitted;
 }
 
 void AudSystemWrapper::setLevelSePermitted(bool permitted) noexcept {
     mLevelSePermitted = permitted;
-    if (mAudSystem) mAudSystem->_82C = !permitted;
+    if (mAudSystem)
+        mAudSystem->_82C = !permitted;
 }
 
 bool AudSystemWrapper::isSePermitted() const noexcept {
@@ -118,6 +127,7 @@ void AudSystemWrapper::requestResourceForInitialize() {
     MR::mountAsyncArchive("/AudioRes/Seqs/JaiSeq.arc", _4);
     MR::mountAsyncArchive("/AudioRes/Info/JaiChord.arc", _4);
     MR::mountAsyncArchive("/AudioRes/Info/JaiMe.arc", _4);
+    MR::mountAsyncArchive(AudSpeakerWrap::getResName(), _4);
     mInitializePhase = InitializePhase::Requested;
 }
 
@@ -133,6 +143,7 @@ void AudSystemWrapper::receiveResourceForInitialize() {
     mJaiSeqRes = MR::receiveArchive("/AudioRes/Seqs/JaiSeq.arc");
     mJaiCordRes = MR::receiveArchive("/AudioRes/Info/JaiChord.arc");
     mJaiMeRes = MR::receiveArchive("/AudioRes/Info/JaiMe.arc");
+    mSpkRes = MR::receiveArchive(AudSpeakerWrap::getResName());
     if (!mSmrRes) {
         aurora::throw_host_exception< std::runtime_error >("Audio initialization received no name resource");
     }
@@ -154,12 +165,10 @@ void AudSystemWrapper::createAudioSystem() {
             aurora::throw_host_exception< std::logic_error >("Audio name resource requires a bounded original heap allocation");
         }
         const aurora::allocation::HostAllocationScope host;
-        mStreamArchive = std::make_shared< aurora::audio::JAudioSoundArchive >(
+        mAudioArchive = std::make_shared< aurora::audio::JAudioSoundArchive >(
             std::span< const u8 >(static_cast< const u8* >(mSmrRes), static_cast< std::size_t >(size)),
-            [](std::string_view name) -> std::vector< u8 > {
-                return readAudioFile("/AudioRes/Waves/" + std::string(name));
-            });
-        mSoundNameBytes = mStreamArchive->native_sound_name_table();
+            [](std::string_view name) -> std::vector< u8 > { return readAudioFile("/AudioRes/Waves/" + std::string(name)); });
+        mSoundNameBytes = mAudioArchive->native_sound_name_table();
         if (mSoundNameBytes.size() < 16) {
             aurora::throw_host_exception< std::runtime_error >("Audio initialization received no sound-name table");
         }
@@ -167,28 +176,25 @@ void AudSystemWrapper::createAudioSystem() {
         AudSoundNameConverter::validateTable(&mSoundNameTable);
         createSoundNameConverter();
 
-        mNativeAudioArchive = mStreamArchive->native_runtime_archive();
-        mInfoResources = std::make_unique<smgpc::resource::AudioInfoResources>(mJaiCordRes, mJaiMeRes, mJaiRemixSeqRes);
+        mNativeAudioArchive = mAudioArchive->native_runtime_archive();
+        mInfoResources = std::make_unique< smgpc::resource::AudioInfoResources >(mJaiCordRes, mJaiMeRes, mJaiRemixSeqRes, mSpkRes);
         {
             const MR::CurrentHeapRestorer current(_4);
             const aurora::allocation::ClientAllocationScope game({true, true});
             mAudSystem = AudNewAudSystem(_4, mNativeAudioArchive.data(), mJaiSeqRes, mJaiCordRes, mJaiMeRes, mJaiRemixSeqRes);
         }
-        mStreamMixer = std::make_shared< aurora::audio::PcmAudioMixer >();
-        mStreamMixer->open_default_playback();
-        mAudSystem->getStreamMgr().bindNativeOutput(mStreamMixer, [archive = mStreamArchive](JAISoundID id) {
-            const auto metadata = archive->resolve_sound(static_cast< u32 >(id));
-            if (metadata.kind != aurora::audio::JAudioSoundKind::Stream)
-                aurora::throw_host_exception< std::invalid_argument >("JAI stream request refers to a non-stream resource");
-            auto recipe = aurora::audio::decode_jaudio_stream(readAudioFile(metadata.stream_path), metadata.channel_control);
-            recipe.voice.gain_multiplier = metadata.volume / 127.0f;
-            std::fprintf(stderr, "[original-audio] Prepared stream id=%08x rate=%u channels=%u samples=%u loop=%d path=%s\n",
-                static_cast< u32 >(id), recipe.sample_rate, recipe.channel_count, recipe.sample_count, recipe.looping, metadata.stream_path.c_str());
-            return recipe;
-        });
-
+        mAudSystem->setSpeakerResource(mSpkRes);
+        {
+            const MR::CurrentHeapRestorer current(JKRHeap::findFromRoot(this));
+            const aurora::allocation::ClientAllocationScope game({true, true});
+            mMeNameConverter = std::make_unique< AudMeNameConverter >();
+            mPreviousMeNameConverter = AudSingletonHolder< AudMeNameConverter >::exchange(mMeNameConverter.get());
+            mSpeakerNameConverter = std::make_unique< CSSoundNameConverter >();
+            mPreviousSpeakerNameConverter = AudSingletonHolder< CSSoundNameConverter >::exchange(mSpeakerNameConverter.get());
+        }
         mInitializePhase = InitializePhase::Initialized;
         AudMicWrap::setMicEnv();
+        smgpc::audio::start_dsp();
     } catch (...) {
         releaseResources();
         _2A = false;
@@ -224,22 +230,21 @@ void AudSystemWrapper::releaseResources() noexcept {
     const aurora::allocation::HostAllocationScope host;
     if (mAudSystem) {
         mAudSystem->stopSync();
+        smgpc::audio::shutdown_dsp();
         delete mAudSystem;
         mAudSystem = nullptr;
         AudSystem::msBasic = nullptr;
     }
     smgpc::audio::shutdown_dsp();
+    if (mMeNameConverter)
+        AudSingletonHolder< AudMeNameConverter >::exchange(mPreviousMeNameConverter);
+    if (mSpeakerNameConverter)
+        AudSingletonHolder< CSSoundNameConverter >::exchange(mPreviousSpeakerNameConverter);
+    mMeNameConverter.reset();
+    mSpeakerNameConverter.reset();
     mInfoResources.reset();
     mNativeAudioArchive.clear();
-    if (mStreamMixer) {
-        mStreamMixer->close_default_playback();
-        const auto stats = mStreamMixer->stats();
-        std::fprintf(stderr, "[original-audio] Playback frames=%llu nonzero_samples=%llu device_callbacks=%llu\n",
-            static_cast< unsigned long long >(stats.mixed_frames), static_cast< unsigned long long >(stats.nonzero_samples),
-            static_cast< unsigned long long >(stats.device_callbacks));
-    }
-    mStreamMixer.reset();
-    mStreamArchive.reset();
+    mAudioArchive.reset();
     if (mSoundNameConverter && AudSingletonHolder< AudSoundNameConverter >::get() == mSoundNameConverter.get()) {
         AudSingletonHolder< AudSoundNameConverter >::exchange(mPreviousNameConverter);
     }
@@ -254,7 +259,8 @@ void AudSystemWrapper::releaseResources() noexcept {
 }
 
 void AudSystemWrapper::updateRhythm() {
-    if (mAudSystem) mAudSystem->mRhythmMeSystem->rhythmProc();
+    if (mAudSystem)
+        mAudSystem->mRhythmMeSystem->rhythmProc();
 }
 
 void AudSystemWrapper::movement() {
@@ -262,55 +268,102 @@ void AudSystemWrapper::movement() {
         return;
     }
     mAudSystem->frameWork();
-    smgpc::audio::advance_dsp(1.0 / 60.0);
+    smgpc::audio::check_dsp();
 }
 
 void AudSystemWrapper::stopAllSound(u32 frames) {
-    if (mAudSystem) mAudSystem->stop(frames);
+    if (mAudSystem)
+        mAudSystem->stop(frames);
 }
 
 bool AudSystemWrapper::isLoadDoneWaveDataAtSystemInit() const {
-    return mInitializePhase == InitializePhase::Initialized && mAudSystem->mSceneMgr->isLoadDoneSystemInit();
+    if (mAudSystem == nullptr) {
+        return false;
+    }
+
+    if (mAudSystem->mSceneMgr == nullptr) {
+        return false;
+    }
+
+    return mAudSystem->mSceneMgr->isLoadDoneSystemInit();
 }
 
 void AudSystemWrapper::loadStaticWaveData() {
-    if (mInitializePhase == InitializePhase::Initialized) {
-        mAudSystem->mSceneMgr->loadStaticResource();
-        mStaticWaveRequested = true;
+    if (mAudSystem == nullptr) {
+        return;
     }
+
+    if (mAudSystem->mSceneMgr == nullptr) {
+        return;
+    }
+
+    mAudSystem->mSceneMgr->loadStaticResource();
 }
 
 bool AudSystemWrapper::isLoadDoneStaticWaveData() const {
-    return mInitializePhase == InitializePhase::Initialized && mStaticWaveRequested && mAudSystem->mSceneMgr->isLoadDoneStaticResource();
+    if (mAudSystem == nullptr) {
+        return false;
+    }
+
+    if (mAudSystem->mSceneMgr == nullptr) {
+        return false;
+    }
+
+    return mAudSystem->mSceneMgr->isLoadDoneStaticResource();
 }
 
-void AudSystemWrapper::loadStageWaveData(const char* sceneName, const char* stageName, bool isPlayerLuigi) {
-    if (mInitializePhase != InitializePhase::Initialized) {
+void AudSystemWrapper::loadStageWaveData(const char* pSceneName, const char* pStageName, bool isPlayerLuigi) {
+    if (mAudSystem == nullptr) {
         return;
     }
+
+    if (mAudSystem->mSceneMgr == nullptr) {
+        return;
+    }
+
     if (isPlayerLuigi) {
         mAudSystem->mSceneMgr->setPlayerModeLuigi();
     } else {
         mAudSystem->mSceneMgr->setPlayerModeMario();
     }
-    mScenarioWaveRequested = false;
-    mAudSystem->mSceneMgr->loadStageResource(sceneName, stageName);
-    mStageWaveRequested = true;
+
+    mAudSystem->mSceneMgr->loadStageResource(pSceneName, pStageName);
 }
 
 bool AudSystemWrapper::isLoadDoneStageWaveData() const {
-    return mInitializePhase == InitializePhase::Initialized && mStageWaveRequested && mAudSystem->mSceneMgr->isLoadDoneStageResource();
+    if (mAudSystem == nullptr) {
+        return false;
+    }
+
+    if (mAudSystem->mSceneMgr == nullptr) {
+        return false;
+    }
+
+    return mAudSystem->mSceneMgr->isLoadDoneStageResource();
 }
 
-void AudSystemWrapper::loadScenarioWaveData(const char* sceneName, const char* stageName, s32 scenarioNo) {
-    if (mInitializePhase == InitializePhase::Initialized) {
-        mAudSystem->mSceneMgr->loadScenarioResource(sceneName, stageName, scenarioNo);
-        mScenarioWaveRequested = true;
+void AudSystemWrapper::loadScenarioWaveData(const char* pSceneName, const char* pStageName, s32 scenarioNo) {
+    if (mAudSystem == nullptr) {
+        return;
     }
+
+    if (mAudSystem->mSceneMgr == nullptr) {
+        return;
+    }
+
+    mAudSystem->mSceneMgr->loadScenarioResource(pSceneName, pStageName, scenarioNo);
 }
 
 bool AudSystemWrapper::isLoadDoneScenarioWaveData() const {
-    return mInitializePhase == InitializePhase::Initialized && mScenarioWaveRequested && mAudSystem->mSceneMgr->isLoadDoneScenarioResource();
+    if (mAudSystem == nullptr) {
+        return false;
+    }
+
+    if (mAudSystem->mSceneMgr == nullptr) {
+        return false;
+    }
+
+    return mAudSystem->mSceneMgr->isLoadDoneScenarioResource();
 }
 
 bool AudSystemWrapper::isPermitToReset() const {
@@ -318,23 +371,42 @@ bool AudSystemWrapper::isPermitToReset() const {
 }
 
 void AudSystemWrapper::prepareReset() {
-    if (mInitializePhase != InitializePhase::Initialized) {
+    if (mAudSystem == nullptr) {
         _29 = true;
     } else {
-        mResetRequested = true;
+        mAudSystem->preProcessToReset();
     }
 }
 
-void AudSystemWrapper::requestReset(bool) {
-    prepareReset();
-    stopAllSound(10);
+void AudSystemWrapper::requestReset(bool stopThreads) {
+    if (mAudSystem == nullptr) {
+        _29 = true;
+    } else {
+        mAudSystem->resetAudio(10, stopThreads);
+        mAudSystem->stop(10);
+    }
 }
 
 bool AudSystemWrapper::isResetDone() {
-    return _29 || mResetRequested || mInitializePhase != InitializePhase::Initialized;
+    if (_29) {
+        return true;
+    }
+
+    if (mAudSystem == nullptr) {
+        return true;
+    }
+
+    return mAudSystem->hasReset();
 }
 
 void AudSystemWrapper::resumeReset() {
-    _29 = false;
-    mResetRequested = false;
+    if (_29) {
+        _29 = false;
+    }
+
+    if (mAudSystem == nullptr) {
+        return;
+    }
+
+    return mAudSystem->resumeReset();
 }

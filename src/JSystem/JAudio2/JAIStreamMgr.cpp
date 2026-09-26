@@ -2,9 +2,6 @@
 #include "JSystem/JAudio2/JAISoundHandles.hpp"
 #include "JSystem/JAudio2/JAISoundInfo.hpp"
 #include "JSystem/JAudio2/JAIStreamDataMgr.hpp"
-#include <aurora/allocation.hpp>
-#include <aurora/exception.hpp>
-#include <stdexcept>
 
 JAIStreamMgr::JAIStreamMgr(bool setInstance) : JASGlobalInstance< JAIStreamMgr >(setInstance) {
     streamDataMgr_ = nullptr;
@@ -15,32 +12,13 @@ JAIStreamMgr::JAIStreamMgr(bool setInstance) : JASGlobalInstance< JAIStreamMgr >
     mActivity.init();
 }
 
-JAIStreamMgr::~JAIStreamMgr() {
-    while (auto* link = mStreamList.getFirst()) {
-        auto* stream = link->getObject();
-        mStreamList.remove(link);
-        stream->die_JAIStream_();
-        if (mNativeMixer) ::delete stream;
-        else delete stream;
-    }
-}
-
-void JAIStreamMgr::bindNativeOutput(std::shared_ptr< aurora::audio::PcmAudioMixer > mixer,
-                                  std::function< aurora::audio::JAudioStreamRecipe(JAISoundID) > loader) {
-    if (isActive() || !mixer || !loader)
-        aurora::throw_host_exception< std::logic_error >("JAI stream output requires an idle manager, mixer and resource loader");
-    mNativeMixer = std::move(mixer);
-    mNativeLoader = std::move(loader);
-}
-
 bool JAIStreamMgr::startSound(JAISoundID id, JAISoundHandle* handle, const JGeometry::TVec3< f32 >* posPtr) {
     if (handle != nullptr && handle->isSoundAttached()) {
         (*handle)->stop();
     }
 
-    s32 streamFileEntry = -1;
-    if (!mNativeMixer && streamDataMgr_) streamFileEntry = streamDataMgr_->getStreamFileEntry(id);
-    if (!mNativeMixer && streamFileEntry < 0) {
+    s32 streamFileEntry = streamDataMgr_->getStreamFileEntry(id);
+    if (streamFileEntry < 0) {
         return false;
     }
 
@@ -57,17 +35,6 @@ bool JAIStreamMgr::startSound(JAISoundID id, JAISoundHandle* handle, const JGeom
     }
 
     stream->JAIStreamMgr_startID_(id, streamFileEntry, posPtr, mAudience, category);
-    if (mNativeMixer) {
-        try {
-            const aurora::allocation::HostAllocationScope host;
-            stream->prepareNative(mNativeMixer, mNativeLoader(id));
-        } catch (...) {
-            mStreamList.remove(stream);
-            stream->die_JAIStream_();
-            ::delete stream;
-            throw;
-        }
-    }
     if (soundInfo != nullptr) {
         soundInfo->getStreamInfo(id, stream);
     }
@@ -76,7 +43,7 @@ bool JAIStreamMgr::startSound(JAISoundID id, JAISoundHandle* handle, const JGeom
         stream->attachHandle(handle);
     }
 
-    return true;
+    return false;
 }
 
 void JAIStreamMgr::freeDeadStream_() {
@@ -91,8 +58,7 @@ void JAIStreamMgr::freeDeadStream_() {
                 bool result = mStreamAramMgr->deleteStreamAram(reinterpret_cast< uintptr_t >(aramAddr));
             }
 
-            if (mNativeMixer) ::delete stream;
-            else delete stream;
+            delete stream;
         }
         i = next;
     }
@@ -138,11 +104,11 @@ void JAIStreamMgr::mixOut() {
 }
 
 JAIStream* JAIStreamMgr::newStream_() {
-    if (!mNativeMixer && mStreamAramMgr == nullptr) {
+    if (mStreamAramMgr == nullptr) {
         return nullptr;
     }
 
-    JAIStream* stream = mNativeMixer ? ::new JAIStream(this, soundStrategyMgr) : new JAIStream(this, soundStrategyMgr);
+    JAIStream* stream = new JAIStream(this, soundStrategyMgr);
     if (stream == nullptr) {
         return nullptr;
     }

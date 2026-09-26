@@ -1,6 +1,7 @@
 #pragma once
 
-#include "JSystem/JAudio2/JAISound.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include <JSystem/JAudio2/JAISound.hpp>
 #include <revolution/types.h>
 
 struct AudMeNameData {
@@ -9,7 +10,7 @@ struct AudMeNameData {
     /* 0x8 */ u32 mHash;
 };
 
-class AudMeNameConverter {
+class AudMeNameConverter : public AudSingletonHolder< AudMeNameConverter > {
 public:
     /// @brief Creates a new `AudMeNameConverter`.
     AudMeNameConverter();

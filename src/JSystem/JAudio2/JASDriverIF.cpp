@@ -28,7 +28,7 @@ u32 JASDriver::getOutputMode() {
 }
 
 void JASDriver::waitSubFrame() {
-    smgpc::audio::render_subframe();
+    smgpc::audio::wait_subframe();
 }
 
 JASCallbackMgr JASDriver::sDspSyncCallback;

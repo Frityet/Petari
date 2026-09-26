@@ -1,77 +1,62 @@
 #include "JSystem/JAudio2/JAISound.hpp"
+#include "JSystem/JAudio2/JAISoundChild.hpp"
+#include "JSystem/JAudio2/JAIStreamDataMgr.hpp"
 #include "JSystem/JAudio2/JAIStreamMgr.hpp"
-#include <cassert>
+#include "NativeHeapFixture.hpp"
 #include <array>
+#include <cassert>
 #include <cstdio>
 #include <cstring>
 
 static void testStreamLifetime() {
-    auto mixer = std::make_shared< aurora::audio::PcmAudioMixer >(48000);
+    const aurora::os::GuestThreadExecutionScope execution;
+    auto heap = smgpc::test::create_native_root_heap(1024 * 1024);
+    auto arena = smgpc::test::create_native_solid_heap(heap, 256 * 1024);
+    JASDram = static_cast<JKRSolidHeap *>(arena.get());
+    JAIStream::newMemPool(2);
+    JAISoundChild::newMemPool(6);
+    // Exercise cancellation before DVD preparation. Full transport, PCM output,
+    // pause and resume use the real-disc original-process SFX fixture.
+    struct Files : JAIStreamDataMgr {
+        s32 getStreamFileEntry(JAISoundID) override {
+            return 1;
+        }
+    } files;
+    struct Aram : JAIStreamAramMgr {
+        void *newStreamAram(u32 *) override {
+            assert(false);
+            return nullptr;
+        }
+        bool deleteStreamAram(uintptr_t) override {
+            assert(false);
+            return false;
+        }
+    } aram;
+    JAIStreamMgr manager(false);
+    manager.setStreamDataMgr(&files);
+    manager.setStreamAramMgr(&aram);
     JAISoundHandle handle;
-    {
-        JAIStreamMgr manager(false);
-        manager.bindNativeOutput(mixer, [](JAISoundID) {
-            aurora::audio::JAudioStreamRecipe recipe;
-            recipe.sample_rate = 48000;
-            recipe.sample_count = 1024;
-            recipe.channel_count = 1;
-            recipe.voice.layers.push_back({
-                .samples = std::make_shared< const std::vector< float > >(1024, 0.5f),
-                .sample_rate = 48000,
-            });
-            return recipe;
-        });
-        std::array< float, 256 > output{};
-        assert(manager.startSound(JAISoundID(0x02000001), &handle, nullptr));
-        assert(handle.isSoundAttached() && !handle->isPrepared());
+    for (unsigned cycle = 0; cycle < 3; ++cycle) {
+        // The retail function returns zero even after attaching the stream.
+        (void)manager.startSound(JAISoundID(0x02000001), &handle, nullptr);
+        assert(handle.isSoundAttached() && !handle->isPrepared() && manager.getNumActiveStreams() == 1);
+        auto *stream = handle->asStream();
+        assert(stream && stream->getNumChild() == 6);
+        for (int i = 0; i < stream->getNumChild(); ++i)
+            assert(stream->getChild(i));
         handle->lockWhenPrepared();
-        manager.calc();
-        manager.mixOut();
-        assert(handle->isPrepared() && !handle->isPlaying());
-        assert(mixer->active_voice_count() == 0);
-        mixer->render_interleaved(output);
-        for (float sample : output) assert(sample == 0.0f);
+        assert(stream->mStatus.getState() == JAISoundStatus_::State_LOCK_PREPARE);
         handle->unlockIfLocked();
-        handle->pause(true);
-        manager.mixOut();
-        assert(handle->isPlaying() && mixer->active_voice_count() == 1);
-        mixer->render_interleaved(output);
-        for (float sample : output) assert(sample == 0.0f);
-        handle->pause(false);
-        manager.mixOut();
-        mixer->render_interleaved(output);
-        assert(output[0] > 0.0f && output[1] > 0.0f);
-        handle->pause(true);
-        manager.mixOut();
-        mixer->render_interleaved(output);
-        for (float sample : output) assert(sample == 0.0f);
-        handle->pause(false);
-        manager.mixOut();
-        for (int i = 0; i < 8; ++i) mixer->render_interleaved(output);
+        handle->stop();
         manager.calc();
         assert(!handle.isSoundAttached() && !manager.isActive());
-
-        assert(manager.startSound(JAISoundID(0x02000002), &handle, nullptr));
-        manager.mixOut();
-        handle->stop(2);
-        manager.calc();
-        manager.mixOut();
-        assert(handle.isSoundAttached());
-        manager.calc();
-        manager.mixOut();
-        manager.calc();
-        assert(!handle.isSoundAttached() && mixer->active_voice_count() == 0);
-
-        assert(manager.startSound(JAISoundID(0x02000003), &handle, nullptr));
-        manager.mixOut();
-        assert(mixer->active_voice_count() == 1);
     }
-    assert(!handle.isSoundAttached() && mixer->active_voice_count() == 0);
-    std::puts("[pass] JAI stream preparation, lock, audible PCM, pause, EOF, fade and owner retirement");
+    JASDram = nullptr;
+    std::puts("[pass] Original stream pool allocation, child ownership and cancellation before preparation");
 }
 
 int main() {
-    static_assert(sizeof(JAISoundHandle) == sizeof(JAISound*));
+    static_assert(sizeof(JAISoundHandle) == sizeof(JAISound *));
     JAISoundID id(2, 13, 0x1234);
     assert(u32(id) == 0x020D1234 && id.getGroupID() == 13 && id.getWaveID() == 0x1234);
     JAISoundStatus_ status;

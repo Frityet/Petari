@@ -23,3 +23,8 @@ bool JASDvd::createThread(s32 priority, int msgCount, u32 stackSize) {
     sThread->resume();
     return true;
 }
+
+void JASDvd::destroyThread() {
+    delete sThread;
+    sThread = nullptr;
+}

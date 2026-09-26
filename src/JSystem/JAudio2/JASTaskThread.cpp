@@ -9,6 +9,8 @@ JASTaskThread::JASTaskThread(int priority, int msgCount, u32 stackSize) : JKRThr
 }
 
 JASTaskThread::~JASTaskThread() {
+    // Join the host worker before draining the command queue it consumes.
+    if (!OSIsThreadTerminated(mThread)) OSCancelThread(mThread);
     OSMessage msg;
     BOOL received;
     while (true) {
